@@ -147,7 +147,7 @@ export default function SummaryView() {
                             }}
                             onClick={() => window.print()}
                         >
-                            Print / Save PDF
+                            {t('printPdf')}
                         </button>
 
                         <button

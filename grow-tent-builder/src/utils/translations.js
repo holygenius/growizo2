@@ -58,6 +58,22 @@ export const translations = {
         // Monitoring
         monitorDesc: 'Select devices to monitor and control your environment.',
 
+        // Summary
+        yourSetup: 'Your Setup',
+        reviewDesc: 'Review your complete grow tent setup below.',
+        compatWarn: 'Compatibility Warning',
+        warnLight: 'Your selected fan may not provide enough airflow. Consider upgrading.',
+        warnCFM: 'Your fan provides {cfm} CFM but you need {req} CFM for proper ventilation.',
+        totalEst: 'Total Estimate',
+        tentDetails: 'Tent Details',
+        equipCost: 'Equipment Cost',
+        totalPower: 'Total Power Draw',
+        estMonthly: 'Est. Monthly Cost',
+        powerNote: 'Based on 18hrs/day @ $0.12/kWh',
+        startOver: 'Start Over',
+        restartConfirm: 'Are you sure you want to start over? This will reset all your selections.',
+        printPdf: 'Print / Save PDF',
+
         // Footer
         footer: 'Grow Tent Builder © 2024 - Built for growers, by growers.'
     },
@@ -119,6 +135,22 @@ export const translations = {
 
         // Monitoring
         monitorDesc: 'Ortamınızı izlemek ve kontrol etmek için cihazlar seçin.',
+
+        // Summary
+        yourSetup: 'Kurulumunuz',
+        reviewDesc: 'Tam büyütme çadırı kurulumunuzu aşağıda inceleyin.',
+        compatWarn: 'Uyumluluk Uyarısı',
+        warnLight: 'Seçtiğiniz fan yeterli hava akışı sağlamayabilir. Yükseltmeyi düşünün.',
+        warnCFM: 'Fanınız {cfm} CFM sağlıyor ancak düzgün havalandırma için {req} CFM gerekiyor.',
+        totalEst: 'Toplam Tahmin',
+        tentDetails: 'Çadır Detayları',
+        equipCost: 'Ekipman Maliyeti',
+        totalPower: 'Toplam Güç Tüketimi',
+        estMonthly: 'Tahmini Aylık Maliyet',
+        powerNote: 'Günde 18 saat @ $0.12/kWh baz alınarak',
+        startOver: 'Baştan Başla',
+        restartConfirm: 'Baştan başlamak istediğinizden emin misiniz? Bu, tüm seçimlerinizi sıfırlayacaktır.',
+        printPdf: 'Yazdır / PDF Kaydet',
 
         // Footer
         footer: 'Grow Tent Builder © 2024 - Yetiştiriciler için, yetiştiriciler tarafından yapıldı.'
