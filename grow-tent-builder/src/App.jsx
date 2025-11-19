@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Layout from './components/Layout';
 import TentSelection from './features/TentSelection';
 import LightingSelection from './features/LightingSelection';
@@ -15,6 +15,11 @@ import SettingsBar from './components/SettingsBar';
 function StepRenderer() {
   const { state } = useBuilder();
   const { currentStep } = state;
+
+  // Scroll to top smoothly when step changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentStep]);
 
   switch (currentStep) {
     case 1: return <TentSelection />;

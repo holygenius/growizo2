@@ -81,14 +81,22 @@ export default function SettingsBar() {
                 
                 /* Mobile specific fixes */
                 @media (max-width: 768px) {
+                    .glass-header {
+                        padding: 0.5rem 0 !important;
+                    }
                     .settings-stack-mobile {
-                        flex-direction: column !important;
-                        align-items: stretch !important;
+                        flex-direction: row !important;
+                        align-items: center !important;
                         gap: 0.5rem !important;
+                        flex-wrap: wrap;
+                        justify-content: center;
+                    }
+                    .setting-group {
+                        flex: 0 0 auto;
                     }
                     .modern-select {
-                        width: 100%;
-                        padding: 0.5rem 1rem;
+                        padding: 0.25rem 0.5rem;
+                        font-size: 0.75rem;
                     }
                 }
             `}</style>
