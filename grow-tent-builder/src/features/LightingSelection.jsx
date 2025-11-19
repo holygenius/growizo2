@@ -17,7 +17,7 @@ export default function LightingSelection() {
     const selectedLights = selectedItems.lighting;
 
     const area = tentSize.width * tentSize.depth;
-    const totalCoverage = selectedLights.reduce((sum, light) => sum + light.coverage, 0);
+    const totalCoverage = selectedLights.reduce((sum, light) => sum + (light.coverage * (light.quantity || 1)), 0);
     const remainingCoverage = Math.max(0, area - totalCoverage);
     const isCovered = totalCoverage >= area;
     const recommendedWatts = area * 30;
@@ -99,19 +99,19 @@ export default function LightingSelection() {
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
                 {LIGHT_OPTIONS.map((item) => {
-                    const isSelected = selectedLights.find(i => i.id === item.id);
+                    const selectedItem = selectedLights.find(i => i.id === item.id);
+                    const isSelected = !!selectedItem;
+                    const quantity = selectedItem?.quantity || 0;
                     const isBestFit = Math.abs(item.coverage - area) < 5;
 
                     return (
                         <div
                             key={item.id}
-                            onClick={() => handleToggleItem(item)}
                             style={{
                                 padding: '1rem',
                                 background: isSelected ? 'var(--bg-surface-hover)' : 'var(--bg-card)',
                                 border: `2px solid ${isSelected ? 'var(--color-primary)' : 'var(--border-color)'}`,
                                 borderRadius: 'var(--radius-md)',
-                                cursor: 'pointer',
                                 position: 'relative',
                                 transition: 'all 0.2s ease'
                             }}
@@ -135,7 +135,75 @@ export default function LightingSelection() {
                             <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
                                 {item.watts}W • {formatUnit(item.coverage, 'area')} {areaLabel} {t('coverage')}
                             </div>
-                            <div style={{ color: 'var(--color-primary)', fontWeight: 'bold' }}>{formatPrice(item.price)}</div>
+                            <div style={{ color: 'var(--color-primary)', fontWeight: 'bold', marginBottom: '1rem' }}>{formatPrice(item.price)}</div>
+
+                            {!isSelected ? (
+                                <button
+                                    onClick={() => handleToggleItem(item)}
+                                    style={{
+                                        width: '100%',
+                                        padding: '0.5rem',
+                                        background: 'var(--color-primary)',
+                                        color: '#000',
+                                        border: 'none',
+                                        borderRadius: 'var(--radius-sm)',
+                                        fontWeight: 'bold',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    + Add
+                                </button>
+                            ) : (
+                                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            dispatch({ type: 'DECREMENT_ITEM', payload: { category: 'lighting', itemId: item.id } });
+                                        }}
+                                        style={{
+                                            flex: 1,
+                                            padding: '0.5rem',
+                                            background: 'var(--bg-surface)',
+                                            color: 'var(--text-primary)',
+                                            border: '1px solid var(--border-color)',
+                                            borderRadius: 'var(--radius-sm)',
+                                            fontWeight: 'bold',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        −
+                                    </button>
+                                    <div style={{
+                                        padding: '0.5rem 1rem',
+                                        background: 'var(--bg-card)',
+                                        border: '1px solid var(--color-primary)',
+                                        borderRadius: 'var(--radius-sm)',
+                                        fontWeight: 'bold',
+                                        minWidth: '60px',
+                                        textAlign: 'center'
+                                    }}>
+                                        {quantity}
+                                    </div>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            dispatch({ type: 'INCREMENT_ITEM', payload: { category: 'lighting', itemId: item.id } });
+                                        }}
+                                        style={{
+                                            flex: 1,
+                                            padding: '0.5rem',
+                                            background: 'var(--color-primary)',
+                                            color: '#000',
+                                            border: 'none',
+                                            borderRadius: 'var(--radius-sm)',
+                                            fontWeight: 'bold',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     );
                 })}

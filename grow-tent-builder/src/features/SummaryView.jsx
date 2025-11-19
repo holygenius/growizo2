@@ -88,23 +88,32 @@ export default function SummaryView() {
                             <div key={cat.key} style={{ marginBottom: '1.5rem' }}>
                                 <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', color: 'var(--color-secondary)' }}>{cat.label}</h3>
                                 <div style={{ background: 'var(--bg-card)', borderRadius: 'var(--radius-md)', overflow: 'hidden' }}>
-                                    {items.map((item, idx) => (
-                                        <div key={idx} style={{
-                                            padding: '1rem',
-                                            borderBottom: idx < items.length - 1 ? '1px solid var(--border-color)' : 'none',
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center'
-                                        }}>
-                                            <div>
-                                                <div style={{ fontWeight: '500' }}>{item.name}</div>
-                                                <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                                                    {item.type} {item.watts ? `• ${item.watts}W` : ''} {item.cfm ? `• ${item.cfm} CFM` : ''}
+                                    {items.map((item, idx) => {
+                                        const quantity = item.quantity || 1;
+                                        const totalPrice = item.price * quantity;
+
+                                        return (
+                                            <div key={idx} style={{
+                                                padding: '1rem',
+                                                borderBottom: idx < items.length - 1 ? '1px solid var(--border-color)' : 'none',
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center'
+                                            }}>
+                                                <div>
+                                                    <div style={{ fontWeight: '500' }}>
+                                                        {quantity > 1 && <span style={{ color: 'var(--color-primary)', marginRight: '0.5rem' }}>{quantity}x</span>}
+                                                        {item.name}
+                                                    </div>
+                                                    <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                                                        {item.type} {item.watts ? `• ${item.watts}W` : ''} {item.cfm ? `• ${item.cfm} CFM` : ''}
+                                                        {quantity > 1 && <span style={{ marginLeft: '0.5rem' }}>({formatPrice(item.price)} each)</span>}
+                                                    </div>
                                                 </div>
+                                                <div style={{ fontWeight: 'bold' }}>{formatPrice(totalPrice)}</div>
                                             </div>
-                                            <div style={{ fontWeight: 'bold' }}>{formatPrice(item.price)}</div>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
                             </div>
                         );
