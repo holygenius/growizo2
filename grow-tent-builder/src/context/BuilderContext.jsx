@@ -1,5 +1,24 @@
 import { createContext, useContext, useReducer } from 'react';
 
+const BuilderContext = createContext();
+
+const initialState = {
+    currentStep: 1,
+    tentSize: { width: 4, depth: 4, height: 7, unit: 'ft' }, // Default 4x4x7
+    mediaType: null, // 'soil', 'coco', 'hydro'
+    selectedItems: {
+        lighting: [],
+        ventilation: [],
+        environment: [],
+        nutrients: [],
+        monitoring: []
+    },
+    totals: {
+        cost: 0,
+        power: 0,
+        cfmRequired: 0
+    }
+};
 
 function calculateTotals(state) {
     let cost = 0;
@@ -24,7 +43,7 @@ function calculateTotals(state) {
 function builderReducer(state, action) {
     switch (action.type) {
         case 'NEXT_STEP':
-            return { ...state, currentStep: Math.min(state.currentStep + 1, 7) };
+            return { ...state, currentStep: Math.min(state.currentStep + 1, 8) }; // Increased max step to 8
         case 'PREV_STEP':
             return { ...state, currentStep: Math.max(state.currentStep - 1, 1) };
         case 'SET_STEP':

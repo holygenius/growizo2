@@ -11,14 +11,15 @@ export default function ProgressTracker() {
         { id: 2, label: t('step2') },
         { id: 3, label: t('step3') },
         { id: 4, label: t('step4') },
-        { id: 5, label: t('step5') },
-        { id: 6, label: t('step6') },
-        { id: 7, label: t('step7') },
+        { id: 5, label: t('step5_media') }, // New Step
+        { id: 6, label: t('step6') },       // Was Step 5
+        { id: 7, label: t('step7') },       // Was Step 6
+        { id: 8, label: t('step8') },       // Was Step 7
     ];
 
     return (
         <div className="no-print" style={{ marginBottom: '3rem', overflowX: 'auto', padding: '1rem 0' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', position: 'relative', minWidth: '600px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', position: 'relative', minWidth: '800px' }}>
                 {/* Progress Line Background */}
                 <div style={{
                     position: 'absolute',
@@ -55,7 +56,8 @@ export default function ProgressTracker() {
                                 alignItems: 'center',
                                 zIndex: 1,
                                 cursor: step.id < currentStep ? 'pointer' : 'default',
-                                position: 'relative'
+                                position: 'relative',
+                                minWidth: '80px'
                             }}
                         >
                             <div style={{
@@ -82,7 +84,8 @@ export default function ProgressTracker() {
                                 fontWeight: isActive ? '600' : '400',
                                 transition: 'color 0.3s ease',
                                 textTransform: 'uppercase',
-                                letterSpacing: '0.05em'
+                                letterSpacing: '0.05em',
+                                textAlign: 'center'
                             }}>
                                 {step.label}
                             </div>
