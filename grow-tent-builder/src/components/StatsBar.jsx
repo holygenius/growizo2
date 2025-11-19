@@ -3,7 +3,7 @@ import { useSettings } from '../context/SettingsContext';
 
 export default function StatsBar() {
     const { state } = useBuilder();
-    const { formatPrice } = useSettings();
+    const { formatPrice, t } = useSettings();
     const { cost, power, cfmRequired } = state.totals;
 
     return (
@@ -16,12 +16,12 @@ export default function StatsBar() {
         }}>
             <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div className="mobile-hide" style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-                    Building your perfect setup...
+                    {t('buildingSetup')}
                 </div>
                 <div style={{ display: 'flex', gap: '2.5rem' }}>
-                    <StatItem label="Est. Cost" value={formatPrice(cost)} highlight />
-                    <StatItem label="Power" value={`${power}W`} />
-                    <StatItem label="Req. CFM" value={`${cfmRequired} CFM`} />
+                    <StatItem label={t('estCost')} value={formatPrice(cost)} highlight />
+                    <StatItem label={t('power')} value={`${power}W`} />
+                    <StatItem label={t('reqCFM')} value={`${cfmRequired} CFM`} />
                 </div>
             </div>
         </div>

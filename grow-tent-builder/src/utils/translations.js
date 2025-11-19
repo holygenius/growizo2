@@ -58,6 +58,12 @@ export const translations = {
         // Monitoring
         monitorDesc: 'Select devices to monitor and control your environment.',
 
+        // StatsBar
+        buildingSetup: 'Building your perfect setup...',
+        estCost: 'Est. Cost',
+        power: 'Power',
+        reqCFM: 'Req. CFM',
+
         // Summary
         yourSetup: 'Your Setup',
         reviewDesc: 'Review your complete grow tent setup below.',
@@ -135,6 +141,12 @@ export const translations = {
 
         // Monitoring
         monitorDesc: 'Ortamınızı izlemek ve kontrol etmek için cihazlar seçin.',
+
+        // StatsBar
+        buildingSetup: 'Mükemmel kurulumunuzu oluşturuyoruz...',
+        estCost: 'Tahmini Maliyet',
+        power: 'Güç',
+        reqCFM: 'Gerekli Hava Akışı',
 
         // Summary
         yourSetup: 'Kurulumunuz',

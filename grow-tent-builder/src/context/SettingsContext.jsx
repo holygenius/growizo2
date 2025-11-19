@@ -6,7 +6,7 @@ const SettingsContext = createContext();
 export const CURRENCIES = {
     USD: { symbol: '$', rate: 1 },
     EUR: { symbol: '€', rate: 0.92 },
-    TRY: { symbol: '₺', rate: 32.50 } // Mock rate
+    TRY: { symbol: '₺', rate: 32.50 }
 };
 
 export const UNITS = {
@@ -14,30 +14,67 @@ export const UNITS = {
     METRIC: { label: 'cm', factor: 30.48, area: 'm²', vol: 'm³' }
 };
 
-export function SettingsProvider({ children }) {
-    const [language, setLanguageState] = useState('en');
-    const [currency, setCurrencyState] = useState('USD');
-    const [unitSystem, setUnitSystem] = useState('IMPERIAL');
+// Detect browser language
+const detectBrowserLanguage = () => {
+    const browserLang = navigator.language || navigator.userLanguage;
+    if (browserLang.toLowerCase().startsWith('tr')) {
+        return 'tr';
+    }
+    return 'en';
+};
 
-    // Smart Setters
+// Load from localStorage or use defaults
+const getInitialLanguage = () => {
+    const saved = localStorage.getItem('language');
+    return saved || detectBrowserLanguage();
+};
+
+const getInitialCurrency = () => {
+    const saved = localStorage.getItem('currency');
+    if (saved) return saved;
+    const lang = getInitialLanguage();
+    return lang === 'tr' ? 'TRY' : 'USD';
+};
+
+const getInitialUnitSystem = () => {
+    const saved = localStorage.getItem('unitSystem');
+    if (saved) return saved;
+    const lang = getInitialLanguage();
+    return lang === 'tr' ? 'METRIC' : 'IMPERIAL';
+};
+
+export function SettingsProvider({ children }) {
+    const [language, setLanguageState] = useState(getInitialLanguage);
+    const [currency, setCurrencyState] = useState(getInitialCurrency);
+    const [unitSystem, setUnitSystemState] = useState(getInitialUnitSystem);
+
     const setLanguage = (lang) => {
         setLanguageState(lang);
+        localStorage.setItem('language', lang);
+
         if (lang === 'tr') {
-            setCurrencyState('TRY');
+            setCurrency('TRY');
             setUnitSystem('METRIC');
         } else if (lang === 'en') {
-            setCurrencyState('USD');
+            setCurrency('USD');
             setUnitSystem('IMPERIAL');
         }
     };
 
     const setCurrency = (curr) => {
         setCurrencyState(curr);
+        localStorage.setItem('currency', curr);
+
         if (curr === 'EUR' || curr === 'TRY') {
             setUnitSystem('METRIC');
         } else if (curr === 'USD') {
             setUnitSystem('IMPERIAL');
         }
+    };
+
+    const setUnitSystem = (units) => {
+        setUnitSystemState(units);
+        localStorage.setItem('unitSystem', units);
     };
 
     const t = (key, params = {}) => {
@@ -55,7 +92,6 @@ export function SettingsProvider({ children }) {
 
     const formatUnit = (value, type = 'length') => {
         if (unitSystem === 'IMPERIAL') return value;
-        // Simple conversion for display
         if (type === 'length') return (value * 30.48).toFixed(0);
         if (type === 'area') return (value * 0.0929).toFixed(2);
         if (type === 'volume') return (value * 0.0283).toFixed(2);
