@@ -178,7 +178,6 @@ button,
 
   /* Stack settings bar on mobile */
   .settings-stack-mobile {
-    flex-direction: column !important;
     gap: 0.5rem !important;
   }
 
@@ -211,12 +210,14 @@ button,
 
   select {
     min-height: 44px;
-    font-size: 16px; /* Prevents zoom on iOS */
+    font-size: 16px;
+    /* Prevents zoom on iOS */
   }
 
   input[type="text"],
   input[type="number"] {
-    font-size: 16px; /* Prevents zoom on iOS */
+    font-size: 16px;
+    /* Prevents zoom on iOS */
     min-height: 44px;
   }
 }

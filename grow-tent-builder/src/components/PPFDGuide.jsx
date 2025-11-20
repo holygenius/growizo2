@@ -44,48 +44,94 @@ export default function PPFDGuide() {
                     borderRadius: 'var(--radius-md)',
                     border: '1px solid var(--border-color)',
                     padding: '1rem',
-                    overflowX: 'auto',
-                    WebkitOverflowScrolling: 'touch',
                     boxShadow: '0 4px 20px rgba(0,0,0,0.5)'
                 }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', minWidth: '400px' }}>
-                        <thead>
-                            <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-secondary)' }}>
-                                <th style={{ padding: '0.75rem', textAlign: 'left' }}>PPFD (μmol/m²/s)</th>
-                                <th style={{ padding: '0.75rem', textAlign: 'left' }}>Durum</th>
-                                <th style={{ padding: '0.75rem', textAlign: 'left' }}>Açıklama</th>
-                                <th style={{ padding: '0.75rem', textAlign: 'left' }}>Etki</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data.map((row, index) => (
-                                <tr
-                                    key={index}
-                                    style={{
-                                        borderBottom: '1px solid rgba(255,255,255,0.05)',
-                                        background: row.bg,
-                                        transition: 'background 0.2s'
-                                    }}
-                                >
-                                    <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{row.range}</td>
-                                    <td style={{ padding: '0.75rem' }}>
+                    {/* Desktop Table View */}
+                    <div className="desktop-view">
+                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                            <thead>
+                                <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-secondary)' }}>
+                                    <th style={{ padding: '0.75rem', textAlign: 'left' }}>PPFD (μmol/m²/s)</th>
+                                    <th style={{ padding: '0.75rem', textAlign: 'left' }}>Durum</th>
+                                    <th style={{ padding: '0.75rem', textAlign: 'left' }}>Açıklama</th>
+                                    <th style={{ padding: '0.75rem', textAlign: 'left' }}>Etki</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.map((row, index) => (
+                                    <tr
+                                        key={index}
+                                        style={{
+                                            borderBottom: '1px solid rgba(255,255,255,0.05)',
+                                            background: row.bg,
+                                            transition: 'background 0.2s'
+                                        }}
+                                    >
+                                        <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{row.range}</td>
+                                        <td style={{ padding: '0.75rem' }}>
+                                            <span style={{
+                                                display: 'inline-block',
+                                                width: '10px',
+                                                height: '10px',
+                                                borderRadius: '50%',
+                                                background: row.color,
+                                                marginRight: '0.5rem',
+                                                border: row.color === '#FFFFFF' || row.color === '#000000' ? '1px solid #555' : 'none'
+                                            }}></span>
+                                            {row.label}
+                                        </td>
+                                        <td style={{ padding: '0.75rem', color: 'var(--text-secondary)' }}>{row.desc}</td>
+                                        <td style={{ padding: '0.75rem', fontStyle: 'italic' }}>{row.effect}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {/* Mobile Card View */}
+                    <div className="mobile-view" style={{ display: 'none', flexDirection: 'column', gap: '0.75rem' }}>
+                        {data.map((row, index) => (
+                            <div key={index} style={{
+                                background: row.bg,
+                                borderRadius: 'var(--radius-sm)',
+                                padding: '1rem',
+                                border: '1px solid rgba(255,255,255,0.05)'
+                            }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                    <span style={{ fontWeight: 'bold', fontSize: '1rem' }}>{row.range}</span>
+                                    <div style={{ display: 'flex', alignItems: 'center', fontSize: '0.9rem' }}>
                                         <span style={{
                                             display: 'inline-block',
-                                            width: '10px',
-                                            height: '10px',
+                                            width: '8px',
+                                            height: '8px',
                                             borderRadius: '50%',
                                             background: row.color,
                                             marginRight: '0.5rem',
                                             border: row.color === '#FFFFFF' || row.color === '#000000' ? '1px solid #555' : 'none'
                                         }}></span>
                                         {row.label}
-                                    </td>
-                                    <td style={{ padding: '0.75rem', color: 'var(--text-secondary)' }}>{row.desc}</td>
-                                    <td style={{ padding: '0.75rem', fontStyle: 'italic' }}>{row.effect}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                                    </div>
+                                </div>
+                                <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
+                                    {row.desc}
+                                </div>
+                                <div style={{ fontSize: '0.8rem', fontStyle: 'italic', color: 'var(--text-muted)', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '0.5rem' }}>
+                                    Etki: {row.effect}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <style>{`
+                        @media (max-width: 768px) {
+                            .desktop-view {
+                                display: none;
+                            }
+                            .mobile-view {
+                                display: flex !important;
+                            }
+                        }
+                    `}</style>
                 </div>
             )}
         </div>

@@ -1,4 +1,4 @@
-import { useSettings, CURRENCIES, UNITS } from '../context/SettingsContext';
+import { useSettings, CURRENCIES } from '../context/SettingsContext';
 import { useState } from 'react';
 import ElectricCostEstimator from './ElectricCostEstimator';
 
@@ -57,20 +57,20 @@ export default function SettingsBar() {
                         <select
                             value={language}
                             onChange={(e) => setLanguage(e.target.value)}
-                            className="modern-select"
+                            className="modern-select lang-select"
                         >
-                            <option value="en">🇺🇸 English</option>
-                            <option value="tr">🇹🇷 Türkçe</option>
+                            <option value="en">🇺🇸</option>
+                            <option value="tr">🇹🇷</option>
                         </select>
 
                         {/* Currency Toggle */}
                         <select
                             value={currency}
                             onChange={(e) => setCurrency(e.target.value)}
-                            className="modern-select"
+                            className="modern-select currency-select"
                         >
                             {Object.keys(CURRENCIES).map(c => (
-                                <option key={c} value={c}>{CURRENCIES[c].symbol} {c}</option>
+                                <option key={c} value={c}>{CURRENCIES[c].symbol}</option>
                             ))}
                         </select>
 
@@ -78,10 +78,10 @@ export default function SettingsBar() {
                         <select
                             value={unitSystem}
                             onChange={(e) => setUnitSystem(e.target.value)}
-                            className="modern-select"
+                            className="modern-select unit-select"
                         >
-                            <option value="IMPERIAL">📏 Imperial (ft)</option>
-                            <option value="METRIC">📏 Metric (cm)</option>
+                            <option value="IMPERIAL">ft</option>
+                            <option value="METRIC">cm</option>
                         </select>
                     </div>
 
@@ -89,9 +89,9 @@ export default function SettingsBar() {
                     <button
                         onClick={() => setShowEstimator(s => !s)}
                         className="modern-select cost-button"
-                        style={{ whiteSpace: 'nowrap' }}
                     >
-                        ⚡ Maliyet
+                        <span className="desktop-text">⚡ Maliyet</span>
+                        <span className="mobile-text">⚡</span>
                     </button>
                 </div>
             </div>
@@ -128,31 +128,61 @@ export default function SettingsBar() {
                     box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
                 }
                 
+                /* Show/hide text based on screen size */
+                .mobile-text {
+                    display: none;
+                }
+                .desktop-text {
+                    display: inline;
+                }
+                
                 /* Mobile specific fixes */
                 @media (max-width: 768px) {
-                    .glass-header .container {
-                        justify-content: center !important;
-                        text-align: center;
-                    }
                     .glass-header {
-                        padding: 0.5rem 0 !important;
+                        padding: 0.4rem 0 !important;
+                    }
+                    .glass-header .container {
+                        gap: 0.5rem !important;
+                        padding: 0 0.5rem !important;
+                    }
+                    .glass-header .container > div:first-child {
+                        font-size: 1rem !important;
+                        gap: 0.25rem !important;
+                    }
+                    .glass-header .container > div:first-child span {
+                        font-size: 1.25rem !important;
                     }
                     .settings-stack-mobile {
-                        flex-wrap: wrap !important;
+                        flex-direction: row !important;
+                        flex-wrap: nowrap !important;
                         gap: 0.35rem !important;
-                        justify-content: center !important;
+                        align-items: center !important;
                     }
                     .modern-select {
-                        padding: 0.4rem 0.75rem;
-                        font-size: 0.75rem;
+                        padding: 0.35rem 0.5rem;
+                        font-size: 1.1rem;
+                        min-width: 40px;
+                        text-align: center;
+                    }
+                    .mobile-text {
+                        display: inline;
+                    }
+                    .desktop-text {
+                        display: none;
                     }
                 }
                 
                 @media (max-width: 480px) {
                     .glass-header .container > div:first-child {
-                        width: 100%;
-                        justify-content: center;
-                        margin-bottom: 0.5rem;
+                        display: none !important;
+                    }
+                    .settings-stack-mobile {
+                        gap: 0.25rem !important;
+                    }
+                    .modern-select {
+                        padding: 0.3rem 0.4rem;
+                        font-size: 1rem;
+                        min-width: 36px;
                     }
                 }
             `}</style>
