@@ -20,6 +20,15 @@ const translations = {
                 title: "Environment Control",
                 description: "Match ventilation and filtration to your specific tent dimensions."
             }
+        },
+        costTool: {
+            title: "Quick Cost Calculator",
+            subtitle: "Estimate your monthly electricity costs",
+            power: "Total Power (Watts)",
+            hours: "Hours per Day",
+            rate: "Electricity Rate ($/kWh)",
+            calculate: "Calculate",
+            result: "Estimated Monthly Cost"
         }
     },
     tr: {
@@ -39,6 +48,15 @@ const translations = {
                 title: "Ortam Kontrolü",
                 description: "Havalandırma ve filtrasyonu çadır boyutlarınıza göre eşleştirin."
             }
+        },
+        costTool: {
+            title: "Hızlı Maliyet Hesaplayıcı",
+            subtitle: "Aylık elektrik maliyetlerinizi tahmin edin",
+            power: "Toplam Güç (Watt)",
+            hours: "Günlük Saat",
+            rate: "Elektrik Tarifesi (₺/kWh)",
+            calculate: "Hesapla",
+            result: "Tahmini Aylık Maliyet"
         }
     }
 };
@@ -150,15 +168,64 @@ export default function LandingPage() {
                     <h3>{t.features.ppfd.title}</h3>
                     <p>{t.features.ppfd.description}</p>
                 </div>
-                <div className="feature-card slide-in" style={{ transitionDelay: '0.2s' }}>
-                    <div className="feature-icon">⚡</div>
-                    <h3>{t.features.cost.title}</h3>
-                    <p>{t.features.cost.description}</p>
-                </div>
                 <div className="feature-card slide-in" style={{ transitionDelay: '0.3s' }}>
                     <div className="feature-icon">🌬️</div>
                     <h3>{t.features.environment.title}</h3>
                     <p>{t.features.environment.description}</p>
+                </div>
+            </section>
+
+            {/* Cost Calculator Tool */}
+            <section className="cost-tool-section">
+                <div className="cost-tool-container">
+                    <div className="cost-tool-header">
+                        <h2>⚡ {t.costTool.title}</h2>
+                        <p>{t.costTool.subtitle}</p>
+                    </div>
+                    <div className="cost-tool-inputs">
+                        <div className="input-group">
+                            <label>{t.costTool.power}</label>
+                            <input
+                                type="number"
+                                id="power-input"
+                                placeholder="300"
+                                defaultValue="300"
+                            />
+                        </div>
+                        <div className="input-group">
+                            <label>{t.costTool.hours}</label>
+                            <input
+                                type="number"
+                                id="hours-input"
+                                placeholder="18"
+                                defaultValue="18"
+                            />
+                        </div>
+                        <div className="input-group">
+                            <label>{t.costTool.rate}</label>
+                            <input
+                                type="number"
+                                step="0.01"
+                                id="rate-input"
+                                placeholder="0.12"
+                                defaultValue="0.12"
+                            />
+                        </div>
+                    </div>
+                    <button
+                        className="calc-button"
+                        onClick={() => {
+                            const power = parseFloat(document.getElementById('power-input').value) || 0;
+                            const hours = parseFloat(document.getElementById('hours-input').value) || 0;
+                            const rate = parseFloat(document.getElementById('rate-input').value) || 0;
+                            const monthlyCost = (power / 1000) * hours * 30 * rate;
+                            document.getElementById('cost-result').textContent =
+                                `${t.costTool.result}: ${language === 'tr' ? '₺' : '$'}${monthlyCost.toFixed(2)}`;
+                        }}
+                    >
+                        {t.costTool.calculate}
+                    </button>
+                    <div id="cost-result" className="cost-result"></div>
                 </div>
             </section>
 
@@ -395,6 +462,100 @@ export default function LandingPage() {
                 .feature-card p {
                     color: #94a3b8;
                     line-height: 1.5;
+                }
+
+                /* Cost Calculator Tool */
+                .cost-tool-section {
+                    padding: 4rem 10%;
+                    position: relative;
+                    z-index: 1;
+                    background: rgba(16, 185, 129, 0.05);
+                }
+
+                .cost-tool-container {
+                    max-width: 600px;
+                    margin: 0 auto;
+                    background: rgba(255, 255, 255, 0.03);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 1.5rem;
+                    padding: 3rem;
+                }
+
+                .cost-tool-header {
+                    text-align: center;
+                    margin-bottom: 2rem;
+                }
+
+                .cost-tool-header h2 {
+                    font-size: 2rem;
+                    margin-bottom: 0.5rem;
+                    color: white;
+                }
+
+                .cost-tool-header p {
+                    color: #94a3b8;
+                }
+
+                .cost-tool-inputs {
+                    display: grid;
+                    gap: 1.5rem;
+                    margin-bottom: 2rem;
+                }
+
+                .input-group {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.5rem;
+                }
+
+                .input-group label {
+                    color: #94a3b8;
+                    font-size: 0.875rem;
+                    font-weight: 600;
+                }
+
+                .input-group input {
+                    background: rgba(255, 255, 255, 0.05);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    color: white;
+                    padding: 0.75rem 1rem;
+                    border-radius: 0.5rem;
+                    font-size: 1rem;
+                    transition: all 0.2s ease;
+                }
+
+                .input-group input:focus {
+                    outline: none;
+                    border-color: #10b981;
+                    background: rgba(255, 255, 255, 0.08);
+                }
+
+                .calc-button {
+                    width: 100%;
+                    background: #10b981;
+                    color: white;
+                    border: none;
+                    padding: 1rem;
+                    border-radius: 0.5rem;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+
+                .calc-button:hover {
+                    background: #059669;
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+                }
+
+                .cost-result {
+                    text-align: center;
+                    margin-top: 1.5rem;
+                    font-size: 1.5rem;
+                    font-weight: 700;
+                    color: #10b981;
+                    min-height: 2rem;
                 }
 
                 /* Animations */

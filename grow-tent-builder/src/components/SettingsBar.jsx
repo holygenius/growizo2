@@ -1,6 +1,4 @@
 import { useSettings, CURRENCIES } from '../context/SettingsContext';
-import { useState } from 'react';
-import ElectricCostEstimator from './ElectricCostEstimator';
 
 export default function SettingsBar() {
     const {
@@ -9,7 +7,7 @@ export default function SettingsBar() {
         unitSystem, setUnitSystem
     } = useSettings();
 
-    const [showEstimator, setShowEstimator] = useState(false);
+    const isMobile = window.innerWidth <= 768;
 
     return (
         <div className="glass-header" style={{
@@ -38,68 +36,45 @@ export default function SettingsBar() {
                     <span style={{ fontSize: '1.5rem' }}>🌿</span> GrowBuilder
                 </div>
 
-                {/* Settings and Actions Container */}
-                <div style={{
+                {/* Settings Group */}
+                <div className="settings-stack-mobile" style={{
                     display: 'flex',
-                    alignItems: 'center',
-                    gap: '1rem',
-                    flexWrap: 'wrap',
-                    justifyContent: 'flex-end'
+                    gap: '0.5rem',
+                    fontSize: '0.875rem',
+                    alignItems: 'center'
                 }}>
-                    {/* Settings Group */}
-                    <div className="settings-stack-mobile" style={{
-                        display: 'flex',
-                        gap: '0.5rem',
-                        fontSize: '0.875rem',
-                        alignItems: 'center'
-                    }}>
-                        {/* Language Toggle */}
-                        <select
-                            value={language}
-                            onChange={(e) => setLanguage(e.target.value)}
-                            className="modern-select lang-select"
-                        >
-                            <option value="en">🇺🇸</option>
-                            <option value="tr">🇹🇷</option>
-                        </select>
-
-                        {/* Currency Toggle */}
-                        <select
-                            value={currency}
-                            onChange={(e) => setCurrency(e.target.value)}
-                            className="modern-select currency-select"
-                        >
-                            {Object.keys(CURRENCIES).map(c => (
-                                <option key={c} value={c}>{CURRENCIES[c].symbol}</option>
-                            ))}
-                        </select>
-
-                        {/* Unit Toggle */}
-                        <select
-                            value={unitSystem}
-                            onChange={(e) => setUnitSystem(e.target.value)}
-                            className="modern-select unit-select"
-                        >
-                            <option value="IMPERIAL">ft</option>
-                            <option value="METRIC">cm</option>
-                        </select>
-                    </div>
-
-                    {/* Cost Button */}
-                    <button
-                        onClick={() => setShowEstimator(s => !s)}
-                        className="modern-select cost-button"
+                    {/* Language Toggle */}
+                    <select
+                        value={language}
+                        onChange={(e) => setLanguage(e.target.value)}
+                        className="modern-select lang-select"
                     >
-                        <span className="desktop-text">⚡ Maliyet</span>
-                        <span className="mobile-text">⚡</span>
-                    </button>
+                        <option value="en">🇺🇸</option>
+                        <option value="tr">🇹🇷</option>
+                    </select>
+
+                    {/* Currency Toggle */}
+                    <select
+                        value={currency}
+                        onChange={(e) => setCurrency(e.target.value)}
+                        className="modern-select currency-select"
+                    >
+                        {Object.keys(CURRENCIES).map(c => (
+                            <option key={c} value={c}>{CURRENCIES[c].symbol}</option>
+                        ))}
+                    </select>
+
+                    {/* Unit Toggle */}
+                    <select
+                        value={unitSystem}
+                        onChange={(e) => setUnitSystem(e.target.value)}
+                        className="modern-select unit-select"
+                    >
+                        <option value="IMPERIAL">ft</option>
+                        <option value="METRIC">cm</option>
+                    </select>
                 </div>
             </div>
-            {showEstimator && (
-                <div style={{ position: 'absolute', right: 16, top: 68, zIndex: 1100 }}>
-                    <ElectricCostEstimator onClose={() => setShowEstimator(false)} />
-                </div>
-            )}
             <style>{`
                 .modern-select {
                     background: rgba(255, 255, 255, 0.05);
@@ -118,22 +93,6 @@ export default function SettingsBar() {
                     background: rgba(255, 255, 255, 0.1);
                     border-color: var(--color-primary);
                     box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.1);
-                }
-                .cost-button {
-                    background: rgba(16, 185, 129, 0.15);
-                    border-color: var(--color-primary);
-                }
-                .cost-button:hover {
-                    background: rgba(16, 185, 129, 0.25);
-                    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
-                }
-                
-                /* Show/hide text based on screen size */
-                .mobile-text {
-                    display: none;
-                }
-                .desktop-text {
-                    display: inline;
                 }
                 
                 /* Mobile specific fixes */
@@ -163,12 +122,6 @@ export default function SettingsBar() {
                         font-size: 1.1rem;
                         min-width: 40px;
                         text-align: center;
-                    }
-                    .mobile-text {
-                        display: inline;
-                    }
-                    .desktop-text {
-                        display: none;
                     }
                 }
                 
