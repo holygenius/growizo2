@@ -367,13 +367,14 @@ export default function LandingPage() {
                     position: fixed;
                     top: 2rem;
                     right: 2rem;
-                    z-index: 100;
+                    z-index: 1000;
                     display: flex;
                     gap: 0.5rem;
                     background: rgba(255, 255, 255, 0.05);
                     padding: 0.25rem;
                     border-radius: 0.5rem;
                     border: 1px solid rgba(255, 255, 255, 0.1);
+                    backdrop-filter: blur(10px);
                 }
 
                 .lang-toggle button {
