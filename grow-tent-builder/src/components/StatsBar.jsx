@@ -14,11 +14,11 @@ export default function StatsBar() {
             padding: '1rem 0',
             borderBottom: '1px solid rgba(255,255,255,0.05)'
         }}>
-            <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
                 <div className="mobile-hide" style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
                     {t('buildingSetup')}
                 </div>
-                <div style={{ display: 'flex', gap: '2.5rem' }}>
+                <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
                     <StatItem label={t('estCost')} value={formatPrice(cost)} highlight />
                     <StatItem label={t('power')} value={`${power}W`} />
                     <StatItem label={t('reqCFM')} value={`${cfmRequired} CFM`} />

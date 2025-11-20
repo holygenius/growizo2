@@ -28,7 +28,9 @@ export default function PPFDGuide() {
                     alignItems: 'center',
                     gap: '0.5rem',
                     margin: '0 auto',
-                    transition: 'all 0.2s ease'
+                    transition: 'all 0.2s ease',
+                    minHeight: '44px', // Touch-friendly
+                    justifyContent: 'center'
                 }}
             >
                 ℹ️ PPFD Rehberi {isOpen ? '▲' : '▼'}
@@ -43,9 +45,10 @@ export default function PPFDGuide() {
                     border: '1px solid var(--border-color)',
                     padding: '1rem',
                     overflowX: 'auto',
+                    WebkitOverflowScrolling: 'touch',
                     boxShadow: '0 4px 20px rgba(0,0,0,0.5)'
                 }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', minWidth: '500px' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', minWidth: '400px' }}>
                         <thead>
                             <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-secondary)' }}>
                                 <th style={{ padding: '0.75rem', textAlign: 'left' }}>PPFD (μmol/m²/s)</th>
