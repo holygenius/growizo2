@@ -1,7 +1,7 @@
 export const translations = {
     en: {
         step1: 'Tent',
-        step2: 'Lights',
+        step2: 'LIGHTS',
         step3: 'Ventilation',
         step4: 'Environment',
         step5_media: 'Medium',
