@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import estimateMonthlyCost from '../utils/electricCostEstimator';
 import { useSettings } from '../context/SettingsContext';
+import { useBuilder } from '../context/BuilderContext';
 
 const STORAGE_KEY = 'electricEstimator.v1';
 
@@ -25,12 +26,31 @@ function saveState(state) {
 export default function ElectricCostEstimator({ onClose } = {}) {
   const { currency } = useSettings();
   const saved = loadState();
+  const { state: builderState } = useBuilder();
 
-  const [lights, setLights] = useState(saved?.lights || [{ name: 'LED 300W', watt: 300, quantity: 1 }]);
-  const [fans, setFans] = useState(saved?.fans || [{ name: 'Inline Fan 100W', watt: 100, quantity: 1 }]);
+  // Helper to convert builder items (which may use `watts`) to estimator device shape ({name, watt, quantity, hoursPerDay?})
+  const fromBuilderItems = (items = []) => items.map(i => ({
+    name: i.name || i.title || 'unknown',
+    watt: Number(i.watts || i.watt || 0),
+    quantity: i.quantity || 1,
+    hoursPerDay: i.hoursPerDay
+  }));
+
+  // Initialize lists: prefer builder-selected items when present, otherwise saved, otherwise sensible defaults
+  const initialLights = (builderState?.selectedItems?.lighting?.length > 0)
+    ? fromBuilderItems(builderState.selectedItems.lighting)
+    : (saved?.lights || [{ name: 'LED 300W', watt: 300, quantity: 1 }]);
+
+  const initialFans = (builderState?.selectedItems?.ventilation?.length > 0)
+    ? fromBuilderItems(builderState.selectedItems.ventilation)
+    : (saved?.fans || [{ name: 'Inline Fan 100W', watt: 100, quantity: 1 }]);
+
+  const [lights, setLights] = useState(initialLights);
+  const [fans, setFans] = useState(initialFans);
   const [pricePerKwh, setPricePerKwh] = useState(saved?.pricePerKwh ?? 1.2);
   const [daysPerMonth, setDaysPerMonth] = useState(saved?.daysPerMonth ?? 30);
   const [report, setReport] = useState(null);
+  const [userTouched, setUserTouched] = useState(false);
 
   useEffect(() => {
     const r = estimateMonthlyCost({ lights, fans, pricePerKwh: Number(pricePerKwh), daysPerMonth: Number(daysPerMonth) });
@@ -38,14 +58,32 @@ export default function ElectricCostEstimator({ onClose } = {}) {
     saveState({ lights, fans, pricePerKwh, daysPerMonth });
   }, [lights, fans, pricePerKwh, daysPerMonth]);
 
+  // If the builder's selected items change and the user hasn't manually edited the estimator,
+  // update the estimator lists to reflect the current selections.
+  useEffect(() => {
+    if (userTouched) return;
+    try {
+      const bLights = builderState?.selectedItems?.lighting || [];
+      const bFans = builderState?.selectedItems?.ventilation || [];
+      if (bLights.length > 0) setLights(fromBuilderItems(bLights));
+      if (bFans.length > 0) setFans(fromBuilderItems(bFans));
+    } catch (e) {
+      // ignore
+    }
+  }, [builderState?.selectedItems?.lighting, builderState?.selectedItems?.ventilation, userTouched]);
+
   // Helpers for device lists
   const updateDevice = (list, setList, idx, patch) => {
     const copy = list.map((it, i) => i === idx ? { ...it, ...patch } : it);
     setList(copy);
+    setUserTouched(true);
   };
 
   const addDevice = (list, setList, template) => setList([...list, template]);
   const removeDevice = (list, setList, idx) => setList(list.filter((_, i) => i !== idx));
+  // Mark user touched for add/remove operations as well
+  const addDeviceTouched = (list, setList, template) => { setUserTouched(true); addDevice(list, setList, template); };
+  const removeDeviceTouched = (list, setList, idx) => { setUserTouched(true); removeDevice(list, setList, idx); };
 
   const symbol = currency || '';
 
