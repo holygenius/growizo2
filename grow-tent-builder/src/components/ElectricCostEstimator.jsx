@@ -140,14 +140,19 @@ export default function ElectricCostEstimator({ onClose } = {}) {
       <style>{`
         .input { width: 100%; padding: 8px 10px; border-radius: 8px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-primary); }
         .input.tiny { width: 72px; }
-        .btn { background: var(--bg-card); border: 1px solid var(--border-color); padding: 6px 8px; border-radius: 8px; cursor: pointer; }
+        /* Match header/controls style for consistency */
+        .btn { background: rgba(255,255,255,0.05); color: var(--text-primary); border: 1px solid var(--border-color); padding: 6px 8px; border-radius: 8px; cursor: pointer; }
         .btn.small { padding: 4px 8px; font-size: 0.85rem; }
-        .btn.danger { background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.18); }
+        .btn.danger { background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.18); color: var(--text-primary); }
 
         @media (max-width: 720px) {
           .input.tiny { width: 56px; }
           .btn { padding: 6px 6px; }
         }
+
+        /* Keep bullet list inside the panel and prevent overflow */
+        .est-list { padding-left: 1rem; margin: 0.5rem 0; list-style-position: inside; }
+        .est-list li { word-break: break-word; margin-left: 0.25rem; }
       `}</style>
     </div>
   );
