@@ -939,6 +939,32 @@ export default function LandingPage() {
                         font-size: 0.75rem;
                         padding: 0.4rem 0.8rem;
                     }
+
+                    /* Cost Calculator Mobile Fixes */
+                    .cost-tool-section {
+                        padding: 2rem 5%;
+                    }
+
+                    .cost-tool-container {
+                        padding: 1.5rem;
+                    }
+
+                    .cost-tool-header h2 {
+                        font-size: 1.5rem;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        line-height: 1.4;
+                    }
+
+                    .input-group input {
+                        width: 100%;
+                        box-sizing: border-box;
+                    }
+
+                    .cost-tool-inputs {
+                        width: 100%;
+                    }
                 }
             `}</style>
         </div>
