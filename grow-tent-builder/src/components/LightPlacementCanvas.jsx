@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useMemo } from 'react';
 import { useBuilder } from '../context/BuilderContext';
 import { useSettings } from '../context/SettingsContext';
 import { generatePPFDMap, calculateMetrics } from '../utils/lightingUtils';
+import PPFDGuide from './PPFDGuide';
 
 export default function LightPlacementCanvas() {
     const { state, dispatch } = useBuilder();
@@ -239,7 +240,9 @@ export default function LightPlacementCanvas() {
                         onChange={(e) => setLightHeight(parseFloat(e.target.value))}
                         style={{ width: '100px' }}
                     />
-                    <span style={{ fontSize: '0.8rem', color: 'var(--text-primary)', minWidth: '3rem' }}>{lightHeight} ft</span>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-primary)', minWidth: '3rem' }}>
+                        {formatUnit(lightHeight, 'length')} {getUnitLabel('length')}
+                    </span>
                 </div>
             </div>
 
@@ -384,6 +387,8 @@ export default function LightPlacementCanvas() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><span style={{ width: 10, height: 10, background: 'red' }}></span> 900-1200 (High)</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><span style={{ width: 10, height: 10, background: 'white', border: '1px solid #555' }}></span> &gt;1200 (Risk)</div>
             </div>
+
+            <PPFDGuide />
         </div>
     );
 }

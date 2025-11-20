@@ -39,9 +39,10 @@ export default function LightingSelection() {
         const fitsRotated = lightW <= tentD && lightD <= tentW;
 
         if (!fitsNormal && !fitsRotated) {
+            const unitLabel = getUnitLabel('length');
             return {
                 hasConflict: true,
-                message: `Warning: ${light.name} (${light.physicalWidth}x${light.physicalDepth}ft) is too large for your tent (${tentW}x${tentD}ft)!`
+                message: `Warning: ${light.name} (${formatUnit(lightW, 'length')}x${formatUnit(lightD, 'length')}${unitLabel}) is too large for your tent (${formatUnit(tentW, 'length')}x${formatUnit(tentD, 'length')}${unitLabel})!`
             };
         }
         return { hasConflict: false };
