@@ -1,50 +1,28 @@
-import { useState, useEffect } from 'react';
-import Layout from './components/Layout';
-import TentSelection from './features/TentSelection';
-import LightingSelection from './features/LightingSelection';
-import VentilationSelection from './features/VentilationSelection';
-import EnvironmentSelection from './features/EnvironmentSelection';
-import MediaSelection from './features/MediaSelection';
-import NutrientSelection from './features/NutrientSelection';
-import MonitoringSelection from './features/MonitoringSelection';
-import SummaryView from './features/SummaryView';
-import { BuilderProvider, useBuilder } from './context/BuilderContext';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BuilderProvider } from './context/BuilderContext';
 import { SettingsProvider } from './context/SettingsContext';
-import SettingsBar from './components/SettingsBar';
-
-function StepRenderer() {
-  const { state } = useBuilder();
-  const { currentStep } = state;
-
-  // Scroll to top smoothly when step changes
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [currentStep]);
-
-  switch (currentStep) {
-    case 1: return <TentSelection />;
-    case 2: return <LightingSelection />;
-    case 3: return <VentilationSelection />;
-    case 4: return <EnvironmentSelection />;
-    case 5: return <MediaSelection />;
-    case 6: return <NutrientSelection />;
-    case 7: return <MonitoringSelection />;
-    case 8: return <SummaryView />;
-    default: return <TentSelection />;
-  }
-}
+import { OnboardingProvider } from './context/OnboardingContext';
+import LandingPage from './components/LandingPage';
+import Onboarding from './components/Onboarding';
+import BuilderApp from './components/BuilderApp';
 
 function App() {
   return (
     <SettingsProvider>
-      <BuilderProvider>
-        <SettingsBar />
-        <Layout>
-          <StepRenderer />
-        </Layout>
-      </BuilderProvider>
+      <OnboardingProvider>
+        <BuilderProvider>
+          <BrowserRouter basename="/grow-tent-builder-web-app">
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/onboarding" element={<Onboarding />} />
+              <Route path="/builder" element={<BuilderApp />} />
+            </Routes>
+          </BrowserRouter>
+        </BuilderProvider>
+      </OnboardingProvider>
     </SettingsProvider>
   );
 }
 
 export default App;
+
