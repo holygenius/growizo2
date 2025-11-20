@@ -1,5 +1,6 @@
 import { useBuilder } from '../context/BuilderContext';
 import { useSettings } from '../context/SettingsContext';
+import ElectricCostEstimator from '../components/ElectricCostEstimator';
 
 export default function SummaryView() {
     const { state, dispatch } = useBuilder();
@@ -174,6 +175,9 @@ export default function SummaryView() {
                         >
                             {t('startOver')}
                         </button>
+                    </div>
+                    <div style={{ marginTop: '1rem' }}>
+                        <ElectricCostEstimator />
                     </div>
                 </div>
             </div>

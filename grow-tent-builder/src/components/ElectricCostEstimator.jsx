@@ -23,7 +23,7 @@ function saveState(state) {
 }
 
 export default function ElectricCostEstimator({ onClose } = {}) {
-  const { currency, CURRENCIES } = useSettings();
+  const { currency } = useSettings();
   const saved = loadState();
 
   const [lights, setLights] = useState(saved?.lights || [{ name: 'LED 300W', watt: 300, quantity: 1 }]);
@@ -47,10 +47,10 @@ export default function ElectricCostEstimator({ onClose } = {}) {
   const addDevice = (list, setList, template) => setList([...list, template]);
   const removeDevice = (list, setList, idx) => setList(list.filter((_, i) => i !== idx));
 
-  const symbol = (useSettings().currency && useSettings().currency) ? useSettings().currency : '';
+  const symbol = currency || '';
 
   return (
-    <div style={{ width: 520, padding: 12, background: 'var(--panel-bg)', border: '1px solid var(--border-color)', borderRadius: 8, color: 'var(--text-primary)' }}>
+    <div style={{ width: 520, maxWidth: 'calc(100vw - 32px)', padding: 12, background: 'var(--bg-surface)', boxShadow: '0 8px 24px rgba(2,6,23,0.6)', border: '1px solid var(--border-color)', borderRadius: 10, color: 'var(--text-primary)' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
         <strong>Elektrik Maliyet Tahmincisi</strong>
         <div style={{ display: 'flex', gap: 8 }}>
@@ -63,7 +63,7 @@ export default function ElectricCostEstimator({ onClose } = {}) {
           <label style={{ fontSize: 12 }}>Elektrik fiyatı (kWh)</label>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
             <input type="number" step="0.01" min="0" value={pricePerKwh} onChange={(e) => setPricePerKwh(e.target.value)} className="input" />
-            <span style={{ fontSize: 14 }}>{useSettings().currency}</span>
+            <span style={{ fontSize: 14 }}>{currency}</span>
           </div>
         </div>
         <div>
@@ -74,8 +74,8 @@ export default function ElectricCostEstimator({ onClose } = {}) {
 
       <hr style={{ margin: '12px 0', borderColor: 'var(--border-color)' }} />
 
-      <div style={{ display: 'flex', gap: 12 }}>
-        <div style={{ flex: 1 }}>
+      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+        <div style={{ flex: '1 1 300px', minWidth: 220 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <strong>Işıklar</strong>
             <button className="btn small" onClick={() => addDevice(lights, setLights, { name: 'Yeni ışık', watt: 100, quantity: 1 })}>Ekle</button>
@@ -92,7 +92,7 @@ export default function ElectricCostEstimator({ onClose } = {}) {
           </div>
         </div>
 
-        <div style={{ flex: 1 }}>
+        <div style={{ flex: '1 1 200px', minWidth: 200 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <strong>Fanlar</strong>
             <button className="btn small" onClick={() => addDevice(fans, setFans, { name: 'Yeni fan', watt: 50, quantity: 1 })}>Ekle</button>
@@ -116,11 +116,11 @@ export default function ElectricCostEstimator({ onClose } = {}) {
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <strong>Büyüme (18/6)</strong>
-            <span>{report.veg.totalKwh} kWh — {(report.veg.totalCost).toFixed(2)} {useSettings().currency}</span>
+            <span>{report.veg.totalKwh} kWh — {(report.veg.totalCost).toFixed(2)} {currency}</span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
             <strong>Çiçeklenme (12/12)</strong>
-            <span>{report.flower.totalKwh} kWh — {(report.flower.totalCost).toFixed(2)} {useSettings().currency}</span>
+            <span>{report.flower.totalKwh} kWh — {(report.flower.totalCost).toFixed(2)} {currency}</span>
           </div>
 
           <details style={{ marginTop: 10 }}>
@@ -138,11 +138,16 @@ export default function ElectricCostEstimator({ onClose } = {}) {
       )}
 
       <style>{`
-        .input { width: 100%; padding: 6px 8px; border-radius: 6px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); color: var(--text-primary); }
+        .input { width: 100%; padding: 8px 10px; border-radius: 8px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-primary); }
         .input.tiny { width: 72px; }
-        .btn { background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); padding: 6px 8px; border-radius: 6px; cursor: pointer; }
+        .btn { background: var(--bg-card); border: 1px solid var(--border-color); padding: 6px 8px; border-radius: 8px; cursor: pointer; }
         .btn.small { padding: 4px 8px; font-size: 0.85rem; }
-        .btn.danger { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.25); }
+        .btn.danger { background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.18); }
+
+        @media (max-width: 720px) {
+          .input.tiny { width: 56px; }
+          .btn { padding: 6px 6px; }
+        }
       `}</style>
     </div>
   );
