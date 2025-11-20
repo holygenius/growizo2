@@ -1,13 +1,15 @@
+import { useState } from 'react';
 import { useBuilder } from '../context/BuilderContext';
 import { useSettings } from '../context/SettingsContext';
+import LightPlacementCanvas from '../components/LightPlacementCanvas';
 
 const LIGHT_OPTIONS = [
-    { id: 'led-100', name: 'Quantum Board 100W LED', type: 'LED', watts: 100, price: 85, coverage: 4 }, // 2x2
-    { id: 'led-240', name: 'Quantum Board 240W LED', type: 'LED', watts: 240, price: 180, coverage: 9 }, // 3x3
-    { id: 'led-480', name: 'Bar Style 480W LED', type: 'LED', watts: 480, price: 420, coverage: 16 }, // 4x4
-    { id: 'led-650', name: 'Bar Style 650W LED', type: 'LED', watts: 650, price: 600, coverage: 25 }, // 5x5
-    { id: 'hps-600', name: '600W HPS Kit', type: 'HPS', watts: 600, price: 150, coverage: 16 },
-    { id: 'hps-1000', name: '1000W DE HPS Kit', type: 'HPS', watts: 1000, price: 220, coverage: 25 },
+    { id: 'led-100', name: 'Quantum Board 100W LED', type: 'LED', watts: 100, price: 85, coverage: 4, physicalWidth: 1, physicalDepth: 1 }, // ~30x30cm
+    { id: 'led-240', name: 'Quantum Board 240W LED', type: 'LED', watts: 240, price: 180, coverage: 9, physicalWidth: 2, physicalDepth: 1 }, // ~60x30cm
+    { id: 'led-480', name: 'Bar Style 480W LED', type: 'LED', watts: 480, price: 420, coverage: 16, physicalWidth: 3, physicalDepth: 3 }, // ~90x90cm
+    { id: 'led-650', name: 'Bar Style 650W LED', type: 'LED', watts: 650, price: 600, coverage: 25, physicalWidth: 3.6, physicalDepth: 3.6 }, // ~110x110cm
+    { id: 'hps-600', name: '600W HPS Kit', type: 'HPS', watts: 600, price: 150, coverage: 16, physicalWidth: 1.6, physicalDepth: 1 }, // ~50x30cm
+    { id: 'hps-1000', name: '1000W DE HPS Kit', type: 'HPS', watts: 1000, price: 220, coverage: 25, physicalWidth: 2.3, physicalDepth: 1.1 }, // ~70x35cm
 ];
 
 export default function LightingSelection() {
@@ -15,6 +17,7 @@ export default function LightingSelection() {
     const { t, formatPrice, formatUnit, getUnitLabel } = useSettings();
     const { tentSize, selectedItems } = state;
     const selectedLights = selectedItems.lighting;
+    const [conflictError, setConflictError] = useState(null);
 
     const area = tentSize.width * tentSize.depth;
     const totalCoverage = selectedLights.reduce((sum, light) => sum + (light.coverage * (light.quantity || 1)), 0);
@@ -22,12 +25,45 @@ export default function LightingSelection() {
     const isCovered = totalCoverage >= area;
     const recommendedWatts = area * 30;
 
+    const checkConflict = (light) => {
+        // Check if light dimensions exceed tent dimensions
+        // We check both orientations (portrait/landscape)
+        const lightW = light.physicalWidth;
+        const lightD = light.physicalDepth;
+        const tentW = tentSize.width;
+        const tentD = tentSize.depth;
+
+        // Check normal orientation
+        const fitsNormal = lightW <= tentW && lightD <= tentD;
+        // Check rotated orientation
+        const fitsRotated = lightW <= tentD && lightD <= tentW;
+
+        if (!fitsNormal && !fitsRotated) {
+            return {
+                hasConflict: true,
+                message: `Warning: ${light.name} (${light.physicalWidth}x${light.physicalDepth}ft) is too large for your tent (${tentW}x${tentD}ft)!`
+            };
+        }
+        return { hasConflict: false };
+    };
+
     const handleToggleItem = (item) => {
         const isSelected = selectedLights.find(i => i.id === item.id);
+
         if (isSelected) {
             dispatch({ type: 'REMOVE_ITEM', payload: { category: 'lighting', itemId: item.id } });
+            setConflictError(null);
         } else {
+            const conflict = checkConflict(item);
+            if (conflict.hasConflict) {
+                setConflictError(conflict.message);
+                // Auto-clear error after 3 seconds
+                setTimeout(() => setConflictError(null), 4000);
+                return; // Prevent adding
+            }
+
             dispatch({ type: 'ADD_ITEM', payload: { category: 'lighting', item } });
+            setConflictError(null);
         }
     };
 
@@ -44,6 +80,25 @@ export default function LightingSelection() {
     return (
         <div>
             <h2 style={{ marginBottom: '1rem', color: 'var(--color-primary)' }}>💡 {t('step2')}</h2>
+
+            {conflictError && (
+                <div className="fade-in" style={{
+                    position: 'fixed',
+                    top: '20px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    background: '#ff5252',
+                    color: 'white',
+                    padding: '1rem 2rem',
+                    borderRadius: 'var(--radius-md)',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                    zIndex: 1000,
+                    fontWeight: 'bold',
+                    textAlign: 'center'
+                }}>
+                    {conflictError}
+                </div>
+            )}
 
             <div style={{
                 display: 'grid',
@@ -64,6 +119,8 @@ export default function LightingSelection() {
                     success={isCovered}
                 />
             </div>
+
+            {selectedLights.length > 0 && <LightPlacementCanvas />}
 
             {isCovered && (
                 <div style={{

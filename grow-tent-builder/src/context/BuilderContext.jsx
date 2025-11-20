@@ -122,6 +122,16 @@ function builderReducer(state, action) {
             const newStateRem = { ...state, selectedItems: newItemsRem };
             return { ...newStateRem, totals: calculateTotals(newStateRem) };
         }
+        case 'UPDATE_ITEM_POSITIONS': {
+            const { category, itemId, positions } = action.payload;
+            const newItems = {
+                ...state.selectedItems,
+                [category]: state.selectedItems[category].map(i =>
+                    i.id === itemId ? { ...i, positions } : i
+                )
+            };
+            return { ...state, selectedItems: newItems };
+        }
         case 'RESET':
             return initialState;
         default:
