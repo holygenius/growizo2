@@ -29,6 +29,42 @@ const translations = {
             rate: "Electricity Rate ($/kWh)",
             calculate: "Calculate",
             result: "Estimated Monthly Cost"
+        },
+        infoBoxes: {
+            title: "Critical Success Factors",
+            subtitle: "Essential knowledge for optimal plant growth",
+            items: [
+                {
+                    icon: "💡",
+                    title: "Light Intensity Matters",
+                    description: "Without proper PPFD levels for your plant type, growth will slow or stop completely."
+                },
+                {
+                    icon: "🌬️",
+                    title: "Air Circulation is Essential",
+                    description: "Stagnant air increases mold and pest risk; fans are mandatory for healthy growth."
+                },
+                {
+                    icon: "🌡️",
+                    title: "Humidity & Temperature Balance",
+                    description: "Excessive humidity or heat creates plant stress; controlled environment is crucial."
+                }
+            ]
+        },
+        faq: {
+            title: "Frequently Asked Questions",
+            subtitle: "Everything you need to know about indoor growing",
+            items: [
+                { q: "Why do plants need light?", a: "To perform photosynthesis." },
+                { q: "Why is photosynthesis important?", a: "Plants produce their food this way." },
+                { q: "Which plants are suitable for indoor growing?", a: "Herbs, vegetables, flowers." },
+                { q: "What happens if I don't install a fan in my grow tent?", a: "Temperature rises, mold forms." },
+                { q: "How many hours of light per day during vegetative stage?", a: "16 hours is generally sufficient." },
+                { q: "How many hours of light per day during flowering stage?", a: "12 hours is generally sufficient." },
+                { q: "Why LED lights?", a: "Efficient, cool, and long-lasting." },
+                { q: "How long does germination typically take?", a: "Usually 3 to 10 days." },
+                { q: "What should humidity be in the tent during vegetative stage?", a: "50–70% is ideal." }
+            ]
         }
     },
     tr: {
@@ -57,6 +93,42 @@ const translations = {
             rate: "Elektrik Tarifesi (₺/kWh)",
             calculate: "Hesapla",
             result: "Tahmini Aylık Maliyet"
+        },
+        infoBoxes: {
+            title: "Kritik Başarı Faktörleri",
+            subtitle: "Optimal bitki gelişimi için temel bilgiler",
+            items: [
+                {
+                    icon: "💡",
+                    title: "Işık Yoğunluğu Önemlidir",
+                    description: "Bitkinin türüne uygun PPFD seviyesi olmazsa gelişim yavaşlar veya durur."
+                },
+                {
+                    icon: "🌬️",
+                    title: "Hava Sirkülasyonu Şarttır",
+                    description: "Durgun hava küf ve haşere riskini artırır; mutlaka fan kullanılmalı."
+                },
+                {
+                    icon: "🌡️",
+                    title: "Nem ve Sıcaklık Dengesi",
+                    description: "Aşırı nem ya da ısı bitkide stres yaratır; kontrollü ortam şart."
+                }
+            ]
+        },
+        faq: {
+            title: "Sıkça Sorulan Sorular",
+            subtitle: "İç mekan yetiştiriciliği hakkında bilmeniz gerekenler",
+            items: [
+                { q: "Bitkiler neden yapay ışığa ihtiyaç duyar?", a: "Bitkiler büyümek, gelişmek ve enerji üretmek için fotosentez yapar. İç mekan yetiştiriciliğinde doğal güneş ışığı yeterli olmadığından yapay aydınlatma (özellikle LED grow ışıkları) kullanılır." },
+                { q: "Fotosentez neden bitki sağlığı için kritiktir?", a: "Fotosentez, bitkilerin su ve karbondioksiti güneş (veya yapay) ışığı ile şekere dönüştürmesini sağlar. Bu süreç, bitkinin enerji kaynağını oluşturur ve sağlıklı gelişimi mümkün kılar." },
+                { q: "İç mekanda hangi bitki türleri yetiştirilebilir?", a: "Aromatik otlar (fesleğen, nane), yapraklı sebzeler (marul, ıspanak) ve bazı çiçekli türler (orkide, sardunya) iç mekan yetiştiriciliğine uygundur. Bu bitkiler sınırlı alanda, kontrollü iklim şartlarında iyi sonuç verir." },
+                { q: "Fan olmayan yetiştirme kabininde ne olur?", a: "Fan kullanılmayan kabinlerde hava dolaşımı olmaz, bu da sıcaklık artışına ve nem birikmesine neden olur. Sonuç olarak mantar oluşumu, küf ve bitki hastalıkları riski yükselir." },
+                { q: "Büyüme döneminde bitkiye günde kaç saat ışık verilmeli?", a: "Büyüme (vejetatif) aşamasında çoğu bitki 16–18 saatlik ışık süresine ihtiyaç duyar. Bu süre, yaprak gelişimini ve sağlıklı gövde oluşumunu destekler." },
+                { q: "Çiçeklenme döneminde ışık süresi ne olmalı?", a: "Çiçeklenme döneminde fotoperiyodik bitkiler için 12 saat ışık, 12 saat karanlık döngüsü uygulanmalıdır. Bu denge, çiçek ve meyve oluşumunu teşvik eder." },
+                { q: "LED grow ışıklarının avantajı nedir?", a: "LED bitki lambaları, düşük enerji tüketimi, uzun ömür ve minimal ısı yayımı ile ideal iç mekan aydınlatması sunar. Ayrıca, bitki evresine uygun tam spektrum ışık sağlayabilir." },
+                { q: "Tohumlar çimlenme döneminde kaç günde filizlenir?", a: "Çimlenme süresi bitki türüne bağlı olmakla birlikte genellikle 3 ila 10 gün arasında tamamlanır. Bu dönemde nemli ortam ve sabit sıcaklık sağlanmalıdır." },
+                { q: "Büyüme döneminde çadır içi nem oranı ne olmalı?", a: "Vejetatif büyüme aşamasında ideal nem oranı %50 ila %70 aralığındadır. Bu nem seviyesi, yaprakların su kaybını dengeleyerek hızlı gelişimi destekler." }
+            ]
         }
     }
 };
@@ -175,6 +247,29 @@ export default function LandingPage() {
                 </div>
             </section>
 
+            {/* Info Boxes Section */}
+            <section className="info-boxes-section">
+                <div className="info-boxes-header">
+                    <h2>⚠️ {t.infoBoxes.title}</h2>
+                    <p>{t.infoBoxes.subtitle}</p>
+                </div>
+                <div className="info-boxes-container">
+                    {t.infoBoxes.items.map((item, index) => (
+                        <div
+                            key={index}
+                            className="info-box"
+                            style={{ animationDelay: `${index * 0.1}s` }}
+                        >
+                            <div className="info-box-icon">{item.icon}</div>
+                            <div className="info-box-content">
+                                <h3>{item.title}</h3>
+                                <p>{item.description}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
             {/* Cost Calculator Tool */}
             <section className="cost-tool-section">
                 <div className="cost-tool-container">
@@ -226,6 +321,36 @@ export default function LandingPage() {
                         {t.costTool.calculate}
                     </button>
                     <div id="cost-result" className="cost-result"></div>
+                </div>
+            </section>
+
+            {/* FAQ Section */}
+            <section className="faq-section">
+                <div className="faq-header">
+                    <h2>❓ {t.faq.title}</h2>
+                    <p>{t.faq.subtitle}</p>
+                </div>
+                <div className="faq-container">
+                    {t.faq.items.map((item, index) => (
+                        <div
+                            key={index}
+                            className="faq-item"
+                            onClick={(e) => {
+                                const answer = e.currentTarget.querySelector('.faq-answer');
+                                const icon = e.currentTarget.querySelector('.faq-icon');
+                                answer.classList.toggle('open');
+                                icon.textContent = answer.classList.contains('open') ? '−' : '+';
+                            }}
+                        >
+                            <div className="faq-question">
+                                <span>{item.q}</span>
+                                <span className="faq-icon">+</span>
+                            </div>
+                            <div className="faq-answer">
+                                {item.a}
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </section>
 
@@ -464,6 +589,92 @@ export default function LandingPage() {
                     line-height: 1.5;
                 }
 
+                /* Info Boxes Section */
+                .info-boxes-section {
+                    padding: 4rem 10%;
+                    position: relative;
+                    z-index: 1;
+                    background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(245, 158, 11, 0.05) 100%);
+                }
+
+                .info-boxes-header {
+                    text-align: center;
+                    margin-bottom: 3rem;
+                }
+
+                .info-boxes-header h2 {
+                    font-size: 2.5rem;
+                    margin-bottom: 0.5rem;
+                    color: white;
+                }
+
+                .info-boxes-header p {
+                    color: #94a3b8;
+                    font-size: 1.125rem;
+                }
+
+                .info-boxes-container {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                    gap: 2rem;
+                    max-width: 1200px;
+                    margin: 0 auto;
+                }
+
+                .info-box {
+                    background: rgba(255, 255, 255, 0.03);
+                    border: 2px solid rgba(245, 158, 11, 0.2);
+                    border-radius: 1rem;
+                    padding: 2rem;
+                    display: flex;
+                    gap: 1.5rem;
+                    align-items: flex-start;
+                    transition: all 0.3s ease;
+                    opacity: 0;
+                    animation: slideInUp 0.6s ease-out forwards;
+                }
+
+                @keyframes slideInUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(30px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                .info-box:hover {
+                    transform: translateY(-5px);
+                    background: rgba(255, 255, 255, 0.05);
+                    border-color: rgba(245, 158, 11, 0.5);
+                    box-shadow: 0 10px 30px rgba(245, 158, 11, 0.2);
+                }
+
+                .info-box-icon {
+                    font-size: 3rem;
+                    flex-shrink: 0;
+                    filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.3));
+                }
+
+                .info-box-content {
+                    flex: 1;
+                }
+
+                .info-box-content h3 {
+                    font-size: 1.25rem;
+                    margin-bottom: 0.75rem;
+                    color: #fbbf24;
+                    font-weight: 700;
+                }
+
+                .info-box-content p {
+                    color: #cbd5e1;
+                    line-height: 1.6;
+                    font-size: 0.95rem;
+                }
+
                 /* Cost Calculator Tool */
                 .cost-tool-section {
                     padding: 4rem 10%;
@@ -558,6 +769,81 @@ export default function LandingPage() {
                     min-height: 2rem;
                 }
 
+                /* FAQ Section */
+                .faq-section {
+                    padding: 4rem 10%;
+                    position: relative;
+                    z-index: 1;
+                }
+
+                .faq-header {
+                    text-align: center;
+                    margin-bottom: 3rem;
+                }
+
+                .faq-header h2 {
+                    font-size: 2.5rem;
+                    margin-bottom: 0.5rem;
+                    color: white;
+                }
+
+                .faq-header p {
+                    color: #94a3b8;
+                    font-size: 1.125rem;
+                }
+
+                .faq-container {
+                    max-width: 800px;
+                    margin: 0 auto;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1rem;
+                }
+
+                .faq-item {
+                    background: rgba(255, 255, 255, 0.03);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 1rem;
+                    padding: 1.5rem;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+
+                .faq-item:hover {
+                    background: rgba(255, 255, 255, 0.05);
+                    border-color: rgba(16, 185, 129, 0.3);
+                }
+
+                .faq-question {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    font-weight: 600;
+                    color: white;
+                    font-size: 1.125rem;
+                }
+
+                .faq-icon {
+                    font-size: 1.5rem;
+                    color: #10b981;
+                    font-weight: 300;
+                    min-width: 24px;
+                    text-align: center;
+                }
+
+                .faq-answer {
+                    max-height: 0;
+                    overflow: hidden;
+                    color: #94a3b8;
+                    line-height: 1.6;
+                    transition: max-height 0.3s ease, margin-top 0.3s ease;
+                }
+
+                .faq-answer.open {
+                    max-height: 200px;
+                    margin-top: 1rem;
+                }
+
                 /* Animations */
                 @keyframes fadeInUp {
                     from { opacity: 0; transform: translateY(30px); }
@@ -595,6 +881,25 @@ export default function LandingPage() {
                         margin: 0 auto;
                         width: 100%;
                         justify-content: center;
+                    }
+
+                    .info-boxes-container {
+                        grid-template-columns: 1fr;
+                        gap: 1.5rem;
+                    }
+
+                    .info-box {
+                        flex-direction: column;
+                        text-align: center;
+                        align-items: center;
+                    }
+
+                    .info-box-icon {
+                        font-size: 2.5rem;
+                    }
+
+                    .info-boxes-header h2 {
+                        font-size: 1.75rem;
                     }
                 }
             `}</style>
