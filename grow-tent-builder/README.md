@@ -86,6 +86,36 @@ This structure favors clarity for a step-based builder app and is easy to extend
 - Persist builder state to localStorage, IndexedDB, or a backend by enhancing `BuilderContext.jsx`.
 - Replace or extend the presentational components in `src/components/` to adapt the UI.
 
+## Elektrik Maliyet Tahmincisi (Örnek)
+
+Projeye basit bir maliyet hesaplayıcı modül eklendi: `src/utils/electricCostEstimator.js`.
+
+Kısa kullanım (örnek):
+
+```js
+import estimateMonthlyCost from './src/utils/electricCostEstimator';
+
+const lights = [
+	{ name: 'LED 300W', watt: 300, quantity: 1 },
+];
+
+const fans = [
+	{ name: 'Inline Fan 100W', watt: 100, quantity: 1 },
+];
+
+// Elektrik fiyatı: ör. 1.2 TL/kWh
+const report = estimateMonthlyCost({ lights, fans, pricePerKwh: 1.2 });
+
+console.log('Büyüme (18/6) toplam maliyet:', report.veg.totalCost, 'TL');
+console.log('Çiçeklenme (12/12) toplam maliyet:', report.flower.totalCost, 'TL');
+```
+
+Varsayılan hesaplama:
+- Işıklar için Büyüme = 18 saat/gün, Çiçeklenme = 12 saat/gün
+- Fanlar için 24 saat/gün (cihaz başına `hoursPerDay` vererek üzerine yazılabilir)
+
+`estimateMonthlyCost` fonksiyonu, hem `veg` hem `flower` için toplam kWh ve maliyetleri, ayrıca cihaz bazlı aylık kWh döndürüyor.
+
 ## Development Notes
 
 - This project uses Vite for fast local development. The `dev` script runs the Vite dev server with HMR.

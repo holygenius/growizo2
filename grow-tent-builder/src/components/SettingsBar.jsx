@@ -1,4 +1,6 @@
 import { useSettings, CURRENCIES, UNITS } from '../context/SettingsContext';
+import { useState } from 'react';
+import ElectricCostEstimator from './ElectricCostEstimator';
 
 export default function SettingsBar() {
     const {
@@ -6,6 +8,8 @@ export default function SettingsBar() {
         currency, setCurrency,
         unitSystem, setUnitSystem
     } = useSettings();
+
+    const [showEstimator, setShowEstimator] = useState(false);
 
     return (
         <div className="glass-header" style={{
@@ -57,7 +61,15 @@ export default function SettingsBar() {
                         </select>
                     </div>
                 </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <button onClick={() => setShowEstimator(s => !s)} className="modern-select">⚡ Maliyet</button>
+                </div>
             </div>
+            {showEstimator && (
+                <div style={{ position: 'absolute', right: 16, top: 68, zIndex: 1100 }}>
+                    <ElectricCostEstimator onClose={() => setShowEstimator(false)} />
+                </div>
+            )}
             <style>{`
                 .modern-select {
                     background: rgba(255, 255, 255, 0.05);
