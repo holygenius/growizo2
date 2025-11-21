@@ -53,5 +53,5 @@ export default defineConfig({
       }
     })
   ],
-  base: '/grow-tent-builder-web-app/', // Repository name for GitHub Pages
+  base: '/', // Repository name for GitHub Pages
 })
