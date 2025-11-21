@@ -78,6 +78,10 @@ const Quiz = ({ data }) => {
 
   const question = data[currentQuestion];
   const isCorrect = selectedOption === question.correctAnswer;
+  // support both old shape (options: []) and new bilingual shape (options: { en: [], tr: [] })
+  const optionsForQuestion = Array.isArray(question.options)
+    ? question.options
+    : (question.options?.[language] || []);
 
   return (
     <div className="quiz-container fade-in-up">
@@ -97,14 +101,14 @@ const Quiz = ({ data }) => {
       <div className="quiz-body">
         <p className="quiz-question">{question.question[language]}</p>
         <div className="quiz-options">
-          {question.options.map((option, index) => (
+          {optionsForQuestion.map((optionText, index) => (
             <button
               key={index}
               className={`quiz-option ${selectedOption === index ? 'selected' : ''} ${showResult && index === question.correctAnswer ? 'correct' : ''} ${showResult && selectedOption === index && !isCorrect ? 'incorrect' : ''}`}
               onClick={() => handleOptionSelect(index)}
               disabled={showResult}
             >
-              {option}
+              {optionText}
               {showResult && index === question.correctAnswer && <span className="icon">✅</span>}
               {showResult && selectedOption === index && !isCorrect && <span className="icon">❌</span>}
             </button>
