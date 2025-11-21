@@ -11,7 +11,7 @@ function App() {
     <SettingsProvider>
       <OnboardingProvider>
         <BuilderProvider>
-          <BrowserRouter basename="/grow-tent-builder-web-app">
+          <BrowserRouter>
             <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/onboarding" element={<Onboarding />} />
