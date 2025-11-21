@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useOnboarding } from '../context/OnboardingContext';
+import { blogPosts } from './Blog/blogData';
 
 const translations = {
     en: {
@@ -335,6 +336,34 @@ export default function LandingPage() {
                             </div>
                         </div>
                     ))}
+                </div>
+            </section>
+
+            {/* Blog Preview Section */}
+            <section className="blog-preview-section">
+                <div className="blog-preview-header">
+                    <h2>📚 {language === 'tr' ? 'En Son Makaleler' : 'Latest Articles'}</h2>
+                    <p>{language === 'tr' ? 'Modern yetiştiricilik tekniklerini keşfedin' : 'Discover modern growing techniques'}</p>
+                </div>
+                <div className="blog-preview-grid">
+                    {blogPosts.slice(0, 3).map((post) => (
+                        <Link to={`/blog/${post.slug}`} key={post.id} className="blog-preview-card">
+                            <div className="preview-image" style={{ backgroundImage: `url(${post.image})` }} />
+                            <div className="preview-content">
+                                <span className="preview-tag">{post.category}</span>
+                                <h3>{post.title}</h3>
+                                <div className="preview-meta">
+                                    <span>{post.readTime}</span>
+                                    <span className="arrow">→</span>
+                                </div>
+                            </div>
+                        </Link>
+                    ))}
+                </div>
+                <div className="blog-cta">
+                    <Link to="/blog" className="view-all-btn">
+                        {language === 'tr' ? 'Tüm Yazıları Gör' : 'View All Articles'}
+                    </Link>
                 </div>
             </section>
 
@@ -965,6 +994,119 @@ export default function LandingPage() {
                     .cost-tool-inputs {
                         width: 100%;
                     }
+                }
+                /* Blog Preview Section */
+                .blog-preview-section {
+                    padding: 6rem 10%;
+                    background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(16, 185, 129, 0.05));
+                    position: relative;
+                    z-index: 1;
+                }
+
+                .blog-preview-header {
+                    text-align: center;
+                    margin-bottom: 3rem;
+                }
+
+                .blog-preview-header h2 {
+                    font-size: 2.5rem;
+                    margin-bottom: 0.5rem;
+                    color: white;
+                }
+
+                .blog-preview-header p {
+                    color: #94a3b8;
+                }
+
+                .blog-preview-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                    gap: 2rem;
+                    max-width: 1200px;
+                    margin: 0 auto 3rem;
+                }
+
+                .blog-preview-card {
+                    background: rgba(30, 41, 59, 0.5);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 1rem;
+                    overflow: hidden;
+                    text-decoration: none;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .blog-preview-card:hover {
+                    transform: translateY(-5px);
+                    border-color: #10b981;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                }
+
+                .preview-image {
+                    height: 200px;
+                    background-size: cover;
+                    background-position: center;
+                    position: relative;
+                }
+
+                .preview-image::after {
+                    content: '';
+                    position: absolute;
+                    inset: 0;
+                    background: linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent);
+                }
+
+                .preview-content {
+                    padding: 1.5rem;
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .preview-tag {
+                    color: #10b981;
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                    margin-bottom: 0.5rem;
+                }
+
+                .preview-content h3 {
+                    color: white;
+                    font-size: 1.25rem;
+                    margin-bottom: 1rem;
+                    line-height: 1.4;
+                    flex: 1;
+                }
+
+                .preview-meta {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    color: #94a3b8;
+                    font-size: 0.875rem;
+                }
+
+                .blog-cta {
+                    text-align: center;
+                }
+
+                .view-all-btn {
+                    display: inline-block;
+                    padding: 0.75rem 2rem;
+                    border: 1px solid #10b981;
+                    color: #10b981;
+                    border-radius: 0.5rem;
+                    text-decoration: none;
+                    font-weight: 600;
+                    transition: all 0.3s ease;
+                }
+
+                .view-all-btn:hover {
+                    background: #10b981;
+                    color: white;
                 }
             `}</style>
         </div>
