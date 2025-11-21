@@ -1,9 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useSettings } from '../../context/SettingsContext';
 import { blogPosts, categories } from './blogData';
+import Footer from '../Footer';
 
 const BlogList = () => {
+  const { language } = useSettings();
   const [activeCategory, setActiveCategory] = useState('All');
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const filteredPosts = activeCategory === 'All'
     ? blogPosts
@@ -33,12 +41,12 @@ const BlogList = () => {
 
           {activeCategory === 'All' && (
             <div className="featured-post fade-in-up" style={{ animationDelay: '0.1s' }}>
-              <Link to={`/blog/${featuredPost.slug}`} className="featured-card">
+              <Link to={`/blog/${featuredPost.slug[language]}`} className="featured-card">
                 <div className="featured-image" style={{ backgroundImage: `url(${featuredPost.image})` }} />
                 <div className="featured-content">
                   <span className="featured-badge">Featured Article</span>
-                  <h2>{featuredPost.title}</h2>
-                  <p>{featuredPost.excerpt}</p>
+                  <h2>{featuredPost.title[language]}</h2>
+                  <p>{featuredPost.excerpt[language]}</p>
                   <div className="blog-meta">
                     <span>{featuredPost.date}</span>
                     <span className="dot">•</span>
@@ -69,9 +77,9 @@ const BlogList = () => {
       {/* Blog Grid */}
       <div className="blog-grid container">
         {gridPosts.map((post) => (
-          <Link to={`/blog/${post.slug}`} key={post.id} className="blog-card card-interactive">
+          <Link to={`/blog/${post.slug[language]}`} key={post.id} className="blog-card card-interactive">
             <div className="blog-card-image">
-              <img src={post.image} alt={post.title} loading="lazy" />
+              <img src={post.image} alt={post.title[language]} loading="lazy" />
               <div className="blog-tags">
                 <span className="blog-tag">{post.category}</span>
               </div>
@@ -82,8 +90,8 @@ const BlogList = () => {
                 <span className="dot">•</span>
                 <span>{post.readTime}</span>
               </div>
-              <h3>{post.title}</h3>
-              <p>{post.excerpt}</p>
+              <h3>{post.title[language]}</h3>
+              <p>{post.excerpt[language]}</p>
               <div className="blog-author">
                 <div className="author-avatar">
                   {post.author.charAt(0)}
@@ -94,6 +102,8 @@ const BlogList = () => {
           </Link>
         ))}
       </div>
+
+      <Footer />
 
       <style>{`
         .blog-container {

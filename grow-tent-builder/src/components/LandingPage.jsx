@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useOnboarding } from '../context/OnboardingContext';
 import { blogPosts } from './Blog/blogData';
+import { useSettings } from '../context/SettingsContext';
+import Footer from './Footer';
 
 const translations = {
     en: {
@@ -351,7 +353,7 @@ export default function LandingPage() {
                             <div className="preview-image" style={{ backgroundImage: `url(${post.image})` }} />
                             <div className="preview-content">
                                 <span className="preview-tag">{post.category}</span>
-                                <h3>{post.title}</h3>
+                                <h3>{post.title[language]}</h3>
                                 <div className="preview-meta">
                                     <span>{post.readTime}</span>
                                     <span className="arrow">→</span>
@@ -368,27 +370,8 @@ export default function LandingPage() {
             </section>
 
             {/* Footer / Künye */}
-            <footer className="landing-footer">
-                <div className="footer-content">
-                    <div className="footer-info">
-                        <p>© 2025 GroWizard. All rights reserved.</p>
-                    </div>
-                    <div className="footer-lang-toggle">
-                        <button
-                            onClick={() => setLanguage('en')}
-                            className={language === 'en' ? 'active' : ''}
-                        >
-                            EN
-                        </button>
-                        <button
-                            onClick={() => setLanguage('tr')}
-                            className={language === 'tr' ? 'active' : ''}
-                        >
-                            TR
-                        </button>
-                    </div>
-                </div>
-            </footer>
+            {/* Footer / Künye */}
+            <Footer />
 
             <style>{`
                 .landing-container {

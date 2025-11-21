@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useSettings } from '../../context/SettingsContext';
 import { blogPosts } from './blogData';
+import Footer from '../Footer';
 
 const Quiz = ({ data }) => {
+  const { language } = useSettings();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [showResult, setShowResult] = useState(false);
@@ -53,20 +56,20 @@ const Quiz = ({ data }) => {
     return (
       <div className="quiz-container fade-in-up">
         <div className="quiz-result">
-          <h3>🎉 Quiz Completed!</h3>
+          <h3>🎉 {language === 'tr' ? 'Test Tamamlandı!' : 'Quiz Completed!'}</h3>
           <div className="score-circle">
             <span className="score-number">{score}</span>
             <span className="score-total">/ {data.length}</span>
           </div>
           <p className="score-message">
             {score === data.length
-              ? "Perfect score! You're a master grower! 🌿"
+              ? (language === 'tr' ? "Mükemmel skor! Sen bir usta yetiştiricisin! 🌿" : "Perfect score! You're a master grower! 🌿")
               : score >= data.length / 2
-                ? "Good job! You know your stuff. 👍"
-                : "Keep learning! You'll get it next time. 📚"}
+                ? (language === 'tr' ? "İyi iş! Konuya hakimsin. 👍" : "Good job! You know your stuff. 👍")
+                : (language === 'tr' ? "Öğrenmeye devam! Bir dahaki sefere yaparsın. 📚" : "Keep learning! You'll get it next time. 📚")}
           </p>
           <button className="quiz-submit-btn" onClick={handleRetake}>
-            Retake Quiz
+            {language === 'tr' ? 'Testi Tekrarla' : 'Retake Quiz'}
           </button>
         </div>
       </div>
@@ -80,7 +83,7 @@ const Quiz = ({ data }) => {
     <div className="quiz-container fade-in-up">
       <div className="quiz-header">
         <div className="quiz-progress">
-          <span>Question {currentQuestion + 1} of {data.length}</span>
+          <span>{language === 'tr' ? 'Soru' : 'Question'} {currentQuestion + 1} / {data.length}</span>
           <div className="progress-bar">
             <div
               className="progress-fill"
@@ -88,11 +91,11 @@ const Quiz = ({ data }) => {
             />
           </div>
         </div>
-        <h3>🧠 Test Your Knowledge</h3>
+        <h3>🧠 {language === 'tr' ? 'Bilgini Test Et' : 'Test Your Knowledge'}</h3>
       </div>
 
       <div className="quiz-body">
-        <p className="quiz-question">{question.question}</p>
+        <p className="quiz-question">{question.question[language]}</p>
         <div className="quiz-options">
           {question.options.map((option, index) => (
             <button
@@ -114,16 +117,18 @@ const Quiz = ({ data }) => {
             onClick={handleSubmit}
             disabled={selectedOption === null}
           >
-            Check Answer
+            {language === 'tr' ? 'Cevabı Kontrol Et' : 'Check Answer'}
           </button>
         ) : (
           <div className="quiz-feedback-container">
             <div className={`quiz-feedback ${isCorrect ? 'success' : 'error'}`}>
-              <h4>{isCorrect ? 'Correct!' : 'Not quite...'}</h4>
-              <p>{question.explanation}</p>
+              <h4>{isCorrect ? (language === 'tr' ? 'Doğru!' : 'Correct!') : (language === 'tr' ? 'Tam olarak değil...' : 'Not quite...')}</h4>
+              <p>{question.explanation[language]}</p>
             </div>
             <button className="quiz-next-btn" onClick={handleNext}>
-              {currentQuestion < data.length - 1 ? 'Next Question →' : 'See Results →'}
+              {currentQuestion < data.length - 1
+                ? (language === 'tr' ? 'Sonraki Soru →' : 'Next Question →')
+                : (language === 'tr' ? 'Sonuçları Gör →' : 'See Results →')}
             </button>
           </div>
         )}
@@ -133,23 +138,58 @@ const Quiz = ({ data }) => {
 };
 
 const BlogPost = () => {
+  const { language, setLanguage } = useSettings();
   const { slug } = useParams();
   const navigate = useNavigate();
-  const post = blogPosts.find(p => p.slug === slug);
 
+  // Find post by checking both English and Turkish slugs
+  const post = blogPosts.find(p => p.slug.en === slug || p.slug.tr === slug);
+
+  // When slug changes via navigation, sync language to match the URL
+  useEffect(() => {
+    if (!post || !slug) return;
+
+    const slugLanguage = post.slug.en === slug ? 'en' : 'tr';
+
+    // Only update language if it doesn't match the URL
+    if (language !== slugLanguage) {
+      setLanguage(slugLanguage);
+    }
+  }, [slug]); // Only depend on slug to avoid conflicts with language changes
+
+  // When language changes via user action, navigate to the corresponding slug
+  useEffect(() => {
+    if (!post || !slug) return;
+
+    const currentSlugLanguage = post.slug.en === slug ? 'en' : 'tr';
+
+    // If user changed language and it doesn't match current URL, navigate
+    if (language !== currentSlugLanguage) {
+      const targetSlug = post.slug[language];
+      if (targetSlug && targetSlug !== slug) {
+        navigate(`/blog/${targetSlug}`);
+      }
+    }
+  }, [language]); // Only depend on language to trigger navigation on user change
+
+  // Update page title when language or post changes
   useEffect(() => {
     if (post) {
-      document.title = `${post.title} | Grow Wizard Blog`;
-      window.scrollTo(0, 0);
+      document.title = `${post.title[language]} | Grow Wizard Blog`;
     }
-  }, [post]);
+  }, [language, post]);
+
+  // Scroll to top when navigating to a new post
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [slug]);
 
   if (!post) {
     return (
       <div className="not-found-container">
-        <h2>Post Not Found</h2>
-        <p>The article you're looking for doesn't exist or has been moved.</p>
-        <Link to="/blog" className="back-btn">Back to Blog</Link>
+        <h2>{language === 'tr' ? 'Yazı Bulunamadı' : 'Post Not Found'}</h2>
+        <p>{language === 'tr' ? 'Aradığınız makale mevcut değil veya taşınmış.' : "The article you're looking for doesn't exist or has been moved."}</p>
+        <Link to="/blog" className="back-btn">{language === 'tr' ? 'Bloga Dön' : 'Back to Blog'}</Link>
       </div>
     );
   }
@@ -160,18 +200,18 @@ const BlogPost = () => {
         <div className="hero-overlay"></div>
         <div className="hero-content container">
           <div className="post-nav">
-            <Link to="/blog" className="back-link">← Back to Blog</Link>
+            <Link to="/blog" className="back-link">← {language === 'tr' ? 'Bloga Dön' : 'Back to Blog'}</Link>
             <div className="nav-actions">
-              <Link to="/" className="nav-btn home-btn">🏠 Home</Link>
-              <Link to="/builder" className="nav-btn app-btn">🚀 App</Link>
+              <Link to="/" className="nav-btn home-btn">🏠 {language === 'tr' ? 'Ana Sayfa' : 'Home'}</Link>
+              <Link to="/builder" className="nav-btn app-btn">🚀 {language === 'tr' ? 'Uygulama' : 'App'}</Link>
             </div>
           </div>
           <div className="post-tags">
             <span className="post-category">{post.category}</span>
           </div>
-          <h1>{post.title}</h1>
+          <h1>{post.title[language]}</h1>
           <div className="post-meta">
-            <span className="author">By {post.author}</span>
+            <span className="author">{language === 'tr' ? 'Yazar:' : 'By'} {post.author}</span>
             <span className="dot">•</span>
             <span className="date">{post.date}</span>
             <span className="dot">•</span>
@@ -181,13 +221,13 @@ const BlogPost = () => {
       </div>
 
       <article className="post-content container">
-        <div className="content-body" dangerouslySetInnerHTML={{ __html: post.content }} />
+        <div className="content-body" dangerouslySetInnerHTML={{ __html: post.content[language] }} />
 
         {post.quiz && post.quiz.length > 0 && <Quiz data={post.quiz} />}
 
         <div className="post-footer">
           <div className="share-section">
-            <span>Share this article:</span>
+            <span>{language === 'tr' ? 'Bu makaleyi paylaş:' : 'Share this article:'}</span>
             <div className="share-buttons">
               <button className="share-btn twitter">Twitter</button>
               <button className="share-btn facebook">Facebook</button>
@@ -196,6 +236,8 @@ const BlogPost = () => {
           </div>
         </div>
       </article>
+
+      <Footer />
 
       <style>{`
         .blog-post-container {
@@ -561,7 +603,7 @@ const BlogPost = () => {
           .hero-content h1 {
             font-size: 2rem;
           }
-          
+
           .post-meta {
             flex-wrap: wrap;
           }
