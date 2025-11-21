@@ -33,7 +33,7 @@ jobs:
       working-directory: grow-tent-builder
     - name: Run tests
       run: |
-        if npm run | grep -q "test$"; then
+        if jq -e '.scripts.test' package.json > /dev/null; then
           npm test
         else
           echo "No test script found, skipping tests"
