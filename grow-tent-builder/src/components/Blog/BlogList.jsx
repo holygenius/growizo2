@@ -110,7 +110,8 @@ const BlogList = () => {
         .blog-container {
           min-height: 100vh;
           background: var(--bg-app);
-          padding-bottom: 4rem;
+          /* increase bottom padding so there's a visible gap above the footer */
+
         }
 
         .blog-hero {
@@ -281,6 +282,7 @@ const BlogList = () => {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
           gap: 2rem;
+          margin-bottom: 3rem; /* gap between last row and footer */
         }
 
         .blog-card {

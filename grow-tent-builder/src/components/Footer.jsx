@@ -29,10 +29,10 @@ const Footer = () => {
         .landing-footer {
           background: rgba(15, 23, 42, 0.95);
           border-top: 1px solid rgba(255, 255, 255, 0.1);
-          padding: 2rem 10%;
+          /* slightly more compact footer */
+          padding: 1.25rem 10%;
           position: relative;
           z-index: 10;
-          margin-top: auto;
         }
 
         .footer-content {
@@ -48,6 +48,7 @@ const Footer = () => {
         .footer-info p {
           color: #94a3b8;
           font-size: 0.875rem;
+          margin: 0; /* ensure compact layout */
         }
 
         .footer-lang-toggle {
