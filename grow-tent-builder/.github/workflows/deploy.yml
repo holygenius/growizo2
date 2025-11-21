@@ -25,6 +25,8 @@ jobs:
         run: npm ci
 
       - name: Build
+        env:
+          VITE_GTAG_ID: ${{ secrets.VITE_GTAG_ID }}
         run: npm run build --if-present
 
       - name: Upload pages artifact
