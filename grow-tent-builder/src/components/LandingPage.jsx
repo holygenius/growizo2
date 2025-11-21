@@ -349,7 +349,7 @@ export default function LandingPage() {
                 </div>
                 <div className="blog-preview-grid">
                     {blogPosts.slice(0, 3).map((post) => (
-                        <Link to={`/blog/${post.slug}`} key={post.id} className="blog-preview-card">
+                        <Link to={`/blog/${post.slug[language]}`} key={post.id} className="blog-preview-card">
                             <div className="preview-image" style={{ backgroundImage: `url(${post.image})` }} />
                             <div className="preview-content">
                                 <span className="preview-tag">{post.category}</span>
@@ -1092,6 +1092,6 @@ export default function LandingPage() {
                     color: white;
                 }
             `}</style>
-        </div>
+        </div >
     );
 }
