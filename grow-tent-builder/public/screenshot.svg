@@ -12,7 +12,7 @@
   <g transform="translate(60,60)">
     <rect class="window" x="0" y="0" width="1080" height="600" rx="10" />
     <rect class="header" x="0" y="0" width="1080" height="62" rx="10" />
-    <text x="28" y="40" class="title">Grow Tent Builder</text>
+    <text x="28" y="40" class="title">GroWizard</text>
     <text x="28" y="86" class="muted">A guided planning tool for indoor grow tent setups</text>
 
     <!-- Steps -->

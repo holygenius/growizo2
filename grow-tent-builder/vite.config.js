@@ -10,8 +10,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icons/icon-192x192.png', 'icons/icon-512x512.png'],
       manifest: {
-        name: 'Grow Tent Builder',
-        short_name: 'GrowTent',
+        name: 'GroWizard',
+        short_name: 'GroWizard',
         description: 'Plan and optimize your perfect grow tent setup',
         theme_color: '#1a1a1a',
         background_color: '#0a0a0a',

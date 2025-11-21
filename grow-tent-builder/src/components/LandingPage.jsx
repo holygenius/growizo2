@@ -342,7 +342,7 @@ export default function LandingPage() {
             <footer className="landing-footer">
                 <div className="footer-content">
                     <div className="footer-info">
-                        <p>© 2025 Grow Tent Builder. All rights reserved.</p>
+                        <p>© 2025 GroWizard. All rights reserved.</p>
                     </div>
                     <div className="footer-lang-toggle">
                         <button

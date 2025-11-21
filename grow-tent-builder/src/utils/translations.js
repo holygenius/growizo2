@@ -85,7 +85,7 @@ export const translations = {
         printPdf: 'Print / Save PDF',
 
         // Footer
-        footer: 'Grow Tent Builder © 2024 - Built for growers, by growers.'
+        footer: 'GroWizard © 2025 - Built for growers, by growers.'
     },
     tr: {
         step1: 'Çadır',
@@ -185,6 +185,6 @@ export const translations = {
         printPdf: 'Yazdır / PDF Kaydet',
 
         // Footer
-        footer: 'Grow Tent Builder © 2024 - Yetiştiriciler için, yetiştiriciler tarafından yapıldı.'
+        footer: 'GroWizard © 2025 - Yetiştiriciler için, yetiştiriciler tarafından yapıldı.'
     }
 };

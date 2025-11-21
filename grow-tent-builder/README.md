@@ -1,6 +1,6 @@
-# Grow Tent Builder
+# GroWizard
 
-Grow Tent Builder is a small React + Vite web application for planning and configuring indoor grow tent setups.
+GroWizard is a small React + Vite web application for planning and configuring indoor grow tent setups.
 
 The app provides a guided builder flow where users choose a tent, lighting, ventilation, nutrients and environmental settings, then review a summary of the configured grow. It is intended as a lightweight planning tool and starting point for a more feature-rich grow management dashboard.
 
@@ -151,4 +151,4 @@ For questions or collaboration, open an issue in this repository or contact the 
 
 ---
 
-Generated and maintained for the `grow-tent-builder` project.
+Generated and maintained for the `growwizard` project.
