@@ -6,7 +6,7 @@ import PPFDGuide from './PPFDGuide';
 
 export default function LightPlacementCanvas() {
     const { state, dispatch } = useBuilder();
-    const { formatUnit, getUnitLabel } = useSettings();
+    const { t, formatUnit, getUnitLabel } = useSettings();
     const { tentSize, selectedItems } = state;
     const lights = selectedItems.lighting;
 
@@ -228,7 +228,7 @@ export default function LightPlacementCanvas() {
     return (
         <div className="fade-in" style={{ marginBottom: '2rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <h3 style={{ margin: 0, color: 'var(--text-primary)' }}>Light Placement & PPFD Map</h3>
+                <h3 style={{ margin: 0, color: 'var(--text-primary)' }}>{t('lightPlacementTitle')}</h3>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Height:</label>
                     <input
@@ -247,7 +247,7 @@ export default function LightPlacementCanvas() {
             </div>
 
             <p style={{ marginBottom: '1rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                Drag to move. Double-click to rotate 90°.
+                {t('dragTip')}
             </p>
 
             <div style={{
@@ -259,10 +259,10 @@ export default function LightPlacementCanvas() {
                 padding: '0.5rem',
                 borderRadius: 'var(--radius-sm)'
             }}>
-                <MetricBox label="Avg PPFD" value={metrics.average} unit="µmol" />
-                <MetricBox label="Min PPFD" value={metrics.min} unit="µmol" />
-                <MetricBox label="Max PPFD" value={metrics.max} unit="µmol" />
-                <MetricBox label="Uniformity" value={metrics.uniformity} unit="" />
+                <MetricBox label={t('avgPPFD')} value={metrics.average} unit="µmol" />
+                <MetricBox label={t('minPPFD')} value={metrics.min} unit="µmol" />
+                <MetricBox label={t('maxPPFD')} value={metrics.max} unit="µmol" />
+                <MetricBox label={t('uniformity')} value={metrics.uniformity} unit="" />
             </div>
 
             <div
@@ -365,7 +365,7 @@ export default function LightPlacementCanvas() {
             </div>
 
             <div style={{ textAlign: 'center', marginTop: '0.5rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                {formatUnit(tentSize.width)} x {formatUnit(tentSize.depth)} {getUnitLabel('length')} Tent Floor
+                {formatUnit(tentSize.width)} x {formatUnit(tentSize.depth)} {getUnitLabel('length')} {t('tentFloor')}
             </div>
 
             {/* Legend */}
@@ -380,12 +380,12 @@ export default function LightPlacementCanvas() {
                 maxWidth: '600px',
                 marginInline: 'auto'
             }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><span style={{ width: 10, height: 10, background: '#555' }}></span> &lt;200 (Low)</div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><span style={{ width: 10, height: 10, background: 'blue' }}></span> 200-400 (Seedling)</div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><span style={{ width: 10, height: 10, background: 'green' }}></span> 400-600 (Veg)</div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><span style={{ width: 10, height: 10, background: 'orange' }}></span> 600-900 (Flower)</div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><span style={{ width: 10, height: 10, background: 'red' }}></span> 900-1200 (High)</div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><span style={{ width: 10, height: 10, background: 'white', border: '1px solid #555' }}></span> &gt;1200 (Risk)</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><span style={{ width: 10, height: 10, background: '#555' }}></span> &lt;200 ({t('low')})</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><span style={{ width: 10, height: 10, background: 'blue' }}></span> 200-400 ({t('seedling')})</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><span style={{ width: 10, height: 10, background: 'green' }}></span> 400-600 ({t('veg')})</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><span style={{ width: 10, height: 10, background: 'orange' }}></span> 600-900 ({t('flower')})</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><span style={{ width: 10, height: 10, background: 'red' }}></span> 900-1200 ({t('high')})</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><span style={{ width: 10, height: 10, background: 'white', border: '1px solid #555' }}></span> &gt;1200 ({t('high')})</div>
             </div>
 
             <PPFDGuide />
