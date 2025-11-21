@@ -29,6 +29,15 @@ jobs:
       - name: Build
         run: npm run build --if-present
 
+      - name: Verify GTAG env present (temporary)
+        run: |
+          if [ -n "${VITE_GTAG_ID}" ]; then
+            echo "GTAG set"
+          else
+            echo "GTAG not set"
+            exit 1
+          fi
+
       - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v1
         with:
