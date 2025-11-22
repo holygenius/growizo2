@@ -5,201 +5,195 @@ import { useSettings } from '../context/SettingsContext';
 const Navbar = () => {
     const { language, setLanguage } = useSettings();
     const location = useLocation();
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isToolsOpen, setIsToolsOpen] = useState(false);
 
-    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+    const t = {
+        en: {
+            home: "🏠 Home",
+            builder: "Go To App 🚀",
+            tools: "🛠️ Tools",
+            blog: "📝 Blog",
+            costCalc: "Electricity Cost Calculator",
+            co2Calc: "CO₂ Calculator",
+            unitConv: "Volume Converter"
+        },
+        tr: {
+            home: "🏠 Ana Sayfa",
+            builder: "Uygulamaya Git 🚀",
+            tools: "🛠️ Araçlar",
+            blog: "📝 Blog",
+            costCalc: "Elektrik Maliyeti Hesaplayıcı",
+            co2Calc: "CO₂ Hesaplayıcı",
+            unitConv: "Hacim Çevirici"
+        }
+    }[language];
 
     const isActive = (path) => location.pathname === path;
 
-    const navLinks = [
-        { path: '/', label: { en: 'Home', tr: 'Ana Sayfa' } },
-        { path: '/builder', label: { en: 'Builder', tr: 'Oluşturucu' } },
-        { path: '/tools', label: { en: 'Tools', tr: 'Araçlar' } },
-        { path: '/blog', label: { en: 'Blog', tr: 'Blog' } },
-    ];
-
     return (
-        <nav className="navbar">
-            <div className="navbar-container">
-                <Link to="/" className="navbar-logo">
-                    🌱 GroWizard
+        <nav style={styles.nav}>
+            <div style={styles.container}>
+                <Link to="/" style={styles.logo}>
+                    🌱 <span style={styles.logoText}>GroWizard</span>
                 </Link>
 
-                {/* Desktop Menu */}
-                <div className="navbar-links desktop-only">
-                    {navLinks.map((link) => (
-                        <Link
-                            key={link.path}
-                            to={link.path}
-                            className={`nav-link ${isActive(link.path) ? 'active' : ''}`}
-                        >
-                            {link.label[language]}
-                        </Link>
-                    ))}
-                </div>
+                <div style={styles.links}>
+                    <Link
+                        to="/"
+                        style={{ ...styles.link, ...(isActive('/') ? styles.activeLink : {}) }}
+                    >
+                        {t.home}
+                    </Link>
 
-                <div className="navbar-actions">
-                    <div className="lang-toggle">
-                        <button
-                            className={language === 'en' ? 'active' : ''}
-                            onClick={() => setLanguage('en')}
+                    <div
+                        style={styles.dropdownContainer}
+                        onMouseEnter={() => setIsToolsOpen(true)}
+                        onMouseLeave={() => setIsToolsOpen(false)}
+                    >
+                        <span
+                            style={{ ...styles.link, ...(location.pathname.includes('/tools') ? styles.activeLink : {}) }}
                         >
-                            EN
-                        </button>
-                        <button
-                            className={language === 'tr' ? 'active' : ''}
-                            onClick={() => setLanguage('tr')}
-                        >
-                            TR
-                        </button>
+                            {t.tools} ▾
+                        </span>
+                        {isToolsOpen && (
+                            <div style={styles.dropdownMenu}>
+                                <Link to="/tools/electricity-cost-calculator" style={styles.dropdownItem}>{t.costCalc}</Link>
+                                <Link to="/tools/co2-calculator" style={styles.dropdownItem}>{t.co2Calc}</Link>
+                                <Link to="/tools/unit-converter" style={styles.dropdownItem}>{t.unitConv}</Link>
+                            </div>
+                        )}
                     </div>
 
-                    {/* Mobile Menu Button */}
-                    <button className="mobile-menu-btn" onClick={toggleMenu}>
-                        <span className="hamburger">☰</span>
+                    <Link
+                        to="/blog"
+                        style={{ ...styles.link, ...(isActive('/blog') ? styles.activeLink : {}) }}
+                    >
+                        {t.blog}
+                    </Link>
+                </div>
+
+                <div style={styles.rightSection}>
+                    <button
+                        onClick={() => setLanguage(language === 'en' ? 'tr' : 'en')}
+                        style={styles.langBtn}
+                    >
+                        {language === 'en' ? 'TR' : 'EN'}
                     </button>
+                    <Link
+                        to="/builder"
+                        style={styles.ctaButton}
+                    >
+                        {t.builder}
+                    </Link>
                 </div>
             </div>
-
-            {/* Mobile Menu */}
-            {isMenuOpen && (
-                <div className="mobile-menu">
-                    {navLinks.map((link) => (
-                        <Link
-                            key={link.path}
-                            to={link.path}
-                            className={`mobile-nav-link ${isActive(link.path) ? 'active' : ''}`}
-                            onClick={() => setIsMenuOpen(false)}
-                        >
-                            {link.label[language]}
-                        </Link>
-                    ))}
-                </div>
-            )}
-
-            <style>{`
-                .navbar {
-                    background: rgba(10, 10, 10, 0.95);
-                    backdrop-filter: blur(10px);
-                    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-                    position: sticky;
-                    top: 0;
-                    z-index: 1000;
-                    padding: 1rem 0;
-                }
-
-                .navbar-container {
-                    max-width: 1200px;
-                    margin: 0 auto;
-                    padding: 0 1.5rem;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                }
-
-                .navbar-logo {
-                    font-size: 1.5rem;
-                    font-weight: 800;
-                    color: #10b981;
-                    text-decoration: none;
-                    background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                }
-
-                .navbar-links {
-                    display: flex;
-                    gap: 2rem;
-                }
-
-                .nav-link {
-                    color: #94a3b8;
-                    text-decoration: none;
-                    font-weight: 500;
-                    transition: color 0.2s;
-                    font-size: 0.95rem;
-                }
-
-                .nav-link:hover, .nav-link.active {
-                    color: #10b981;
-                }
-
-                .navbar-actions {
-                    display: flex;
-                    align-items: center;
-                    gap: 1rem;
-                }
-
-                .lang-toggle {
-                    display: flex;
-                    background: rgba(255, 255, 255, 0.05);
-                    padding: 0.25rem;
-                    border-radius: 0.5rem;
-                    border: 1px solid rgba(255, 255, 255, 0.1);
-                }
-
-                .lang-toggle button {
-                    background: transparent;
-                    border: none;
-                    color: #94a3b8;
-                    padding: 0.25rem 0.5rem;
-                    border-radius: 0.25rem;
-                    cursor: pointer;
-                    font-size: 0.75rem;
-                    font-weight: 600;
-                    transition: all 0.2s;
-                }
-
-                .lang-toggle button.active {
-                    background: #10b981;
-                    color: white;
-                }
-
-                .mobile-menu-btn {
-                    display: none;
-                    background: none;
-                    border: none;
-                    color: white;
-                    font-size: 1.5rem;
-                    cursor: pointer;
-                }
-
-                .mobile-menu {
-                    position: absolute;
-                    top: 100%;
-                    left: 0;
-                    width: 100%;
-                    background: #0a0a0a;
-                    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-                    padding: 1rem;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 1rem;
-                }
-
-                .mobile-nav-link {
-                    color: #94a3b8;
-                    text-decoration: none;
-                    padding: 0.5rem;
-                    border-radius: 0.5rem;
-                }
-
-                .mobile-nav-link.active {
-                    background: rgba(16, 185, 129, 0.1);
-                    color: #10b981;
-                }
-
-                @media (max-width: 768px) {
-                    .desktop-only {
-                        display: none;
-                    }
-                    .mobile-menu-btn {
-                        display: block;
-                    }
-                }
-            `}</style>
         </nav>
     );
+};
+
+const styles = {
+    nav: {
+        background: 'rgba(10, 10, 10, 0.8)',
+        backdropFilter: 'blur(10px)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        position: 'sticky',
+        top: 0,
+        zIndex: 1000,
+        padding: '1rem 0',
+    },
+    container: {
+        maxWidth: '1200px',
+        margin: '0 auto',
+        padding: '0 1.5rem',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    logo: {
+        textDecoration: 'none',
+        fontSize: '1.5rem',
+        fontWeight: 'bold',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.5rem',
+    },
+    logoText: {
+        background: 'linear-gradient(135deg, #10b981 0%, #3b82f6 100%)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+    },
+    links: {
+        display: 'flex',
+        gap: '2rem',
+        alignItems: 'center',
+    },
+    link: {
+        color: '#94a3b8',
+        textDecoration: 'none',
+        fontSize: '0.95rem',
+        fontWeight: '500',
+        transition: 'color 0.2s',
+        cursor: 'pointer',
+    },
+    activeLink: {
+        color: 'white',
+    },
+    dropdownContainer: {
+        position: 'relative',
+        padding: '1rem 0', // Increase hit area
+        margin: '-1rem 0',
+    },
+    dropdownMenu: {
+        position: 'absolute',
+        top: '100%',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        background: '#1e293b',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        borderRadius: '0.75rem',
+        padding: '0.5rem',
+        minWidth: '220px',
+        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.25rem',
+    },
+    dropdownItem: {
+        color: '#cbd5e1',
+        textDecoration: 'none',
+        padding: '0.75rem 1rem',
+        borderRadius: '0.5rem',
+        fontSize: '0.9rem',
+        transition: 'background 0.2s, color 0.2s',
+        whiteSpace: 'nowrap',
+        display: 'block'
+    },
+    rightSection: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '1.5rem',
+    },
+    langBtn: {
+        background: 'rgba(255, 255, 255, 0.1)',
+        border: 'none',
+        color: 'white',
+        padding: '0.4rem 0.8rem',
+        borderRadius: '0.5rem',
+        cursor: 'pointer',
+        fontSize: '0.8rem',
+        fontWeight: '600',
+    },
+    ctaButton: {
+        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+        color: 'white',
+        textDecoration: 'none',
+        padding: '0.6rem 1.2rem',
+        borderRadius: '0.75rem',
+        fontWeight: '600',
+        fontSize: '0.95rem',
+        boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
+        transition: 'transform 0.2s',
+    }
 };
 
 export default Navbar;

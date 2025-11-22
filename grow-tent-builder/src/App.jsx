@@ -25,7 +25,7 @@ function App() {
               <Route path="/blog" element={<BlogList />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/tools" element={<ToolsPage />} />
-              <Route path="/tools/cost-calculator" element={<CostCalculator />} />
+              <Route path="/tools/electricity-cost-calculator" element={<CostCalculator />} />
               <Route path="/tools/unit-converter" element={<UnitConverter />} />
               <Route path="/tools/co2-calculator" element={<CO2Calculator />} />
             </Routes>

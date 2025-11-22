@@ -15,9 +15,9 @@ const ToolsPage = () => {
                 {
                     id: 'cost',
                     icon: '⚡',
-                    title: 'Cost Calculator',
+                    title: 'Electricity Cost Calculator',
                     desc: 'Estimate monthly electricity costs',
-                    path: '/tools/cost-calculator',
+                    path: '/tools/electricity-cost-calculator',
                     color: 'from-yellow-400 to-orange-500'
                 },
                 {
@@ -45,9 +45,9 @@ const ToolsPage = () => {
                 {
                     id: 'cost',
                     icon: '⚡',
-                    title: 'Maliyet Hesaplayıcı',
+                    title: 'Elektrik Maliyeti Hesaplayıcı',
                     desc: 'Aylık elektrik maliyetini hesaplayın',
-                    path: '/tools/cost-calculator',
+                    path: '/tools/electricity-cost-calculator',
                     color: 'from-yellow-400 to-orange-500'
                 },
                 {
