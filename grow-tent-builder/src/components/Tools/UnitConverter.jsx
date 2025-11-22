@@ -3,109 +3,150 @@ import { useSettings } from '../../context/SettingsContext';
 import Navbar from '../Navbar';
 import Footer from '../Footer';
 
-const conversionData = {
-    // Metric
-    'cubic_km': { factor: 1e12, label: 'Kübik kilometre (km³)', category: 'Metric' },
-    'cubic_m': { factor: 1000, label: 'Metreküp (m³)', category: 'Metric' },
-    'hl': { factor: 100, label: 'Hektolitre (hl)', category: 'Metric' },
-    'dal': { factor: 10, label: 'Dekalitre (dal)', category: 'Metric' },
-    'l': { factor: 1, label: 'Litre (l)', category: 'Metric' }, // BASE UNIT
-    'dl': { factor: 0.1, label: 'Desilitre (dl)', category: 'Metric' },
-    'cl': { factor: 0.01, label: 'Centiliter (cl)', category: 'Metric' },
-    'cubic_cm': { factor: 0.001, label: 'Santimetre küp (cm³)', category: 'Metric' },
-    'ml': { factor: 0.001, label: 'Mililitre (ml)', category: 'Metric' },
-    'cubic_mm': { factor: 1e-6, label: 'Kübik milimetre (mm³)', category: 'Metric' },
-    'ul': { factor: 1e-6, label: 'Mikrolitre (µl)', category: 'Metric' },
-
-    // Imperial (UK)
-    'uk_barrel': { factor: 163.659, label: 'Barrel (UK)', category: 'Imperial' },
-    'uk_bushel': { factor: 36.3687, label: 'Bushel (UK)', category: 'Imperial' },
-    'uk_peck': { factor: 9.09218, label: 'Peck (UK)', category: 'Imperial' },
-    'uk_gal': { factor: 4.54609, label: 'Galon (UK)', category: 'Imperial' },
-    'uk_qt': { factor: 1.13652, label: 'Quart (UK)', category: 'Imperial' },
-    'uk_pt': { factor: 0.568261, label: 'Pint (UK)', category: 'Imperial' },
-    'uk_fl_oz': { factor: 0.0284131, label: 'Sıvı ons (UK oz)', category: 'Imperial' },
-
-    // US Liquid
-    'acre_foot': { factor: 1233480, label: 'Acre foot', category: 'US Liquid' },
-    'cubic_yd': { factor: 764.555, label: 'Yard küp (yd³)', category: 'US Liquid' },
-    'us_barrel': { factor: 119.24, label: 'Barrel (US)', category: 'US Liquid' },
-    'cubic_ft': { factor: 28.3168, label: 'Foot küp (ft³)', category: 'US Liquid' },
-    'us_gal': { factor: 3.78541, label: 'Galon (US)', category: 'US Liquid' },
-    'us_qt': { factor: 0.946353, label: 'Quart (US)', category: 'US Liquid' },
-    'us_pt': { factor: 0.473176, label: 'Pint (US)', category: 'US Liquid' },
-    'us_gill': { factor: 0.118294, label: 'Gill (US)', category: 'US Liquid' },
-    'us_fl_oz': { factor: 0.0295735, label: 'Sıvı ons (US oz)', category: 'US Liquid' },
-    'cubic_in': { factor: 0.0163871, label: 'İnç küp (in³)', category: 'US Liquid' },
-    'us_fl_dram': { factor: 0.00369669, label: 'Sıvı dram (US)', category: 'US Liquid' },
-    'us_minim': { factor: 0.0000616115, label: 'Minim (US)', category: 'US Liquid' },
-
-    // US Dry
-    'us_dry_barrel': { factor: 115.627, label: 'Barrel (US Dry)', category: 'US Dry' },
-    'us_dry_bushel': { factor: 35.2391, label: 'Bushel (US Dry)', category: 'US Dry' },
-    'us_dry_peck': { factor: 8.80977, label: 'Peck (US Dry)', category: 'US Dry' },
-    'us_dry_gal': { factor: 4.40488, label: 'Galon (US Dry)', category: 'US Dry' },
-    'us_dry_qt': { factor: 1.10122, label: 'Quart (US Dry)', category: 'US Dry' },
-    'us_dry_pt': { factor: 0.55061, label: 'Pint (US Dry)', category: 'US Dry' },
-    'us_dry_gill': { factor: 0.137652, label: 'Gill (US Dry)', category: 'US Dry' },
-    'board_foot': { factor: 2.35974, label: 'Board foot (FBM)', category: 'US Dry' },
-
-    // Japanese
-    'jp_koku': { factor: 180.39, label: 'Koku', category: 'Japanese' },
-    'jp_to': { factor: 18.039, label: 'To', category: 'Japanese' },
-    'jp_sho': { factor: 1.8039, label: 'Sho', category: 'Japanese' },
-    'jp_go': { factor: 0.18039, label: 'Go', category: 'Japanese' },
-
-    // Cooking (US)
-    'us_cup': { factor: 0.236588, label: 'Cup (US)', category: 'Cooking (US)' },
-    'us_tbsp': { factor: 0.0147868, label: 'Yemek kaşığı (US)', category: 'Cooking (US)' },
-    'us_tsp': { factor: 0.00492892, label: 'Tatlı kaşığı (US)', category: 'Cooking (US)' },
-
-    // Cooking (Metric)
-    'metric_tbsp': { factor: 0.015, label: 'Yemek kaşığı (Metric)', category: 'Cooking (Metric)' },
-    'metric_tsp': { factor: 0.005, label: 'Tatlı kaşığı (Metric)', category: 'Cooking (Metric)' },
-    'metric_spice': { factor: 0.001, label: 'Baharat ölçüsü', category: 'Cooking (Metric)' },
-};
-
 const UnitConverter = () => {
     const { language } = useSettings();
-    const [amount, setAmount] = useState(1);
-    const [fromUnit, setFromUnit] = useState('l');
-    const [toUnit, setToUnit] = useState('us_gal');
-    const [result, setResult] = useState(0);
 
-    useEffect(() => {
-        const fromFactor = conversionData[fromUnit].factor;
-        const toFactor = conversionData[toUnit].factor;
-        // Convert to liters first, then to target unit
-        const inLiters = amount * fromFactor;
-        const finalResult = inLiters / toFactor;
-        setResult(finalResult);
-    }, [amount, fromUnit, toUnit]);
+    // Base value is always in Liters
+    const [liters, setLiters] = useState(1);
+
+    // Conversion factors to Liters
+    const factors = {
+        ml: 0.001,
+        l: 1,
+        gal: 3.78541, // US Gallon
+        qt: 0.946353, // US Quart
+        pt: 0.473176, // US Pint
+        cup: 0.236588, // US Cup
+        floz: 0.0295735, // US Fluid Ounce
+        tbsp: 0.0147868, // US Tablespoon
+        tsp: 0.00492892, // US Teaspoon
+        m3: 1000,
+        ft3: 28.3168
+    };
+
+    const updateFrom = (unit, value) => {
+        const num = parseFloat(value);
+        if (!isNaN(num)) {
+            setLiters(num * factors[unit]);
+        } else if (value === '') {
+            setLiters(0);
+        }
+    };
+
+    const getValue = (unit) => {
+        const val = liters / factors[unit];
+        // Avoid floating point errors for display
+        if (val === 0) return '';
+        // Format to reasonable decimals, but keep precision for editing
+        return parseFloat(val.toFixed(6));
+    };
 
     const t = {
         en: {
-            title: "Universal Unit Converter",
-            subtitle: "Convert between Metric, Imperial, US, Japanese, and Cooking units",
-            amount: "Amount",
-            from: "From",
-            to: "To",
-            result: "Result",
-            tableTitle: "Conversion Table (Reference to 1 Liter)"
+            title: "Volume Converter",
+            subtitle: "Convert freely between imperial and metric volume units",
+            units: {
+                ml: "Milliliters (ml)",
+                l: "Liters (L)",
+                gal: "Gallons (US gal)",
+                qt: "Quarts (US qt)",
+                pt: "Pints (US pt)",
+                cup: "Cups (US cup)",
+                floz: "Fluid Ounces (US fl oz)",
+                tbsp: "Tablespoons (tbsp)",
+                tsp: "Teaspoons (tsp)",
+                m3: "Cubic Meters (m³)",
+                ft3: "Cubic Feet (ft³)"
+            },
+            content: {
+                introTitle: "Volume units",
+                introText: "Choose the unit and convert freely between imperial and metric systems. Our calculator contains the following:",
+                introList: [
+                    "cubic millimeters (mm³)*", "cubic centimeters (cm³)*", "cubic decimeters (dm³)*", "cubic meters (m³)*",
+                    "cubic inches (cu in)*", "cubic feet (cu ft)*", "cubic yards (cu yd)*",
+                    "milliliters (ml)", "liters (l)",
+                    "gallons (US) / gallons (UK) (gal)", "quarts (US) / quarts (UK) (qt)",
+                    "pints (US) / pints (UK) (pt)", "fluid ounces (US) / fluid ounces (UK) (fl oz)",
+                    "US customary cups/glasses (236.59ml) (cups)",
+                    "tablespoons (15 ml) (tablespoons)", "teaspoons (5 ml) (teaspoons)"
+                ],
+                introNote: "*Some units are simplified in this view for common usage.",
+                chartTitle: "Volume conversion chart",
+                chartText: "One quick way of changing imperial volume units to the most popular metric, one milliliter, is using this conversion chart:",
+                chartHeaders: ["Measure", "US (ml)", "Metric (ml)"],
+                chartRows: [
+                    ["Teaspoon", "4.93", "5"],
+                    ["Tablespoon", "14.79", "15"],
+                    ["Fluid ounce", "29.57", "30"],
+                    ["Cup", "236.59", "250"],
+                    ["Pint", "473.18", "568.26 (UK)"],
+                    ["Quart", "946.35", "1136.52 (UK)"],
+                    ["Gallon", "3785.41", "4546.09 (UK)"]
+                ],
+                howtoTitle: "How to find the volume in a different unit",
+                howtoText: "Let's imagine that you want to bake a cake, but the problem is that the recipe comes from a different part of the world. You are used to your standard units, such as cups or pints, but you have no idea how much is 550 ml of milk. What can you do? Put that value in the calculator next to the milliliters unit, and immediately you will get the answer in cups (2.32), pints (1.16), or even teaspoons (110) if you wish.",
+                faqTitle: "FAQs",
+                faqs: [
+                    { q: "How do I convert from liters to gallons?", a: "To convert from liters to gallons, use the formula: 1 L = 0.264 gal (US). You can roughly divide by 4 for a quick estimate." },
+                    { q: "How much is 5 liters in cubic feet?", a: "5 liters equal to 0.177 cubic feet (ft³). Formula: 5 L / 1000 * 35.315 = 0.177 ft³." },
+                    { q: "Why do we measure volume in cubic meters?", a: "We measure volume in cubic meters because volume measures the space occupied in three dimensions. Since the meter is a measure of length, the cubic meter (m³) represents a three-dimensional quantity." }
+                ]
+            }
         },
         tr: {
-            title: "Evrensel Birim Dönüştürücü",
-            subtitle: "Metrik, İngiliz, ABD, Japon ve Mutfak birimleri arasında dönüşüm yapın",
-            amount: "Miktar",
-            from: "Şuradan",
-            to: "Şuna",
-            result: "Sonuç",
-            tableTitle: "Dönüşüm Tablosu (1 Litre Referans)"
+            title: "Hacim Çevirici",
+            subtitle: "İmperyal ve metrik hacim birimleri arasında özgürce dönüşüm yapın",
+            units: {
+                ml: "Mililitre (ml)",
+                l: "Litre (L)",
+                gal: "Galon (US gal)",
+                qt: "Çeyrek (US qt)",
+                pt: "Pint (US pt)",
+                cup: "Fincan (US cup)",
+                floz: "Sıvı Ons (US fl oz)",
+                tbsp: "Yemek Kaşığı (tbsp)",
+                tsp: "Çay Kaşığı (tsp)",
+                m3: "Metreküp (m³)",
+                ft3: "Fitküp (ft³)"
+            },
+            content: {
+                introTitle: "Hacim birimleri",
+                introText: "Birimi seçin ve imperyal ve metrik sistemler arasında özgürce dönüştürün. Hesaplayıcımız şunları içerir:",
+                introList: [
+                    "milimetreküp (mm³)*", "santimetreküp (cm³)*", "desimetreküp (dm³)*", "metreküp (m³)*",
+                    "inçküp (cu in)*", "fitküp (cu ft)*", "yardaküp (cu yd)*",
+                    "mililitre (ml)", "litre (l)",
+                    "galon (ABD) / galon (BK) (gal)", "çeyrek (ABD) / çeyrek (BK) (qt)",
+                    "pint (ABD) / pint (BK) (pt)", "sıvı ons (ABD) / sıvı ons (BK) (fl oz)",
+                    "ABD standart fincan/bardak (236.59ml) (cups)",
+                    "yemek kaşığı (15 ml) (tablespoons)", "çay kaşığı (5 ml) (teaspoons)"
+                ],
+                introNote: "*Bazı birimler yaygın kullanım için bu görünümde basitleştirilmiştir.",
+                chartTitle: "Hacim dönüşüm tablosu",
+                chartText: "İmperyal hacim birimlerini en popüler metrik birim olan mililitreye değiştirmenin hızlı bir yolu bu dönüşüm tablosunu kullanmaktır:",
+                chartHeaders: ["Ölçü", "ABD (ml)", "Metrik (ml)"],
+                chartRows: [
+                    ["Çay Kaşığı", "4.93", "5"],
+                    ["Yemek Kaşığı", "14.79", "15"],
+                    ["Sıvı Ons", "29.57", "30"],
+                    ["Fincan", "236.59", "250"],
+                    ["Pint", "473.18", "568.26 (BK)"],
+                    ["Çeyrek", "946.35", "1136.52 (BK)"],
+                    ["Galon", "3785.41", "4546.09 (BK)"]
+                ],
+                howtoTitle: "Farklı bir birimde hacim nasıl bulunur",
+                howtoText: "Diyelim ki bir kek yapmak istiyorsunuz, ancak sorun şu ki tarif dünyanın farklı bir yerinden geliyor. Fincan veya pint gibi standart birimlerinize alışkınsınız, ancak 550 ml sütün ne kadar olduğu hakkında hiçbir fikriniz yok. Ne yapabilirsiniz? Bu değeri hesaplayıcıda mililitre biriminin yanına koyun ve hemen fincan (2.32), pint (1.16) veya isterseniz çay kaşığı (110) cinsinden cevabı alacaksınız.",
+                faqTitle: "SSS",
+                faqs: [
+                    { q: "Litreyi galona nasıl çeviririm?", a: "Litreyi galona çevirmek için şu formülü kullanın: 1 L = 0.264 gal (ABD). Hızlı bir tahmin için 4'e bölebilirsiniz." },
+                    { q: "5 litre kaç fitküptür?", a: "5 litre 0.177 fitküpe (ft³) eşittir. Formül: 5 L / 1000 * 35.315 = 0.177 ft³." },
+                    { q: "Neden hacmi metreküp olarak ölçüyoruz?", a: "Hacmi metreküp olarak ölçüyoruz çünkü hacim, bir nesnenin üç boyutta kapladığı alanı ölçer. Metre bir uzunluk ölçüsü olduğundan, metreküp (m³) üç boyutlu bir niceliği temsil eder." }
+                ]
+            }
         }
     }[language];
 
-    // Group units by category for select dropdown
-    const categories = [...new Set(Object.values(conversionData).map(u => u.category))];
+    const unitKeys = ['ml', 'l', 'gal', 'qt', 'pt', 'cup', 'floz', 'tbsp', 'tsp', 'm3', 'ft3'];
 
     return (
         <div className="page-container">
@@ -113,87 +154,64 @@ const UnitConverter = () => {
             <div className="tool-content">
                 <div className="tool-card">
                     <div className="tool-header">
-                        <div className="tool-icon">🔄</div>
+                        <div className="tool-icon">💧</div>
                         <h1>{t.title}</h1>
                         <p>{t.subtitle}</p>
                     </div>
 
-                    <div className="converter-form">
-                        <div className="input-group">
-                            <label>{t.amount}</label>
-                            <input
-                                type="number"
-                                value={amount}
-                                onChange={(e) => setAmount(parseFloat(e.target.value) || 0)}
-                                className="amount-input"
-                            />
-                        </div>
-
-                        <div className="conversion-row">
-                            <div className="select-group">
-                                <label>{t.from}</label>
-                                <select value={fromUnit} onChange={(e) => setFromUnit(e.target.value)}>
-                                    {categories.map(cat => (
-                                        <optgroup key={cat} label={cat}>
-                                            {Object.entries(conversionData)
-                                                .filter(([_, data]) => data.category === cat)
-                                                .map(([key, data]) => (
-                                                    <option key={key} value={key}>{data.label}</option>
-                                                ))}
-                                        </optgroup>
-                                    ))}
-                                </select>
+                    <div className="converter-grid">
+                        {unitKeys.map((key) => (
+                            <div key={key} className="input-group">
+                                <label>{t.units[key]}</label>
+                                <input
+                                    type="number"
+                                    value={getValue(key)}
+                                    onChange={(e) => updateFrom(key, e.target.value)}
+                                    placeholder="0"
+                                />
                             </div>
-
-                            <div className="arrow-icon">➜</div>
-
-                            <div className="select-group">
-                                <label>{t.to}</label>
-                                <select value={toUnit} onChange={(e) => setToUnit(e.target.value)}>
-                                    {categories.map(cat => (
-                                        <optgroup key={cat} label={cat}>
-                                            {Object.entries(conversionData)
-                                                .filter(([_, data]) => data.category === cat)
-                                                .map(([key, data]) => (
-                                                    <option key={key} value={key}>{data.label}</option>
-                                                ))}
-                                        </optgroup>
-                                    ))}
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="result-display">
-                            <span className="result-label">{t.result}:</span>
-                            <span className="result-value">
-                                {result < 0.0001 && result > 0 ? result.toExponential(4) : result.toLocaleString(undefined, { maximumFractionDigits: 6 })}
-                            </span>
-                            <span className="result-unit">{conversionData[toUnit].label}</span>
-                        </div>
+                        ))}
                     </div>
                 </div>
 
-                <div className="reference-table-container">
-                    <h2>{t.tableTitle}</h2>
-                    <div className="table-wrapper">
-                        <table>
+                <div className="info-section">
+                    <h2>{t.content.introTitle}</h2>
+                    <p>{t.content.introText}</p>
+                    <ul>
+                        {t.content.introList.map((item, i) => <li key={i}>{item}</li>)}
+                    </ul>
+                    <p className="note">{t.content.introNote}</p>
+
+                    <h2>{t.content.chartTitle}</h2>
+                    <p>{t.content.chartText}</p>
+                    <div className="chart-container">
+                        <table className="conversion-table">
                             <thead>
                                 <tr>
-                                    <th>Category</th>
-                                    <th>Unit</th>
-                                    <th>Liters (Approx)</th>
+                                    {t.content.chartHeaders.map((h, i) => <th key={i}>{h}</th>)}
                                 </tr>
                             </thead>
                             <tbody>
-                                {Object.entries(conversionData).map(([key, data]) => (
-                                    <tr key={key}>
-                                        <td>{data.category}</td>
-                                        <td>{data.label}</td>
-                                        <td>{data.factor.toExponential(2)} L</td>
+                                {t.content.chartRows.map((row, i) => (
+                                    <tr key={i}>
+                                        {row.map((cell, j) => <td key={j}>{cell}</td>)}
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
+                    </div>
+
+                    <h2>{t.content.howtoTitle}</h2>
+                    <p>{t.content.howtoText}</p>
+
+                    <h2>{t.content.faqTitle}</h2>
+                    <div className="faq-list">
+                        {t.content.faqs.map((faq, i) => (
+                            <div key={i} className="faq-item">
+                                <h3>{faq.q}</h3>
+                                <p>{faq.a}</p>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -213,8 +231,11 @@ const UnitConverter = () => {
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    padding: 4rem 1rem;
+                    padding: 4rem 1.5rem;
                     gap: 4rem;
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    width: 100%;
                 }
 
                 .tool-card {
@@ -222,7 +243,7 @@ const UnitConverter = () => {
                     border: 1px solid rgba(255, 255, 255, 0.1);
                     border-radius: 1.5rem;
                     padding: 3rem;
-                    max-width: 800px;
+                    max-width: 600px;
                     width: 100%;
                     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
                 }
@@ -240,7 +261,7 @@ const UnitConverter = () => {
                 .tool-header h1 {
                     font-size: 2rem;
                     margin-bottom: 0.5rem;
-                    background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+                    background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
                     -webkit-background-clip: text;
                     -webkit-text-fill-color: transparent;
                 }
@@ -249,10 +270,9 @@ const UnitConverter = () => {
                     color: #94a3b8;
                 }
 
-                .converter-form {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 2rem;
+                .converter-grid {
+                    display: grid;
+                    gap: 1.5rem;
                 }
 
                 .input-group {
@@ -261,134 +281,130 @@ const UnitConverter = () => {
                     gap: 0.5rem;
                 }
 
-                .amount-input {
-                    background: rgba(255, 255, 255, 0.05);
-                    border: 1px solid rgba(255, 255, 255, 0.1);
-                    color: white;
-                    padding: 1rem;
-                    border-radius: 0.75rem;
-                    font-size: 1.5rem;
-                    width: 100%;
-                    text-align: center;
-                }
-
-                .conversion-row {
-                    display: flex;
-                    align-items: flex-end;
-                    gap: 1rem;
-                }
-
-                .select-group {
-                    flex: 1;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 0.5rem;
-                }
-
-                select {
-                    background: rgba(255, 255, 255, 0.05);
-                    border: 1px solid rgba(255, 255, 255, 0.1);
-                    color: white;
-                    padding: 1rem;
-                    border-radius: 0.75rem;
-                    font-size: 1rem;
-                    width: 100%;
-                    cursor: pointer;
-                }
-
-                select option {
-                    background: #1e293b;
-                }
-
-                .arrow-icon {
-                    font-size: 1.5rem;
+                .input-group label {
                     color: #94a3b8;
-                    padding-bottom: 0.75rem;
-                }
-
-                .result-display {
-                    background: rgba(168, 85, 247, 0.1);
-                    border: 1px solid rgba(168, 85, 247, 0.2);
-                    padding: 2rem;
-                    border-radius: 1rem;
-                    text-align: center;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 0.5rem;
-                }
-
-                .result-label {
-                    color: #a855f7;
                     font-size: 0.875rem;
                     font-weight: 600;
-                    text-transform: uppercase;
                 }
 
-                .result-value {
-                    font-size: 2.5rem;
-                    font-weight: 800;
+                .input-group input[type="number"] {
+                    background: rgba(255, 255, 255, 0.05);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
                     color: white;
-                    word-break: break-all;
-                }
-
-                .result-unit {
-                    color: #e2e8f0;
-                    font-size: 1.1rem;
-                }
-
-                .reference-table-container {
+                    padding: 1rem;
+                    border-radius: 0.75rem;
+                    font-size: 1.25rem;
                     width: 100%;
+                    transition: all 0.2s;
+                }
+
+                .input-group input[type="number"]:focus {
+                    outline: none;
+                    border-color: #3b82f6;
+                    background: rgba(59, 130, 246, 0.1);
+                }
+
+                .info-section {
                     max-width: 800px;
+                    width: 100%;
+                    color: #cbd5e1;
+                    line-height: 1.7;
                 }
 
-                .reference-table-container h2 {
+                .info-section h2 {
                     color: white;
-                    margin-bottom: 1.5rem;
-                    font-size: 1.5rem;
-                    text-align: center;
+                    font-size: 1.75rem;
+                    margin: 3rem 0 1.5rem;
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                    padding-bottom: 0.5rem;
                 }
 
-                .table-wrapper {
+                .info-section h2:first-child {
+                    margin-top: 0;
+                }
+
+                .info-section p {
+                    margin-bottom: 1.5rem;
+                }
+
+                .info-section ul {
+                    margin-bottom: 1.5rem;
+                    padding-left: 1.5rem;
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                    gap: 0.5rem;
+                }
+
+                .info-section li {
+                    margin-bottom: 0.5rem;
+                }
+
+                .note {
+                    font-style: italic;
+                    color: #94a3b8;
+                    font-size: 0.9rem;
+                }
+
+                .chart-container {
                     overflow-x: auto;
-                    background: rgba(255, 255, 255, 0.03);
+                    margin-bottom: 2rem;
                     border-radius: 1rem;
                     border: 1px solid rgba(255, 255, 255, 0.1);
                 }
 
-                table {
+                .conversion-table {
                     width: 100%;
                     border-collapse: collapse;
-                    color: #cbd5e1;
+                    background: rgba(255, 255, 255, 0.02);
                 }
 
-                th, td {
+                .conversion-table th,
+                .conversion-table td {
                     padding: 1rem;
                     text-align: left;
                     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
                 }
 
-                th {
+                .conversion-table th {
                     background: rgba(255, 255, 255, 0.05);
-                    color: #a855f7;
                     font-weight: 600;
+                    color: white;
                 }
 
-                tr:last-child td {
+                .conversion-table tr:last-child td {
                     border-bottom: none;
                 }
 
-                tr:hover {
-                    background: rgba(255, 255, 255, 0.02);
+                .faq-list {
+                    display: grid;
+                    gap: 1.5rem;
                 }
 
-                @media (max-width: 640px) {
-                    .conversion-row {
-                        flex-direction: column;
-                        align-items: center;
+                .faq-item {
+                    background: rgba(255, 255, 255, 0.03);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 1rem;
+                    padding: 1.5rem;
+                }
+
+                .faq-item h3 {
+                    color: #e2e8f0;
+                    font-size: 1.1rem;
+                    margin-bottom: 0.75rem;
+                }
+
+                .faq-item p {
+                    margin-bottom: 0;
+                    color: #94a3b8;
+                }
+
+                @media (max-width: 768px) {
+                    .tool-content {
+                        padding: 2rem 1rem;
                     }
-                    .arrow-icon {
-                        transform: rotate(90deg);
-                        padding: 0;
+                    
+                    .tool-card {
+                        padding: 1.5rem;
                     }
                 }
             `}</style>
