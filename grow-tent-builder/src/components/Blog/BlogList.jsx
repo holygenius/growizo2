@@ -4,6 +4,8 @@ import { useSettings } from '../../context/SettingsContext';
 import { blogPosts, categories } from './blogData';
 import Footer from '../Footer';
 
+import Navbar from '../Navbar';
+
 const BlogList = () => {
   const { language, t } = useSettings();
   const [activeCategory, setActiveCategory] = useState('All');
@@ -22,6 +24,7 @@ const BlogList = () => {
 
   return (
     <div className="blog-container">
+      <Navbar />
       {/* Blog Hero & Featured Post */}
       <section className="blog-hero">
         <div className="container">

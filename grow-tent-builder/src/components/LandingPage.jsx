@@ -4,6 +4,7 @@ import { useOnboarding } from '../context/OnboardingContext';
 import { blogPosts } from './Blog/blogData';
 import { useSettings } from '../context/SettingsContext';
 import Footer from './Footer';
+import Navbar from './Navbar';
 
 const translations = {
     en: {
@@ -178,6 +179,7 @@ export default function LandingPage() {
 
     return (
         <div className="landing-container">
+            <Navbar />
             {/* Animated Background */}
             <div className="landing-bg">
                 <div className="glow-orb orb-1" style={{
@@ -308,6 +310,36 @@ export default function LandingPage() {
                 </div>
             </section>
 
+            {/* Tools Preview Section */}
+            <section className="tools-preview-section">
+                <div className="section-header">
+                    <h2>🛠️ {language === 'tr' ? 'Yetiştirme Araçları' : 'Grow Tools'}</h2>
+                    <p>{language === 'tr' ? 'Başarılı bir hasat için ihtiyacınız olan her şey' : 'Everything you need for a successful harvest'}</p>
+                </div>
+                <div className="tools-grid">
+                    <Link to="/tools/cost-calculator" className="tool-preview-card">
+                        <div className="tool-icon">⚡</div>
+                        <h3>{language === 'tr' ? 'Maliyet Hesaplayıcı' : 'Cost Calculator'}</h3>
+                        <p>{language === 'tr' ? 'Elektrik masraflarınızı hesaplayın' : 'Estimate electricity costs'}</p>
+                    </Link>
+                    <Link to="/tools/liter-converter" className="tool-preview-card">
+                        <div className="tool-icon">💧</div>
+                        <h3>{language === 'tr' ? 'Birim Çevirici' : 'Unit Converter'}</h3>
+                        <p>{language === 'tr' ? 'Litre ve Galon dönüşümü' : 'Convert Liters & Gallons'}</p>
+                    </Link>
+                    <Link to="/tools/co2-calculator" className="tool-preview-card">
+                        <div className="tool-icon">🌫️</div>
+                        <h3>{language === 'tr' ? 'CO2 Hesaplayıcı' : 'CO2 Calculator'}</h3>
+                        <p>{language === 'tr' ? 'Optimal CO2 seviyelerini bulun' : 'Find optimal CO2 levels'}</p>
+                    </Link>
+                </div>
+                <div className="center-btn">
+                    <Link to="/tools" className="secondary-btn">
+                        {language === 'tr' ? 'Tüm Araçları Gör' : 'View All Tools'}
+                    </Link>
+                </div>
+            </section>
+
             {/* FAQ Section */}
             <section className="faq-section">
                 <div className="faq-header">
@@ -363,6 +395,27 @@ export default function LandingPage() {
                     <Link to="/blog" className="view-all-btn">
                         {language === 'tr' ? 'Tüm Yazıları Gör' : 'View All Articles'}
                     </Link>
+                </div>
+            </section>
+
+            {/* Featured Guides Section (Additional Blog Section) */}
+            <section className="featured-guides-section">
+                <div className="section-header">
+                    <h2>🌟 {language === 'tr' ? 'Öne Çıkan Rehberler' : 'Featured Guides'}</h2>
+                    <p>{language === 'tr' ? 'Uzmanlardan derinlemesine bilgiler' : 'In-depth knowledge from experts'}</p>
+                </div>
+                <div className="featured-grid">
+                    {blogPosts.slice(0, 2).map((post) => (
+                        <Link to={`/blog/${post.slug[language]}`} key={`featured-${post.id}`} className="featured-guide-card">
+                            <div className="guide-content">
+                                <span className="guide-tag">{post.category}</span>
+                                <h3>{post.title[language]}</h3>
+                                <p>{post.excerpt[language]}</p>
+                                <span className="read-more">{language === 'tr' ? 'Devamını Oku →' : 'Read More →'}</span>
+                            </div>
+                            <div className="guide-image" style={{ backgroundImage: `url(${post.image})` }} />
+                        </Link>
+                    ))}
                 </div>
             </section>
 
@@ -798,6 +851,182 @@ export default function LandingPage() {
                 }
 
                 .cost-result {
+                    margin-top: 1.5rem;
+                    font-size: 1.25rem;
+                    font-weight: 700;
+                    color: #fbbf24;
+                    text-align: center;
+                    min-height: 1.5em;
+                }
+
+                /* Tools Preview Section */
+                .tools-preview-section {
+                    padding: 4rem 10%;
+                    background: rgba(0, 0, 0, 0.2);
+                    position: relative;
+                    z-index: 1;
+                }
+
+                .section-header {
+                    text-align: center;
+                    margin-bottom: 3rem;
+                }
+
+                .section-header h2 {
+                    font-size: 2.5rem;
+                    margin-bottom: 0.5rem;
+                    color: white;
+                }
+
+                .section-header p {
+                    color: #94a3b8;
+                    font-size: 1.125rem;
+                }
+
+                .tools-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                    gap: 2rem;
+                    margin-bottom: 2rem;
+                }
+
+                .tool-preview-card {
+                    background: rgba(255, 255, 255, 0.03);
+                    border: 1px solid rgba(255, 255, 255, 0.05);
+                    padding: 2rem;
+                    border-radius: 1rem;
+                    text-align: center;
+                    text-decoration: none;
+                    transition: all 0.3s ease;
+                }
+
+                .tool-preview-card:hover {
+                    transform: translateY(-5px);
+                    background: rgba(255, 255, 255, 0.05);
+                    border-color: rgba(16, 185, 129, 0.3);
+                }
+
+                .tool-preview-card .tool-icon {
+                    font-size: 2.5rem;
+                    margin-bottom: 1rem;
+                }
+
+                .tool-preview-card h3 {
+                    color: white;
+                    font-size: 1.25rem;
+                    margin-bottom: 0.5rem;
+                }
+
+                .tool-preview-card p {
+                    color: #94a3b8;
+                    font-size: 0.9rem;
+                }
+
+                .center-btn {
+                    text-align: center;
+                }
+
+                .secondary-btn {
+                    display: inline-block;
+                    padding: 0.75rem 2rem;
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    border-radius: 0.5rem;
+                    color: white;
+                    text-decoration: none;
+                    transition: all 0.3s ease;
+                }
+
+                .secondary-btn:hover {
+                    background: rgba(255, 255, 255, 0.1);
+                    border-color: white;
+                }
+
+                /* Featured Guides Section */
+                .featured-guides-section {
+                    padding: 4rem 10%;
+                    background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.8));
+                    position: relative;
+                    z-index: 1;
+                }
+
+                .featured-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+                    gap: 2rem;
+                }
+
+                .featured-guide-card {
+                    display: flex;
+                    background: rgba(255, 255, 255, 0.03);
+                    border: 1px solid rgba(255, 255, 255, 0.05);
+                    border-radius: 1rem;
+                    overflow: hidden;
+                    text-decoration: none;
+                    transition: all 0.3s ease;
+                    height: 250px;
+                }
+
+                .featured-guide-card:hover {
+                    transform: translateY(-5px);
+                    border-color: rgba(59, 130, 246, 0.3);
+                }
+
+                .guide-content {
+                    flex: 1;
+                    padding: 2rem;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                }
+
+                .guide-image {
+                    width: 40%;
+                    background-size: cover;
+                    background-position: center;
+                }
+
+                .guide-tag {
+                    color: #3b82f6;
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    margin-bottom: 0.5rem;
+                }
+
+                .guide-content h3 {
+                    color: white;
+                    font-size: 1.5rem;
+                    margin-bottom: 0.75rem;
+                    line-height: 1.2;
+                }
+
+                .guide-content p {
+                    color: #94a3b8;
+                    font-size: 0.95rem;
+                    margin-bottom: 1rem;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                }
+
+                .read-more {
+                    color: white;
+                    font-size: 0.9rem;
+                    font-weight: 600;
+                    margin-top: auto;
+                }
+
+                @media (max-width: 768px) {
+                    .featured-guide-card {
+                        flex-direction: column-reverse;
+                        height: auto;
+                    }
+                    .guide-image {
+                        width: 100%;
+                        height: 200px;
+                    }
+                }
                     text-align: center;
                     margin-top: 1.5rem;
                     font-size: 1.5rem;

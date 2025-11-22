@@ -7,6 +7,10 @@ import Onboarding from './components/Onboarding';
 import BuilderApp from './components/BuilderApp';
 import BlogList from './components/Blog/BlogList';
 import BlogPost from './components/Blog/BlogPost';
+import ToolsPage from './components/Tools/ToolsPage';
+import CostCalculator from './components/Tools/CostCalculator';
+import LiterConverter from './components/Tools/LiterConverter';
+import CO2Calculator from './components/Tools/CO2Calculator';
 
 function App() {
   return (
@@ -20,6 +24,10 @@ function App() {
               <Route path="/builder" element={<BuilderApp />} />
               <Route path="/blog" element={<BlogList />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/tools" element={<ToolsPage />} />
+              <Route path="/tools/cost-calculator" element={<CostCalculator />} />
+              <Route path="/tools/liter-converter" element={<LiterConverter />} />
+              <Route path="/tools/co2-calculator" element={<CO2Calculator />} />
             </Routes>
           </BrowserRouter>
         </BuilderProvider>

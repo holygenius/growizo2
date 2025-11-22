@@ -141,6 +141,8 @@ const Quiz = ({ data }) => {
   );
 };
 
+import Navbar from '../Navbar';
+
 const BlogPost = () => {
   const { language, setLanguage } = useSettings();
   const { slug } = useParams();
@@ -191,6 +193,7 @@ const BlogPost = () => {
   if (!post) {
     return (
       <div className="not-found-container">
+        <Navbar />
         <h2>{language === 'tr' ? 'Yazı Bulunamadı' : 'Post Not Found'}</h2>
         <p>{language === 'tr' ? 'Aradığınız makale mevcut değil veya taşınmış.' : "The article you're looking for doesn't exist or has been moved."}</p>
         <Link to="/blog" className="back-btn">{language === 'tr' ? 'Bloga Dön' : 'Back to Blog'}</Link>
@@ -200,6 +203,7 @@ const BlogPost = () => {
 
   return (
     <div className="blog-post-container">
+      <Navbar />
       <div className="post-hero" style={{ backgroundImage: `url(${post.image})` }}>
         <div className="hero-overlay"></div>
         <div className="hero-content container">
