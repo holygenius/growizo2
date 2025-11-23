@@ -143,10 +143,13 @@ const Quiz = ({ data }) => {
 
 import Navbar from '../Navbar';
 
+import TableOfContents from './TableOfContents';
+
 const BlogPost = () => {
   const { language, setLanguage } = useSettings();
   const { slug } = useParams();
   const navigate = useNavigate();
+  const [activeId, setActiveId] = useState('');
 
   // Find post by checking both English and Turkish slugs
   const post = blogPosts.find(p => p.slug.en === slug || p.slug.tr === slug);
@@ -190,6 +193,53 @@ const BlogPost = () => {
     window.scrollTo(0, 0);
   }, [slug]);
 
+  // Parse content to extract headings and inject IDs
+  const { processedContent, headings } = React.useMemo(() => {
+    if (!post) return { processedContent: '', headings: [] };
+
+    const rawContent = post.content[language];
+    const headingsList = [];
+
+    // Regex to match h2 and h3 tags
+    // We use a function replacer to build the headings list and inject IDs
+    const contentWithIds = rawContent.replace(/<h([23])>(.*?)<\/h\1>/g, (match, level, text) => {
+      // Create a simple slug from text for the ID
+      const id = text
+        .toLowerCase()
+        .replace(/[^a-z0-9\u00C0-\u00FF]+/g, '-') // Support international characters
+        .replace(/^-+|-+$/g, '');
+
+      headingsList.push({ id, text, level: parseInt(level) });
+
+      return `<h${level} id="${id}">${text}</h${level}>`;
+    });
+
+    return { processedContent: contentWithIds, headings: headingsList };
+  }, [post, language]);
+
+  // ScrollSpy Logic
+  useEffect(() => {
+    if (!headings.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveId(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: '-100px 0px -60% 0px' } // Adjust these values to trigger earlier/later
+    );
+
+    headings.forEach(({ id }) => {
+      const element = document.getElementById(id);
+      if (element) observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, [headings]);
+
   if (!post) {
     return (
       <div className="not-found-container">
@@ -209,7 +259,6 @@ const BlogPost = () => {
         <div className="hero-content container">
           <div className="post-nav">
             <Link to="/blog" className="back-link">← {language === 'tr' ? 'Bloga Dön' : 'Back to Blog'}</Link>
-
           </div>
           <div className="post-tags">
             <span className="post-category">{post.category}</span>
@@ -225,22 +274,29 @@ const BlogPost = () => {
         </div>
       </div>
 
-      <article className="post-content container">
-        <div className="content-body" dangerouslySetInnerHTML={{ __html: post.content[language] }} />
+      <div className="blog-layout container">
+        <aside className="blog-sidebar">
+          <div className="sticky-wrapper">
+            <TableOfContents headings={headings} activeId={activeId} />
 
-        {post.quiz && post.quiz.length > 0 && <Quiz data={post.quiz} />}
-
-        <div className="post-footer">
-          <div className="share-section">
-            <span>{language === 'tr' ? 'Bu makaleyi paylaş:' : 'Share this article:'}</span>
-            <div className="share-buttons">
-              <button className="share-btn twitter">Twitter</button>
-              <button className="share-btn facebook">Facebook</button>
-              <button className="share-btn linkedin">LinkedIn</button>
+            <div className="share-widget">
+              <h4>{language === 'tr' ? 'PAYLAŞ' : 'SHARE'}</h4>
+              <div className="share-buttons-row">
+                <button className="share-icon-btn" title="WhatsApp">💬</button>
+                <button className="share-icon-btn" title="Twitter">𝕏</button>
+                <button className="share-icon-btn" title="LinkedIn">in</button>
+                <button className="share-icon-btn" title="Facebook">f</button>
+              </div>
             </div>
           </div>
-        </div>
-      </article>
+        </aside>
+
+        <article className="post-content">
+          <div className="content-body" dangerouslySetInnerHTML={{ __html: processedContent }} />
+
+          {post.quiz && post.quiz.length > 0 && <Quiz data={post.quiz} />}
+        </article>
+      </div>
 
       <Footer />
 
@@ -294,8 +350,6 @@ const BlogPost = () => {
           margin-bottom: 2rem;
         }
 
-
-
         .post-category {
           color: var(--color-primary);
           font-weight: 600;
@@ -323,23 +377,138 @@ const BlogPost = () => {
           font-size: 1rem;
         }
 
-        .post-content {
-          max-width: 800px;
-          margin: -2rem auto 0;
-          position: relative;
-          z-index: 2;
+        /* New Layout Styles */
+        .blog-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 4rem;
+            margin-top: -4rem; /* Pull up into hero */
+            position: relative;
+            z-index: 2;
         }
 
+        .blog-sidebar {
+            position: relative;
+        }
+
+        .sticky-wrapper {
+            position: sticky;
+            top: 120px; /* Adjust based on navbar height */
+        }
+
+        .post-content {
+            min-width: 0; /* Prevent overflow in grid */
+        }
+
+        /* TOC Styles */
+        .toc-container {
+            margin-bottom: 3rem;
+        }
+
+        .toc-header h3 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            border-left: 2px solid var(--border-color);
+        }
+
+        .toc-item {
+            margin: 0;
+        }
+
+        .toc-link {
+            display: block;
+            padding: 0.5rem 0 0.5rem 1.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            transition: all 0.2s;
+            border-left: 2px solid transparent;
+            margin-left: -2px;
+        }
+
+        .toc-link:hover {
+            color: var(--color-primary);
+        }
+
+        .toc-link.active {
+            color: var(--color-primary);
+            border-left-color: var(--color-primary);
+            font-weight: 500;
+        }
+
+        .toc-item.level-3 .toc-link {
+            padding-left: 2.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* Share Widget Styles */
+        .share-widget h4 {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            letter-spacing: 0.05em;
+        }
+
+        .share-buttons-row {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .share-icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: var(--bg-surface);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1.1rem;
+        }
+
+        .share-icon-btn:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+            transform: translateY(-2px);
+        }
+
+        /* Content Styles */
         .content-body {
           font-size: 1.125rem;
           line-height: 1.8;
           color: var(--text-secondary);
         }
 
+        .content-body h2 {
+            color: var(--text-primary);
+            font-size: 2rem;
+            margin: 3rem 0 1.5rem;
+            scroll-margin-top: 120px; /* For sticky header */
+        }
+
         .content-body h3 {
           color: var(--text-primary);
-          font-size: 1.75rem;
+          font-size: 1.5rem;
           margin: 2.5rem 0 1rem;
+          scroll-margin-top: 120px;
         }
 
         .content-body p {
@@ -537,37 +706,60 @@ const BlogPost = () => {
           margin-bottom: 2rem;
         }
 
-        /* Share Section */
-        .post-footer {
-          margin-top: 4rem;
-          padding-top: 2rem;
-          border-top: 1px solid var(--border-color);
-        }
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .blog-layout {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
 
-        .share-section {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-        }
+            .blog-sidebar {
+                order: -1; /* Move TOC to top on mobile */
+            }
 
-        .share-buttons {
-          display: flex;
-          gap: 0.5rem;
-        }
+            .sticky-wrapper {
+                position: static;
+            }
 
-        .share-btn {
-          padding: 0.5rem 1rem;
-          border: 1px solid var(--border-color);
-          background: transparent;
-          color: var(--text-secondary);
-          border-radius: 0.25rem;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
+            .toc-container {
+                background: var(--bg-card);
+                padding: 1rem;
+                border-radius: 0.5rem;
+                border: 1px solid var(--border-color);
+            }
 
-        .share-btn:hover {
-          border-color: var(--color-primary);
-          color: var(--color-primary);
+            .toc-header {
+                cursor: pointer;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .toc-header h3 {
+                margin-bottom: 0;
+            }
+
+            .mobile-toggle {
+                display: block;
+                transition: transform 0.3s;
+            }
+
+            .mobile-toggle.open {
+                transform: rotate(180deg);
+            }
+
+            .toc-list {
+                display: none;
+                margin-top: 1rem;
+            }
+
+            .toc-list.open {
+                display: block;
+            }
+
+            .share-widget {
+                display: none; /* Hide share widget on mobile sidebar to save space */
+            }
         }
 
         @media (max-width: 768px) {
