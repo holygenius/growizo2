@@ -6,7 +6,7 @@ import { blogPosts } from '../src/components/Blog/blogData.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const BASE_URL = 'https://growwizard.app';
+const BASE_URL = 'https://growizard.app';
 
 const staticRoutes = [
     '/',

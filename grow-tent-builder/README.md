@@ -156,4 +156,4 @@ For questions or collaboration, open an issue in this repository or contact the 
 
 ---
 
-Generated and maintained for the `growwizard` project.
+Generated and maintained for the `growizard` project.

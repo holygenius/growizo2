@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://growwizard.app/sitemap.xml
+Sitemap: https://growizard.app/sitemap.xml
