@@ -14,11 +14,11 @@ const AVAILABLE_LIGHTS = [
 
 export default function PPFDHeatMapTool() {
     const { language } = useSettings();
-    const [unit, setUnit] = useState('ft'); // 'ft' or 'cm'
+    const [unit, setUnit] = useState('cm'); // 'ft' or 'cm'
 
     // Store dimensions in the CURRENT unit to avoid typing issues
-    // Initialize with default feet values
-    const [dimensions, setDimensions] = useState({ width: 4, depth: 4, height: 1.5 });
+    // Initialize with default metric values (150x150 cm)
+    const [dimensions, setDimensions] = useState({ width: 150, depth: 150, height: 45 });
 
     const [activeLights, setActiveLights] = useState([]);
     const [metrics, setMetrics] = useState({ average: 0, min: 0, max: 0, uniformity: 0 });
