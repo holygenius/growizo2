@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useSettings } from '../../context/SettingsContext';
 import Navbar from '../Navbar';
 import Footer from '../Footer';
@@ -135,6 +136,10 @@ const CostCalculator = () => {
 
     return (
         <div className="page-container">
+            <Helmet>
+                <title>{t.title} | GroWizard</title>
+                <meta name="description" content={t.subtitle} />
+            </Helmet>
             <Navbar />
             <div className="tool-content">
                 <div className="tool-card">

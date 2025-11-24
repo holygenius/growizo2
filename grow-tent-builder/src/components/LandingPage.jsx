@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
 import { useOnboarding } from '../context/OnboardingContext';
 import { blogPosts } from './Blog/blogData';
@@ -143,26 +144,14 @@ export default function LandingPage() {
     // scrollY is intentionally unused in this component but kept for future effects
     const [, setScrollY] = useState(0);
     const { hasSeenOnboarding } = useOnboarding();
-    const navigate = useNavigate();
     const { language } = useSettings();
+    const navigate = useNavigate();
 
-    // Use page-local translations but driven by global language
     const t = translations[language];
-
-    const handleStartBuilding = () => {
-        if (hasSeenOnboarding()) {
-            navigate('/builder');
-        } else {
-            navigate('/onboarding');
-        }
-    };
 
     useEffect(() => {
         const handleMouseMove = (e) => {
-            setMousePos({
-                x: (e.clientX / window.innerWidth) * 2 - 1,
-                y: (e.clientY / window.innerHeight) * 2 - 1
-            });
+            setMousePos({ x: (e.clientX / window.innerWidth) - 0.5, y: (e.clientY / window.innerHeight) - 0.5 });
         };
 
         const handleScroll = () => {
@@ -178,13 +167,19 @@ export default function LandingPage() {
         };
     }, []);
 
+    const handleStartBuilding = () => {
+        navigate('/builder');
+    };
+
     return (
         <div className="landing-container">
-            <Navbar />
-            {/* Animated Background */}
+            <Helmet>
+                <title>{t.title} | GroWizard</title>
+                <meta name="description" content={t.subtitle} />
+            </Helmet>
             <div className="landing-bg">
                 <div className="glow-orb orb-1" style={{
-                    transform: `translate(${mousePos.x * 20}px, ${mousePos.y * 20}px)`
+                    transform: `translate(${mousePos.x * 30}px, ${mousePos.y * 30}px)`
                 }} />
                 <div className="glow-orb orb-2" style={{
                     transform: `translate(${mousePos.x * -30}px, ${mousePos.y * -30}px)`
@@ -193,7 +188,7 @@ export default function LandingPage() {
             </div>
 
             {/* Hero Section */}
-            <section className="hero-section">
+            < section className="hero-section" >
                 <div className="hero-content fade-in-up">
                     <div className="badge">🌱 Professional Grow Planner</div>
                     <h1 className="hero-title">
@@ -218,10 +213,10 @@ export default function LandingPage() {
                         <div className="light-beam" />
                     </div>
                 </div>
-            </section>
+            </section >
 
             {/* Tools Preview Section */}
-            <section className="tools-preview-section">
+            < section className="tools-preview-section" >
                 <div className="section-header">
                     <h2>🛠️ {language === 'tr' ? 'Yetiştirme Araçları' : 'Grow Tools'}</h2>
                     <p>{language === 'tr' ? 'Başarılı bir hasat için ihtiyacınız olan her şey' : 'Everything you need for a successful harvest'}</p>
@@ -248,10 +243,10 @@ export default function LandingPage() {
                         {language === 'tr' ? 'Tüm Araçları Gör' : 'View All Tools'}
                     </Link>
                 </div>
-            </section>
+            </section >
 
             {/* Features Section */}
-            <section className="features-section">
+            < section className="features-section" >
                 <div className="feature-card slide-in" style={{ transitionDelay: '0.1s' }}>
                     <div className="feature-icon">💡</div>
                     <h3>{t.features.ppfd.title}</h3>
@@ -262,10 +257,10 @@ export default function LandingPage() {
                     <h3>{t.features.environment.title}</h3>
                     <p>{t.features.environment.description}</p>
                 </div>
-            </section>
+            </section >
 
             {/* Info Boxes Section */}
-            <section className="info-boxes-section">
+            < section className="info-boxes-section" >
                 <div className="info-boxes-header">
                     <h2>⚠️ {t.infoBoxes.title}</h2>
                     <p>{t.infoBoxes.subtitle}</p>
@@ -285,10 +280,10 @@ export default function LandingPage() {
                         </div>
                     ))}
                 </div>
-            </section>
+            </section >
 
             {/* Featured Guides Section (Slider) */}
-            <section className="featured-guides-section">
+            < section className="featured-guides-section" >
                 <div className="section-header">
                     <h2>🌟 {language === 'tr' ? 'Öne Çıkan Rehberler' : 'Featured Guides'}</h2>
                     <p>{language === 'tr' ? 'Uzmanlardan derinlemesine bilgiler' : 'In-depth knowledge from experts'}</p>
@@ -345,10 +340,10 @@ export default function LandingPage() {
                         />
                     ))}
                 </div>
-            </section>
+            </section >
 
             {/* Cost Calculator Tool */}
-            <section className="cost-tool-section">
+            < section className="cost-tool-section" >
                 <div className="cost-tool-container">
                     <div className="cost-tool-header">
                         <h2>⚡ {t.costTool.title}</h2>
@@ -399,10 +394,10 @@ export default function LandingPage() {
                     </button>
                     <div id="cost-result" className="cost-result"></div>
                 </div>
-            </section>
+            </section >
 
             {/* FAQ Section */}
-            <section className="faq-section">
+            < section className="faq-section" >
                 <div className="faq-header">
                     <h2>❓ {t.faq.title}</h2>
                     <p>{t.faq.subtitle}</p>
@@ -429,10 +424,10 @@ export default function LandingPage() {
                         </div>
                     ))}
                 </div>
-            </section>
+            </section >
 
             {/* Blog Preview Section */}
-            <section className="blog-preview-section">
+            < section className="blog-preview-section" >
                 <div className="blog-preview-header">
                     <h2>📚 {language === 'tr' ? 'En Son Makaleler' : 'Latest Articles'}</h2>
                     <p>{language === 'tr' ? 'Modern yetiştiricilik tekniklerini keşfedin' : 'Discover modern growing techniques'}</p>
@@ -457,7 +452,7 @@ export default function LandingPage() {
                         {language === 'tr' ? 'Tüm Yazıları Gör' : 'View All Articles'}
                     </Link>
                 </div>
-            </section>
+            </section >
 
             <Footer />
 

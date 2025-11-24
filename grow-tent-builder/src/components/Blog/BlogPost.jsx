@@ -145,6 +145,8 @@ import Navbar from '../Navbar';
 
 import TableOfContents from './TableOfContents';
 
+import { Helmet } from 'react-helmet-async';
+
 const BlogPost = () => {
   const { language, setLanguage } = useSettings();
   const { slug } = useParams();
@@ -183,9 +185,8 @@ const BlogPost = () => {
 
   // Update page title when language or post changes
   useEffect(() => {
-    if (post) {
-      document.title = `${post.title[language]} | Grow Wizard Blog`;
-    }
+    // Document title is now handled by Helmet, but we can keep this as fallback or remove it.
+    // Helmet will take precedence.
   }, [language, post]);
 
   // Scroll to top when navigating to a new post
@@ -273,6 +274,10 @@ const BlogPost = () => {
 
   return (
     <div className="blog-post-container">
+      <Helmet>
+        <title>{post.title[language]} | GroWizard Blog</title>
+        <meta name="description" content={post.excerpt[language]} />
+      </Helmet>
       <Navbar />
       <div className="post-hero" style={{ backgroundImage: `url(${post.image})` }}>
         <div className="hero-overlay"></div>

@@ -13,11 +13,17 @@ import UnitConverter from './components/Tools/UnitConverter';
 import CO2Calculator from './components/Tools/CO2Calculator';
 import PPFDHeatMapTool from './components/Tools/PPFDHeatMapTool';
 
+import { Helmet } from 'react-helmet-async';
+
 function App() {
   return (
     <SettingsProvider>
       <OnboardingProvider>
         <BuilderProvider>
+          <Helmet>
+            <title>GroWizard</title>
+            <meta name="description" content="Plan and optimize your perfect grow tent setup with advanced PPFD lighting simulation" />
+          </Helmet>
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<LandingPage />} />
@@ -26,7 +32,7 @@ function App() {
               <Route path="/blog" element={<BlogList />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/tools" element={<ToolsPage />} />
-              <Route path="/tools/electricity-cost-calculator" element={<CostCalculator />} />
+              <Route path="/tools/cost-calculator" element={<CostCalculator />} />
               <Route path="/tools/unit-converter" element={<UnitConverter />} />
               <Route path="/tools/co2-calculator" element={<CO2Calculator />} />
               <Route path="/tools/ppfd-heatmap" element={<PPFDHeatMapTool />} />
