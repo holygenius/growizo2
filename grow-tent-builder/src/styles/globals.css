@@ -1,0 +1,202 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import './variables.css';
+@import './mixins.css';
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Ensure form elements inherit font */
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+/* Fix select dropdown visibility */
+select {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+select option {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.slide-up {
+  animation: slideUp 0.5s ease-out forwards;
+}
+
+/* Interactive Elements */
+button,
+.card-interactive {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-app);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-surface);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--bg-surface-hover);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .mobile-hide {
+    display: none !important;
+  }
+
+  .container {
+    padding: 0 0.5rem;
+  }
+
+  /* Adjust padding for mobile */
+  .glass-panel {
+    padding: 1rem;
+  }
+
+  /* Stack settings bar on mobile */
+  .settings-stack-mobile {
+    gap: 0.5rem !important;
+  }
+
+  /* Touch-friendly buttons */
+  button {
+    min-height: 44px;
+    padding: 0.75rem 1rem;
+  }
+
+  /* Smaller font sizes on mobile */
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  /* Better canvas scaling on mobile */
+  canvas {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Improve form elements for touch */
+  input[type="range"] {
+    min-height: 44px;
+    cursor: pointer;
+  }
+
+  select {
+    min-height: 44px;
+    font-size: 16px;
+    /* Prevents zoom on iOS */
+  }
+
+  input[type="text"],
+  input[type="number"] {
+    font-size: 16px;
+    /* Prevents zoom on iOS */
+    min-height: 44px;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  .container {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .summary-grid {
+    display: block !important;
+  }
+
+  h2,
+  h3 {
+    color: #000 !important;
+    border-bottom: 1px solid #ccc;
+  }
+
+  /* Ensure all text is black for printing */
+  * {
+    color: #000 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Keep borders for structure */
+  div {
+    border-color: #ccc !important;
+  }
+}
