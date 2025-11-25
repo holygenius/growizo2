@@ -1,1 +1,1 @@
-export { useTent, default } from './useTent';
+export { useTent } from './useTent';
