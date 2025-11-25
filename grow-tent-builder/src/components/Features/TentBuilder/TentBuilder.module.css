@@ -1,0 +1,93 @@
+.tentBuilderContainer {
+  min-height: 100vh;
+  background: var(--bg-app);
+  color: var(--text-primary);
+}
+
+.builderContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.stepIndicator {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.stepDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--bg-surface);
+  transition: all 0.3s ease;
+}
+
+.stepDot.active {
+  background: var(--color-primary);
+  transform: scale(1.2);
+}
+
+.stepDot.completed {
+  background: var(--color-secondary);
+}
+
+.navigationButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.navButton {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.navButton.prev {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+.navButton.prev:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.navButton.next {
+  background: var(--color-primary);
+  border: none;
+  color: #000;
+}
+
+.navButton.next:hover {
+  background: var(--color-secondary);
+}
+
+.navButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .builderContent {
+    padding: 1rem;
+  }
+
+  .navigationButtons {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .navButton {
+    width: 100%;
+    text-align: center;
+  }
+}

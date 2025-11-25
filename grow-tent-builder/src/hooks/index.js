@@ -1,0 +1,1 @@
+export { useTent } from './useTent';

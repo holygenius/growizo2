@@ -1,6 +1,6 @@
 import { createContext, useContext, useReducer } from 'react';
 
-const BuilderContext = createContext();
+export const BuilderContext = createContext();
 
 const initialState = {
     currentStep: 1,
