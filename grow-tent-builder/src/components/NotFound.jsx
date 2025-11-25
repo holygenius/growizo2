@@ -3,29 +3,9 @@ import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useSettings } from '../context/SettingsContext';
 
-const translations = {
-  en: {
-    title: "404 - Light Leak!",
-    description: "You've wandered into the dark cycle.",
-    headline: "404: Light Leak Detected!",
-    subtext: "Shhh! The plants are sleeping.",
-    message: "You've wandered into the dark cycle. Let's get you back to the light before they get stressed.",
-    button: "Return to Garden 🌿"
-  },
-  tr: {
-    title: "404 - Işık Sızıntısı!",
-    description: "Karanlık döngüye girdiniz.",
-    headline: "404: Işık Sızıntısı Tespit Edildi!",
-    subtext: "Şşşt! Bitkiler uyuyor.",
-    message: "Karanlık döngüye girdiniz. Bitkiler strese girmeden sizi ışığa geri döndürelim.",
-    button: "Bahçeye Dön 🌿"
-  }
-};
-
 export default function NotFound() {
   const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
-  const { language } = useSettings();
-  const t = translations[language];
+  const { t } = useSettings();
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -42,8 +22,8 @@ export default function NotFound() {
   return (
     <div className="not-found-container">
       <Helmet>
-        <title>{t.title} | GroWizard</title>
-        <meta name="description" content={t.description} />
+        <title>{t('notFoundTitle')} | GroWizard</title>
+        <meta name="description" content={t('notFoundDescription')} />
       </Helmet>
 
       <div
@@ -55,12 +35,12 @@ export default function NotFound() {
 
       <div className="content">
         <div className="icon">🔦</div>
-        <h1>{t.headline}</h1>
-        <p>{t.subtext}</p>
-        <p className="sub-text">{t.message}</p>
+        <h1>{t('notFoundHeadline')}</h1>
+        <p>{t('notFoundSubtext')}</p>
+        <p className="sub-text">{t('notFoundMessage')}</p>
 
         <Link to="/" className="home-btn">
-          {t.button}
+          {t('notFoundButton')}
         </Link>
       </div>
 

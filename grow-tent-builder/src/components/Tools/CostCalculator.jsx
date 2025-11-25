@@ -5,7 +5,7 @@ import Navbar from '../Navbar';
 import Footer from '../Footer';
 
 const CostCalculator = () => {
-    const { language } = useSettings();
+    const { language, t } = useSettings();
     const [power, setPower] = useState(200);
     const [hours, setHours] = useState(18);
     const [minutes, setMinutes] = useState(0);
@@ -19,141 +19,40 @@ const CostCalculator = () => {
     // Calculate Cost
     const totalCost = energyConsumed * price;
 
-    const t = {
-        en: {
-            title: "Electricity Cost Calculator",
-            subtitle: "Calculate the cost of running your grow equipment",
-            inputs: {
-                power: "Power consumption",
-                time: "Usage time",
-                price: "Energy price",
-                energy: "Energy consumed",
-                cost: "Cost"
-            },
-            units: {
-                w: "W",
-                hrs: "hrs",
-                min: "min",
-                kwh: "kWh",
-                currency: "$"
-            },
-            content: {
-                introTitle: "How to calculate electricity cost",
-                introText: "If you're wondering how much electricity costs, all you need to know is the power consumption of your electrical device, how long it runs, and the actual energy prices offered by your supplier. The calculation runs in two steps.",
-                introSteps: [
-                    "First, multiply power consumption of your device by usage time to find how much energy your device consumed: power consumption × usage time = energy consumed",
-                    "Then, check the electricity cost per kWh from your local energy supplier and multiply it by the amount of energy consumed: cost = energy consumed × energy price"
-                ],
-                introExample: "Example: 700W vacuum for 30 mins. 700W × 0.5h = 350Wh = 0.35 kWh. 0.35 kWh × $0.14/kWh = $0.05.",
-                worksTitle: "How electricity cost – single usage calculator works",
-                worksText: "Our electricity cost – single usage calculator needs just a few steps to tell you how much electricity costs once the selected device is running:",
-                worksList: [
-                    "Determine power consumption of your device in watts.",
-                    "Enter usage time (hours and minutes).",
-                    "The calculator returns the energy consumed in kWh.",
-                    "Enter the actual electricity cost per kWh to see the total cost."
-                ],
-                tipsTitle: "How to lower your electric bill",
-                tipsList: [
-                    "Get a home energy audit.",
-                    "Switch to dimmer switches.",
-                    "Keep your fridge and freezer closed.",
-                    "Keep the air circulating in your home with ceiling fans.",
-                    "Eliminate phantom loads from televisions, computers, etc.",
-                    "Switch to LED light bulbs.",
-                    "Shade your home with trees, curtains, and blinds.",
-                    "Use cool water for laundry.",
-                    "Wash laundry in full loads or use 'eco' mode.",
-                    "Install a water heater timer.",
-                    "Check if your home is properly insulated."
-                ],
-                faqTitle: "FAQs",
-                faqs: [
-                    { q: "How to calculate my electric bill?", a: "Get the power of each device, multiply by operating time to get energy consumption (convert to kWh), then multiply by electricity cost." },
-                    { q: "How much does it cost to run a 1500 watt oven?", a: "$0.36 for 1.5 hours at $0.16/kWh. (1500W × 1.5h = 2.25 kWh. 2.25 kWh × $0.16 = $0.36)." },
-                    { q: "What uses a lot of electricity?", a: "Electrical heaters, water heaters, and HVAC systems consume a lot of electricity." },
-                    { q: "Is 100 kWh per day a lot?", a: "Yes. 100 kWh/day = 3000 kWh/month, which exceeds the U.S. average of 893 kWh/month." }
-                ]
-            }
-        },
-        tr: {
-            title: "Elektrik Maliyeti Hesaplayıcı",
-            subtitle: "Ekipmanlarınızı çalıştırmanın maliyetini hesaplayın",
-            inputs: {
-                power: "Güç tüketimi",
-                time: "Kullanım süresi",
-                price: "Enerji fiyatı",
-                energy: "Tüketilen enerji",
-                cost: "Maliyet"
-            },
-            units: {
-                w: "W",
-                hrs: "saat",
-                min: "dk",
-                kwh: "kWh",
-                currency: "₺"
-            },
-            content: {
-                introTitle: "Elektrik maliyeti nasıl hesaplanır",
-                introText: "Elektriğin ne kadar tuttuğunu merak ediyorsanız, bilmeniz gereken tek şey elektrikli cihazınızın güç tüketimi, ne kadar süre çalıştığı ve tedarikçiniz tarafından sunulan gerçek enerji fiyatlarıdır. Hesaplama iki adımda gerçekleşir.",
-                introSteps: [
-                    "İlk olarak, cihazınızın ne kadar enerji tükettiğini bulmak için güç tüketimini kullanım süresiyle çarpın: güç tüketimi × kullanım süresi = tüketilen enerji",
-                    "Ardından, yerel enerji tedarikçinizden kWh başına elektrik maliyetini kontrol edin ve bunu tüketilen enerji miktarıyla çarpın: maliyet = tüketilen enerji × enerji fiyatı"
-                ],
-                introExample: "Örnek: 30 dakika boyunca 700W süpürge. 700W × 0.5sa = 350Wh = 0.35 kWh. 0.35 kWh × 0.14₺/kWh = 0.05₺.",
-                worksTitle: "Elektrik maliyeti hesaplayıcı nasıl çalışır",
-                worksText: "Elektrik maliyeti hesaplayıcımız, seçilen cihaz çalıştığında elektriğin ne kadar tuttuğunu size söylemek için sadece birkaç adıma ihtiyaç duyar:",
-                worksList: [
-                    "Cihazınızın güç tüketimini watt cinsinden belirleyin.",
-                    "Kullanım süresini (saat ve dakika) girin.",
-                    "Hesaplayıcı, tüketilen enerjiyi kWh cinsinden döndürür.",
-                    "Toplam maliyeti görmek için kWh başına gerçek elektrik maliyetini girin."
-                ],
-                tipsTitle: "Elektrik faturanızı nasıl düşürürsünüz",
-                tipsList: [
-                    "Ev enerji denetimi yaptırın.",
-                    "Dimmer anahtarlara geçin.",
-                    "Buzdolabınızı ve dondurucunuzu kapalı tutun.",
-                    "Tavan vantilatörleri ile evinizdeki havayı dolaştırın.",
-                    "Televizyonlar, bilgisayarlar vb. cihazlardan kaynaklanan hayalet yükleri ortadan kaldırın.",
-                    "LED ampullere geçin.",
-                    "Evinizi ağaçlar, perdeler ve panjurlarla gölgeleyin.",
-                    "Çamaşır için soğuk su kullanın.",
-                    "Çamaşırları tam yükte yıkayın veya 'eko' modunu kullanın.",
-                    "Su ısıtıcı zamanlayıcısı takın.",
-                    "Evinizin uygun şekilde yalıtılıp yalıtılmadığını kontrol edin."
-                ],
-                faqTitle: "SSS",
-                faqs: [
-                    { q: "Elektrik faturamı nasıl hesaplarım?", a: "Her cihazın gücünü alın, enerji tüketimini (kWh'ye çevirin) elde etmek için çalışma süresiyle çarpın, ardından elektrik maliyetiyle çarpın." },
-                    { q: "1500 watt'lık bir fırını çalıştırmak ne kadara mal olur?", a: "1.5 saat için 0.16₺/kWh fiyatla 0.36₺. (1500W × 1.5sa = 2.25 kWh. 2.25 kWh × 0.16 = 0.36₺)." },
-                    { q: "Ne çok elektrik tüketir?", a: "Elektrikli ısıtıcılar, su ısıtıcıları ve HVAC sistemleri çok fazla elektrik tüketir." },
-                    { q: "Günde 100 kWh çok mu?", a: "Evet. Günde 100 kWh = ayda 3000 kWh, bu da ortalamanın oldukça üzerindedir." }
-                ]
-            }
-        }
-    }[language];
+    const introSteps = [t('costCalcIntroStep1'), t('costCalcIntroStep2')];
+    const worksList = [t('costCalcWorksList1'), t('costCalcWorksList2'), t('costCalcWorksList3'), t('costCalcWorksList4')];
+    const tipsList = [
+        t('costCalcTip1'), t('costCalcTip2'), t('costCalcTip3'), t('costCalcTip4'),
+        t('costCalcTip5'), t('costCalcTip6'), t('costCalcTip7'), t('costCalcTip8'),
+        t('costCalcTip9'), t('costCalcTip10'), t('costCalcTip11')
+    ];
+    const faqs = [
+        { q: t('costCalcFaq1Q'), a: t('costCalcFaq1A') },
+        { q: t('costCalcFaq2Q'), a: t('costCalcFaq2A') },
+        { q: t('costCalcFaq3Q'), a: t('costCalcFaq3A') },
+        { q: t('costCalcFaq4Q'), a: t('costCalcFaq4A') }
+    ];
 
     return (
         <div className="page-container">
             <Helmet>
-                <title>{t.title} | GroWizard</title>
-                <meta name="description" content={t.subtitle} />
+                <title>{t('costCalcTitle')} | GroWizard</title>
+                <meta name="description" content={t('costCalcSubtitle')} />
             </Helmet>
             <Navbar />
             <div className="tool-content">
                 <div className="tool-card">
                     <div className="tool-header">
                         <div className="tool-icon">⚡</div>
-                        <h1>{t.title}</h1>
-                        <p>{t.subtitle}</p>
+                        <h1>{t('costCalcTitle')}</h1>
+                        <p>{t('costCalcSubtitle')}</p>
                     </div>
 
                     <div className="calculator-form">
                         {/* Power Consumption */}
                         <div className="input-group">
                             <div className="label-row">
-                                <label>{t.inputs.power}</label>
+                                <label>{t('costCalcPower')}</label>
                                 <span className="dots">•••</span>
                             </div>
                             <div className="input-wrapper">
@@ -162,7 +61,7 @@ const CostCalculator = () => {
                                     value={power}
                                     onChange={(e) => setPower(parseFloat(e.target.value) || 0)}
                                 />
-                                <span className="unit">{t.units.w}</span>
+                                <span className="unit">{t('costCalcW')}</span>
                                 <span className="arrow">⌄</span>
                             </div>
                         </div>
@@ -170,7 +69,7 @@ const CostCalculator = () => {
                         {/* Usage Time */}
                         <div className="input-group">
                             <div className="label-row">
-                                <label>{t.inputs.time}</label>
+                                <label>{t('costCalcTime')}</label>
                                 <span className="dots">•••</span>
                             </div>
                             <div className="input-wrapper time-wrapper">
@@ -180,7 +79,7 @@ const CostCalculator = () => {
                                         value={hours}
                                         onChange={(e) => setHours(parseFloat(e.target.value) || 0)}
                                     />
-                                    <span className="unit">{t.units.hrs}</span>
+                                    <span className="unit">{t('costCalcHrs')}</span>
                                 </div>
                                 <span className="divider">|</span>
                                 <div className="time-input">
@@ -189,7 +88,7 @@ const CostCalculator = () => {
                                         value={minutes}
                                         onChange={(e) => setMinutes(parseFloat(e.target.value) || 0)}
                                     />
-                                    <span className="unit">{t.units.min}</span>
+                                    <span className="unit">{t('costCalcMin')}</span>
                                 </div>
                                 <span className="arrow">⌄</span>
                             </div>
@@ -198,26 +97,26 @@ const CostCalculator = () => {
                         {/* Energy Consumed (Read-only) */}
                         <div className="input-group">
                             <div className="label-row">
-                                <label>{t.inputs.energy}</label>
+                                <label>{t('costCalcEnergy')}</label>
                                 <span className="dots">•••</span>
                             </div>
                             <div className="input-wrapper read-only">
                                 <span className="value highlight-blue">
                                     {energyConsumed.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                                 </span>
-                                <span className="unit highlight-blue">{t.units.kwh}</span>
+                                <span className="unit highlight-blue">{t('costCalcKwh')}</span>
                             </div>
                         </div>
 
                         {/* Energy Price */}
                         <div className="input-group">
                             <div className="label-row">
-                                <label>{t.inputs.price}</label>
+                                <label>{t('costCalcPrice')}</label>
                                 <span className="pin">📌</span>
                                 <span className="dots">•••</span>
                             </div>
                             <div className="input-wrapper">
-                                <span className="currency-prefix">{t.units.currency}</span>
+                                <span className="currency-prefix">{t('costCalcCurrency')}</span>
                                 <input
                                     type="number"
                                     value={price}
@@ -225,18 +124,18 @@ const CostCalculator = () => {
                                     onChange={(e) => setPrice(parseFloat(e.target.value) || 0)}
                                     className="price-input"
                                 />
-                                <span className="unit-suffix">/ {t.units.kwh}</span>
+                                <span className="unit-suffix">/ {t('costCalcKwh')}</span>
                             </div>
                         </div>
 
                         {/* Total Cost (Read-only) */}
                         <div className="input-group">
                             <div className="label-row">
-                                <label>{t.inputs.cost}</label>
+                                <label>{t('costCalcCost')}</label>
                                 <span className="dots">•••</span>
                             </div>
                             <div className="input-wrapper read-only cost-wrapper">
-                                <span className="currency-prefix highlight-blue">{t.units.currency}</span>
+                                <span className="currency-prefix highlight-blue">{t('costCalcCurrency')}</span>
                                 <span className="value highlight-blue">
                                     {totalCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 3 })}
                                 </span>
@@ -246,27 +145,27 @@ const CostCalculator = () => {
                 </div>
 
                 <div className="info-section">
-                    <h2>{t.content.introTitle}</h2>
-                    <p>{t.content.introText}</p>
+                    <h2>{t('costCalcIntroTitle')}</h2>
+                    <p>{t('costCalcIntroText')}</p>
                     <ul>
-                        {t.content.introSteps.map((step, i) => <li key={i}>{step}</li>)}
+                        {introSteps.map((step, i) => <li key={i}>{step}</li>)}
                     </ul>
-                    <p className="example">{t.content.introExample}</p>
+                    <p className="example">{t('costCalcIntroExample')}</p>
 
-                    <h2>{t.content.worksTitle}</h2>
-                    <p>{t.content.worksText}</p>
+                    <h2>{t('costCalcWorksTitle')}</h2>
+                    <p>{t('costCalcWorksText')}</p>
                     <ol>
-                        {t.content.worksList.map((item, i) => <li key={i}>{item}</li>)}
+                        {worksList.map((item, i) => <li key={i}>{item}</li>)}
                     </ol>
 
-                    <h2>{t.content.tipsTitle}</h2>
+                    <h2>{t('costCalcTipsTitle')}</h2>
                     <ul className="tips-list">
-                        {t.content.tipsList.map((tip, i) => <li key={i}>✅ {tip}</li>)}
+                        {tipsList.map((tip, i) => <li key={i}>✅ {tip}</li>)}
                     </ul>
 
-                    <h2>{t.content.faqTitle}</h2>
+                    <h2>{t('costCalcFaqTitle')}</h2>
                     <div className="faq-list">
-                        {t.content.faqs.map((faq, i) => (
+                        {faqs.map((faq, i) => (
                             <div key={i} className="faq-item">
                                 <h3>{faq.q}</h3>
                                 <p>{faq.a}</p>

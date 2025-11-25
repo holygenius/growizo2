@@ -13,7 +13,7 @@ const AVAILABLE_LIGHTS = [
 ];
 
 export default function PPFDHeatMapTool() {
-    const { language } = useSettings();
+    const { t } = useSettings();
     const [unit, setUnit] = useState('cm'); // 'ft' or 'cm'
 
     // Store dimensions in the CURRENT unit to avoid typing issues
@@ -41,59 +41,6 @@ export default function PPFDHeatMapTool() {
         });
         setUnit(newUnit);
     };
-
-    const t = {
-        en: {
-            title: "Advanced PPFD Heat Map",
-            subtitle: "Visualize light intensity and optimize your grow space",
-            dimensions: `Room Dimensions (${unit})`,
-            width: "Width",
-            depth: "Depth",
-            addLight: "Add Light Source",
-            height: `Global Light Height (${unit})`,
-            metrics: {
-                avg: "Average PPFD",
-                min: "Min PPFD",
-                max: "Max PPFD",
-                uni: "Uniformity"
-            },
-            legend: {
-                low: "Low (<200)",
-                seedling: "Seedling (200-400)",
-                veg: "Veg (400-600)",
-                flower: "Flower (600-900)",
-                high: "High (900-1200)",
-                extreme: "Extreme (>1200)"
-            },
-            instructions: "Drag lights to position. Double click to rotate.",
-            unitToggle: "Unit System"
-        },
-        tr: {
-            title: "Gelişmiş PPFD Isı Haritası",
-            subtitle: "Işık yoğunluğunu görselleştirin ve alanınızı optimize edin",
-            dimensions: `Oda Boyutları (${unit})`,
-            width: "Genişlik",
-            depth: "Derinlik",
-            addLight: "Işık Kaynağı Ekle",
-            height: `Genel Işık Yüksekliği (${unit})`,
-            metrics: {
-                avg: "Ortalama PPFD",
-                min: "Min PPFD",
-                max: "Maks PPFD",
-                uni: "Üniformite"
-            },
-            legend: {
-                low: "Düşük (<200)",
-                seedling: "Fide (200-400)",
-                veg: "Gelişim (400-600)",
-                flower: "Çiçek (600-900)",
-                high: "Yüksek (900-1200)",
-                extreme: "Aşırı (>1200)"
-            },
-            instructions: "Işıkları sürükleyerek konumlandırın. Döndürmek için çift tıklayın.",
-            unitToggle: "Birim Sistemi"
-        }
-    }[language];
 
     // Add a light to the canvas
     const addLight = (lightTemplate) => {
@@ -264,8 +211,8 @@ export default function PPFDHeatMapTool() {
             <Navbar />
             <div className="tool-main">
                 <div className="tool-header">
-                    <h1>{t.title}</h1>
-                    <p>{t.subtitle}</p>
+                    <h1>{t('ppfdToolTitle')}</h1>
+                    <p>{t('ppfdToolSubtitle')}</p>
                 </div>
 
                 <div className="tool-workspace">
@@ -273,7 +220,7 @@ export default function PPFDHeatMapTool() {
                     <div className="controls-panel glass-panel">
 
                         <div className="control-group">
-                            <h3>{t.unitToggle}</h3>
+                            <h3>{t('ppfdToolUnitToggle')}</h3>
                             <div className="unit-toggle">
                                 <button
                                     className={unit === 'ft' ? 'active' : ''}
@@ -287,10 +234,10 @@ export default function PPFDHeatMapTool() {
                         </div>
 
                         <div className="control-group">
-                            <h3>{t.dimensions}</h3>
+                            <h3>{t('ppfdToolDimensions')} ({unit})</h3>
                             <div className="input-row">
                                 <div className="input-wrap">
-                                    <label>{t.width}</label>
+                                    <label>{t('width')}</label>
                                     <input
                                         type="number"
                                         value={dimensions.width}
@@ -299,7 +246,7 @@ export default function PPFDHeatMapTool() {
                                     />
                                 </div>
                                 <div className="input-wrap">
-                                    <label>{t.depth}</label>
+                                    <label>{t('depth')}</label>
                                     <input
                                         type="number"
                                         value={dimensions.depth}
@@ -311,7 +258,7 @@ export default function PPFDHeatMapTool() {
                         </div>
 
                         <div className="control-group">
-                            <h3>{t.height}</h3>
+                            <h3>{t('ppfdToolHeight')} ({unit})</h3>
                             <div className="slider-wrap">
                                 <input
                                     type="range"
@@ -326,7 +273,7 @@ export default function PPFDHeatMapTool() {
                         </div>
 
                         <div className="control-group">
-                            <h3>{t.addLight}</h3>
+                            <h3>{t('ppfdToolAddLight')}</h3>
                             <div className="light-list">
                                 {AVAILABLE_LIGHTS.map(light => (
                                     <button key={light.id} className="light-btn" onClick={() => addLight(light)}>
@@ -346,19 +293,19 @@ export default function PPFDHeatMapTool() {
                     <div className="canvas-area">
                         <div className="metrics-bar glass-panel">
                             <div className="metric">
-                                <span className="metric-label">{t.metrics.avg}</span>
+                                <span className="metric-label">{t('ppfdToolAvg')}</span>
                                 <span className="metric-value">{metrics.average}</span>
                             </div>
                             <div className="metric">
-                                <span className="metric-label">{t.metrics.min}</span>
+                                <span className="metric-label">{t('ppfdToolMin')}</span>
                                 <span className="metric-value">{metrics.min}</span>
                             </div>
                             <div className="metric">
-                                <span className="metric-label">{t.metrics.max}</span>
+                                <span className="metric-label">{t('ppfdToolMax')}</span>
                                 <span className="metric-value">{metrics.max}</span>
                             </div>
                             <div className="metric">
-                                <span className="metric-label">{t.metrics.uni}</span>
+                                <span className="metric-label">{t('ppfdToolUni')}</span>
                                 <span className="metric-value">{metrics.uniformity}</span>
                             </div>
                         </div>
@@ -412,19 +359,19 @@ export default function PPFDHeatMapTool() {
                             })}
                         </div>
 
-                        <p className="instructions">{t.instructions}</p>
+                        <p className="instructions">{t('ppfdToolInstructions')}</p>
 
                         <div className="legend glass-panel">
-                            <div className="legend-item"><span className="dot" style={{ background: '#333' }}></span> {t.legend.low}</div>
-                            <div className="legend-item"><span className="dot" style={{ background: 'blue' }}></span> {t.legend.seedling}</div>
-                            <div className="legend-item"><span className="dot" style={{ background: 'green' }}></span> {t.legend.veg}</div>
-                            <div className="legend-item"><span className="dot" style={{ background: 'orange' }}></span> {t.legend.flower}</div>
-                            <div className="legend-item"><span className="dot" style={{ background: 'red' }}></span> {t.legend.high}</div>
-                            <div className="legend-item"><span className="dot" style={{ background: 'white', border: '1px solid #555' }}></span> {t.legend.extreme}</div>
+                            <div className="legend-item"><span className="dot" style={{ background: '#333' }}></span> {t('ppfdToolLegendLow')}</div>
+                            <div className="legend-item"><span className="dot" style={{ background: 'blue' }}></span> {t('ppfdToolLegendSeedling')}</div>
+                            <div className="legend-item"><span className="dot" style={{ background: 'green' }}></span> {t('ppfdToolLegendVeg')}</div>
+                            <div className="legend-item"><span className="dot" style={{ background: 'orange' }}></span> {t('ppfdToolLegendFlower')}</div>
+                            <div className="legend-item"><span className="dot" style={{ background: 'red' }}></span> {t('ppfdToolLegendHigh')}</div>
+                            <div className="legend-item"><span className="dot" style={{ background: 'white', border: '1px solid #555' }}></span> {t('ppfdToolLegendExtreme')}</div>
                         </div>
                     </div>
                 </div>
-                <PPFDInfoSection language={language} />
+                <PPFDInfoSection />
             </div>
             <Footer />
 

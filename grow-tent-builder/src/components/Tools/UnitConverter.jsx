@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSettings } from '../../context/SettingsContext';
 import Navbar from '../Navbar';
 import Footer from '../Footer';
 
 const UnitConverter = () => {
-    const { language } = useSettings();
+    const { t } = useSettings();
 
     // Base value is always in Liters
     const [liters, setLiters] = useState(1);
@@ -41,110 +41,46 @@ const UnitConverter = () => {
         return parseFloat(val.toFixed(6));
     };
 
-    const t = {
-        en: {
-            title: "Volume Converter",
-            subtitle: "Convert freely between imperial and metric volume units",
-            units: {
-                ml: "Milliliters (ml)",
-                l: "Liters (L)",
-                gal: "Gallons (US gal)",
-                qt: "Quarts (US qt)",
-                pt: "Pints (US pt)",
-                cup: "Cups (US cup)",
-                floz: "Fluid Ounces (US fl oz)",
-                tbsp: "Tablespoons (tbsp)",
-                tsp: "Teaspoons (tsp)",
-                m3: "Cubic Meters (m³)",
-                ft3: "Cubic Feet (ft³)"
-            },
-            content: {
-                introTitle: "Volume units",
-                introText: "Choose the unit and convert freely between imperial and metric systems. Our calculator contains the following:",
-                introList: [
-                    "cubic millimeters (mm³)*", "cubic centimeters (cm³)*", "cubic decimeters (dm³)*", "cubic meters (m³)*",
-                    "cubic inches (cu in)*", "cubic feet (cu ft)*", "cubic yards (cu yd)*",
-                    "milliliters (ml)", "liters (l)",
-                    "gallons (US) / gallons (UK) (gal)", "quarts (US) / quarts (UK) (qt)",
-                    "pints (US) / pints (UK) (pt)", "fluid ounces (US) / fluid ounces (UK) (fl oz)",
-                    "US customary cups/glasses (236.59ml) (cups)",
-                    "tablespoons (15 ml) (tablespoons)", "teaspoons (5 ml) (teaspoons)"
-                ],
-                introNote: "*Some units are simplified in this view for common usage.",
-                chartTitle: "Volume conversion chart",
-                chartText: "One quick way of changing imperial volume units to the most popular metric, one milliliter, is using this conversion chart:",
-                chartHeaders: ["Measure", "US (ml)", "Metric (ml)"],
-                chartRows: [
-                    ["Teaspoon", "4.93", "5"],
-                    ["Tablespoon", "14.79", "15"],
-                    ["Fluid ounce", "29.57", "30"],
-                    ["Cup", "236.59", "250"],
-                    ["Pint", "473.18", "568.26 (UK)"],
-                    ["Quart", "946.35", "1136.52 (UK)"],
-                    ["Gallon", "3785.41", "4546.09 (UK)"]
-                ],
-                howtoTitle: "How to find the volume in a different unit",
-                howtoText: "Let's imagine that you want to bake a cake, but the problem is that the recipe comes from a different part of the world. You are used to your standard units, such as cups or pints, but you have no idea how much is 550 ml of milk. What can you do? Put that value in the calculator next to the milliliters unit, and immediately you will get the answer in cups (2.32), pints (1.16), or even teaspoons (110) if you wish.",
-                faqTitle: "FAQs",
-                faqs: [
-                    { q: "How do I convert from liters to gallons?", a: "To convert from liters to gallons, use the formula: 1 L = 0.264 gal (US). You can roughly divide by 4 for a quick estimate." },
-                    { q: "How much is 5 liters in cubic feet?", a: "5 liters equal to 0.177 cubic feet (ft³). Formula: 5 L / 1000 * 35.315 = 0.177 ft³." },
-                    { q: "Why do we measure volume in cubic meters?", a: "We measure volume in cubic meters because volume measures the space occupied in three dimensions. Since the meter is a measure of length, the cubic meter (m³) represents a three-dimensional quantity." }
-                ]
-            }
-        },
-        tr: {
-            title: "Hacim Çevirici",
-            subtitle: "İmperyal ve metrik hacim birimleri arasında özgürce dönüşüm yapın",
-            units: {
-                ml: "Mililitre (ml)",
-                l: "Litre (L)",
-                gal: "Galon (US gal)",
-                qt: "Çeyrek (US qt)",
-                pt: "Pint (US pt)",
-                cup: "Fincan (US cup)",
-                floz: "Sıvı Ons (US fl oz)",
-                tbsp: "Yemek Kaşığı (tbsp)",
-                tsp: "Çay Kaşığı (tsp)",
-                m3: "Metreküp (m³)",
-                ft3: "Fitküp (ft³)"
-            },
-            content: {
-                introTitle: "Hacim birimleri",
-                introText: "Birimi seçin ve imperyal ve metrik sistemler arasında özgürce dönüştürün. Hesaplayıcımız şunları içerir:",
-                introList: [
-                    "milimetreküp (mm³)*", "santimetreküp (cm³)*", "desimetreküp (dm³)*", "metreküp (m³)*",
-                    "inçküp (cu in)*", "fitküp (cu ft)*", "yardaküp (cu yd)*",
-                    "mililitre (ml)", "litre (l)",
-                    "galon (ABD) / galon (BK) (gal)", "çeyrek (ABD) / çeyrek (BK) (qt)",
-                    "pint (ABD) / pint (BK) (pt)", "sıvı ons (ABD) / sıvı ons (BK) (fl oz)",
-                    "ABD standart fincan/bardak (236.59ml) (cups)",
-                    "yemek kaşığı (15 ml) (tablespoons)", "çay kaşığı (5 ml) (teaspoons)"
-                ],
-                introNote: "*Bazı birimler yaygın kullanım için bu görünümde basitleştirilmiştir.",
-                chartTitle: "Hacim dönüşüm tablosu",
-                chartText: "İmperyal hacim birimlerini en popüler metrik birim olan mililitreye değiştirmenin hızlı bir yolu bu dönüşüm tablosunu kullanmaktır:",
-                chartHeaders: ["Ölçü", "ABD (ml)", "Metrik (ml)"],
-                chartRows: [
-                    ["Çay Kaşığı", "4.93", "5"],
-                    ["Yemek Kaşığı", "14.79", "15"],
-                    ["Sıvı Ons", "29.57", "30"],
-                    ["Fincan", "236.59", "250"],
-                    ["Pint", "473.18", "568.26 (BK)"],
-                    ["Çeyrek", "946.35", "1136.52 (BK)"],
-                    ["Galon", "3785.41", "4546.09 (BK)"]
-                ],
-                howtoTitle: "Farklı bir birimde hacim nasıl bulunur",
-                howtoText: "Diyelim ki bir kek yapmak istiyorsunuz, ancak sorun şu ki tarif dünyanın farklı bir yerinden geliyor. Fincan veya pint gibi standart birimlerinize alışkınsınız, ancak 550 ml sütün ne kadar olduğu hakkında hiçbir fikriniz yok. Ne yapabilirsiniz? Bu değeri hesaplayıcıda mililitre biriminin yanına koyun ve hemen fincan (2.32), pint (1.16) veya isterseniz çay kaşığı (110) cinsinden cevabı alacaksınız.",
-                faqTitle: "SSS",
-                faqs: [
-                    { q: "Litreyi galona nasıl çeviririm?", a: "Litreyi galona çevirmek için şu formülü kullanın: 1 L = 0.264 gal (ABD). Hızlı bir tahmin için 4'e bölebilirsiniz." },
-                    { q: "5 litre kaç fitküptür?", a: "5 litre 0.177 fitküpe (ft³) eşittir. Formül: 5 L / 1000 * 35.315 = 0.177 ft³." },
-                    { q: "Neden hacmi metreküp olarak ölçüyoruz?", a: "Hacmi metreküp olarak ölçüyoruz çünkü hacim, bir nesnenin üç boyutta kapladığı alanı ölçer. Metre bir uzunluk ölçüsü olduğundan, metreküp (m³) üç boyutlu bir niceliği temsil eder." }
-                ]
-            }
-        }
-    }[language];
+    const units = {
+        ml: t('unitConvMl'),
+        l: t('unitConvL'),
+        gal: t('unitConvGal'),
+        qt: t('unitConvQt'),
+        pt: t('unitConvPt'),
+        cup: t('unitConvCup'),
+        floz: t('unitConvFloz'),
+        tbsp: t('unitConvTbsp'),
+        tsp: t('unitConvTsp'),
+        m3: t('unitConvM3'),
+        ft3: t('unitConvFt3')
+    };
+
+    const introList = [
+        "cubic millimeters (mm³)*", "cubic centimeters (cm³)*", "cubic decimeters (dm³)*", "cubic meters (m³)*",
+        "cubic inches (cu in)*", "cubic feet (cu ft)*", "cubic yards (cu yd)*",
+        "milliliters (ml)", "liters (l)",
+        "gallons (US) / gallons (UK) (gal)", "quarts (US) / quarts (UK) (qt)",
+        "pints (US) / pints (UK) (pt)", "fluid ounces (US) / fluid ounces (UK) (fl oz)",
+        "US customary cups/glasses (236.59ml) (cups)",
+        "tablespoons (15 ml) (tablespoons)", "teaspoons (5 ml) (teaspoons)"
+    ];
+
+    const chartHeaders = [t('unitConvChartMeasure'), t('unitConvChartUS'), t('unitConvChartMetric')];
+    const chartRows = [
+        ["Teaspoon", "4.93", "5"],
+        ["Tablespoon", "14.79", "15"],
+        ["Fluid ounce", "29.57", "30"],
+        ["Cup", "236.59", "250"],
+        ["Pint", "473.18", "568.26 (UK)"],
+        ["Quart", "946.35", "1136.52 (UK)"],
+        ["Gallon", "3785.41", "4546.09 (UK)"]
+    ];
+
+    const faqs = [
+        { q: t('unitConvFaq1Q'), a: t('unitConvFaq1A') },
+        { q: t('unitConvFaq2Q'), a: t('unitConvFaq2A') },
+        { q: t('unitConvFaq3Q'), a: t('unitConvFaq3A') }
+    ];
 
     const unitKeys = ['ml', 'l', 'gal', 'qt', 'pt', 'cup', 'floz', 'tbsp', 'tsp', 'm3', 'ft3'];
 
@@ -155,14 +91,14 @@ const UnitConverter = () => {
                 <div className="tool-card">
                     <div className="tool-header">
                         <div className="tool-icon">💧</div>
-                        <h1>{t.title}</h1>
-                        <p>{t.subtitle}</p>
+                        <h1>{t('unitConvTitle')}</h1>
+                        <p>{t('unitConvSubtitle')}</p>
                     </div>
 
                     <div className="converter-grid">
                         {unitKeys.map((key) => (
                             <div key={key} className="input-group">
-                                <label>{t.units[key]}</label>
+                                <label>{units[key]}</label>
                                 <input
                                     type="number"
                                     value={getValue(key)}
@@ -175,24 +111,24 @@ const UnitConverter = () => {
                 </div>
 
                 <div className="info-section">
-                    <h2>{t.content.introTitle}</h2>
-                    <p>{t.content.introText}</p>
+                    <h2>{t('unitConvIntroTitle')}</h2>
+                    <p>{t('unitConvIntroText')}</p>
                     <ul>
-                        {t.content.introList.map((item, i) => <li key={i}>{item}</li>)}
+                        {introList.map((item, i) => <li key={i}>{item}</li>)}
                     </ul>
-                    <p className="note">{t.content.introNote}</p>
+                    <p className="note">{t('unitConvIntroNote')}</p>
 
-                    <h2>{t.content.chartTitle}</h2>
-                    <p>{t.content.chartText}</p>
+                    <h2>{t('unitConvChartTitle')}</h2>
+                    <p>{t('unitConvChartText')}</p>
                     <div className="chart-container">
                         <table className="conversion-table">
                             <thead>
                                 <tr>
-                                    {t.content.chartHeaders.map((h, i) => <th key={i}>{h}</th>)}
+                                    {chartHeaders.map((h, i) => <th key={i}>{h}</th>)}
                                 </tr>
                             </thead>
                             <tbody>
-                                {t.content.chartRows.map((row, i) => (
+                                {chartRows.map((row, i) => (
                                     <tr key={i}>
                                         {row.map((cell, j) => <td key={j}>{cell}</td>)}
                                     </tr>
@@ -201,12 +137,12 @@ const UnitConverter = () => {
                         </table>
                     </div>
 
-                    <h2>{t.content.howtoTitle}</h2>
-                    <p>{t.content.howtoText}</p>
+                    <h2>{t('unitConvHowTitle')}</h2>
+                    <p>{t('unitConvHowText')}</p>
 
-                    <h2>{t.content.faqTitle}</h2>
+                    <h2>{t('unitConvFaqTitle')}</h2>
                     <div className="faq-list">
-                        {t.content.faqs.map((faq, i) => (
+                        {faqs.map((faq, i) => (
                             <div key={i} className="faq-item">
                                 <h3>{faq.q}</h3>
                                 <p>{faq.a}</p>

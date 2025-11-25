@@ -4,7 +4,7 @@ import Navbar from '../Navbar';
 import Footer from '../Footer';
 
 const CO2Calculator = () => {
-    const { language } = useSettings();
+    const { t } = useSettings();
     const [width, setWidth] = useState(120);
     const [length, setLength] = useState(120);
     const [height, setHeight] = useState(200);
@@ -26,66 +26,12 @@ const CO2Calculator = () => {
     const flowRateCFM = requiredCO2Ft3 / fillTime;
     const flowRateLPM = requiredCO2Liters / fillTime;
 
-    const t = {
-        en: {
-            title: "CO₂ Grow Room Calculator",
-            subtitle: "Optimize your grow space with precise CO₂ calculations",
-            dims: "Room Dimensions (cm)",
-            target: "Target CO₂ Level (PPM)",
-            fillTime: "Desired Fill Time (minutes)",
-            volume: "Room Volume",
-            required: "Required CO₂ Amount",
-            flow: "Required Flow Rate",
-            calculate: "Calculate",
-            content: {
-                introTitle: "How much CO₂ to add to a grow room?",
-                introText: "Find out how much CO2 to add to a grow room with our CO2 grow room calculator! Read on to learn the optimum CO2 level for plant growth and how to calculate the CO2 flow rate of a tank to reach that level. But first, let's answer the most critical question: why would you add CO2 to a grow room?",
-                introText2: "As you may or may not know, plants perform photosynthesis, transforming carbon dioxide, water, and sunlight into oxygen and compounds they use to grow. While we have plenty of CO2 in the atmosphere (around 420 ppm), adding more CO2 may be beneficial if you care about yield. However, adding CO2 alone won't do much. You also need to provide enough nutrients, water, and light. Even if you add plenty of CO2, the amount of light can be a limiting factor if it's not intense enough, and the CO2 will go to waste.",
-                calcTitle: "How to use the CO₂ grow room calculator?",
-                calcText: "To calculate the volume of CO2 for a grow tent, you need to know the following:",
-                calcList: [
-                    "The dimensions or volume of the room/tent",
-                    "The current and desired CO2 levels in parts per million (ppm)"
-                ],
-                calcText2: "Then you can use the calculator above to find how much CO2 you need to add to your grow room.",
-                faqTitle: "FAQs",
-                faqs: [
-                    { q: "What is the optimal CO2 level?", a: "For most plants, 1200-1500 PPM is considered optimal during the flowering stage with high light intensity." },
-                    { q: "When should I add CO2?", a: "CO2 should only be added when the lights are ON. Plants do not use CO2 during the dark period." },
-                    { q: "Do I need to seal my room?", a: "Yes, a sealed room is best to prevent CO2 from escaping. If using an exhaust fan, it should be timed or controlled to minimize waste." }
-                ]
-            }
-        },
-        tr: {
-            title: "CO₂ Yetiştirme Odası Hesaplayıcı",
-            subtitle: "Hassas CO₂ hesaplamalarıyla yetiştirme alanınızı optimize edin",
-            dims: "Oda Boyutları (cm)",
-            target: "Hedef CO₂ Seviyesi (PPM)",
-            fillTime: "İstenen Dolum Süresi (dakika)",
-            volume: "Oda Hacmi",
-            required: "Gerekli CO₂ Miktarı",
-            flow: "Gerekli Akış Hızı",
-            calculate: "Hesapla",
-            content: {
-                introTitle: "Yetiştirme odasına ne kadar CO₂ eklenmeli?",
-                introText: "CO2 yetiştirme odası hesaplayıcımızla yetiştirme odasına ne kadar CO2 ekleneceğini öğrenin! Bitki büyümesi için optimum CO2 seviyesini ve bu seviyeye ulaşmak için bir tankın CO2 akış hızını nasıl hesaplayacağınızı öğrenmek için okumaya devam edin. Ama önce en kritik soruyu cevaplayalım: neden bir yetiştirme odasına CO2 ekleyesiniz?",
-                introText2: "Bildiğiniz veya bilmediğiniz gibi, bitkiler fotosentez yapar; karbondioksit, su ve güneş ışığını oksijene ve büyümek için kullandıkları bileşiklere dönüştürür. Atmosferde bol miktarda CO2 (yaklaşık 420 ppm) bulunsa da, verimi önemsiyorsanız daha fazla CO2 eklemek faydalı olabilir. Ancak, sadece CO2 eklemek pek bir işe yaramaz. Ayrıca yeterli besin, su ve ışık sağlamanız gerekir. Bol miktarda CO2 ekleseniz bile, ışık miktarı yeterince yoğun değilse sınırlayıcı bir faktör olabilir ve CO2 boşa gider.",
-                calcTitle: "CO₂ yetiştirme odası hesaplayıcısı nasıl kullanılır?",
-                calcText: "Bir yetiştirme çadırı için CO2 hacmini hesaplamak için aşağıdakileri bilmeniz gerekir:",
-                calcList: [
-                    "Odanın/çadırın boyutları veya hacmi",
-                    "Milyonda parça (ppm) cinsinden mevcut ve istenen CO2 seviyeleri"
-                ],
-                calcText2: "Ardından, yetiştirme odanıza ne kadar CO2 eklemeniz gerektiğini bulmak için yukarıdaki hesaplayıcıyı kullanabilirsiniz.",
-                faqTitle: "Sıkça Sorulan Sorular",
-                faqs: [
-                    { q: "Optimal CO2 seviyesi nedir?", a: "Çoğu bitki için, yüksek ışık yoğunluğuyla çiçeklenme döneminde 1200-1500 PPM optimal kabul edilir." },
-                    { q: "Ne zaman CO2 eklemeliyim?", a: "CO2 sadece ışıklar AÇIKKEN eklenmelidir. Bitkiler karanlık dönemde CO2 kullanmazlar." },
-                    { q: "Odamı yalıtmam gerekir mi?", a: "Evet, CO2'nin kaçmasını önlemek için yalıtılmış bir oda en iyisidir. Egzoz fanı kullanıyorsanız, israfı en aza indirmek için zamanlanmalı veya kontrol edilmelidir." }
-                ]
-            }
-        }
-    }[language];
+    const calcList = [t('co2CalcHowList1'), t('co2CalcHowList2')];
+    const faqs = [
+        { q: t('co2CalcFaq1Q'), a: t('co2CalcFaq1A') },
+        { q: t('co2CalcFaq2Q'), a: t('co2CalcFaq2A') },
+        { q: t('co2CalcFaq3Q'), a: t('co2CalcFaq3A') }
+    ];
 
     return (
         <div className="page-container">
@@ -94,12 +40,12 @@ const CO2Calculator = () => {
                 <div className="tool-card">
                     <div className="tool-header">
                         <div className="tool-icon">🌫️</div>
-                        <h1>{t.title}</h1>
-                        <p>{t.subtitle}</p>
+                        <h1>{t('co2CalcTitle')}</h1>
+                        <p>{t('co2CalcSubtitle')}</p>
                     </div>
 
                     <div className="calculator-form">
-                        <div className="section-label">{t.dims}</div>
+                        <div className="section-label">{t('co2CalcDims')}</div>
                         <div className="dims-grid">
                             <div className="input-group">
                                 <label>W (cm)</label>
@@ -128,7 +74,7 @@ const CO2Calculator = () => {
                         </div>
 
                         <div className="input-group">
-                            <label>{t.target}</label>
+                            <label>{t('co2CalcTarget')}</label>
                             <div className="range-wrapper">
                                 <input
                                     type="range"
@@ -144,7 +90,7 @@ const CO2Calculator = () => {
                         </div>
 
                         <div className="input-group">
-                            <label>{t.fillTime}</label>
+                            <label>{t('co2CalcFillTime')}</label>
                             <div className="range-wrapper">
                                 <input
                                     type="range"
@@ -161,17 +107,17 @@ const CO2Calculator = () => {
 
                         <div className="results-grid">
                             <div className="result-item">
-                                <span className="label">{t.volume}</span>
+                                <span className="label">{t('co2CalcVolume')}</span>
                                 <span className="value">{volumeM3.toFixed(2)} m³</span>
                                 <span className="sub-value">({volumeFt3.toFixed(2)} ft³)</span>
                             </div>
                             <div className="result-item highlight">
-                                <span className="label">{t.required}</span>
+                                <span className="label">{t('co2CalcRequired')}</span>
                                 <span className="value">{requiredCO2Ft3.toFixed(4)} ft³</span>
                                 <span className="sub-value">({requiredCO2Liters.toFixed(2)} L)</span>
                             </div>
                             <div className="result-item highlight-green">
-                                <span className="label">{t.flow}</span>
+                                <span className="label">{t('co2CalcFlow')}</span>
                                 <span className="value">{flowRateLPM.toFixed(2)} L/min</span>
                                 <span className="sub-value">({flowRateCFM.toFixed(4)} CFM)</span>
                             </div>
@@ -180,20 +126,20 @@ const CO2Calculator = () => {
                 </div>
 
                 <div className="info-section">
-                    <h2>{t.content.introTitle}</h2>
-                    <p>{t.content.introText}</p>
-                    <p>{t.content.introText2}</p>
+                    <h2>{t('co2CalcIntroTitle')}</h2>
+                    <p>{t('co2CalcIntroText')}</p>
+                    <p>{t('co2CalcIntroText2')}</p>
 
-                    <h2>{t.content.calcTitle}</h2>
-                    <p>{t.content.calcText}</p>
+                    <h2>{t('co2CalcHowTitle')}</h2>
+                    <p>{t('co2CalcHowText')}</p>
                     <ul>
-                        {t.content.calcList.map((item, i) => <li key={i}>{item}</li>)}
+                        {calcList.map((item, i) => <li key={i}>{item}</li>)}
                     </ul>
-                    <p>{t.content.calcText2}</p>
+                    <p>{t('co2CalcHowText2')}</p>
 
-                    <h2>{t.content.faqTitle}</h2>
+                    <h2>{t('co2CalcFaqTitle')}</h2>
                     <div className="faq-list">
-                        {t.content.faqs.map((faq, i) => (
+                        {faqs.map((faq, i) => (
                             <div key={i} className="faq-item">
                                 <h3>{faq.q}</h3>
                                 <p>{faq.a}</p>

@@ -5,102 +5,58 @@ import Navbar from '../Navbar';
 import Footer from '../Footer';
 
 const ToolsPage = () => {
-    const { language } = useSettings();
+    const { t } = useSettings();
 
-    const t = {
-        en: {
-            title: "Grow Tools",
-            subtitle: "Essential calculators and converters for your indoor garden",
-            tools: [
-                {
-                    id: 'cost',
-                    icon: '⚡',
-                    title: 'Electricity Cost Calculator',
-                    desc: 'Estimate monthly electricity costs',
-                    path: '/tools/electricity-cost-calculator',
-                    color: 'from-yellow-400 to-orange-500'
-                },
-                {
-                    id: 'unit',
-                    icon: '💧',
-                    title: 'Unit Converter',
-                    desc: 'Convert between Liters, Gallons and more',
-                    path: '/tools/unit-converter',
-                    color: 'from-blue-400 to-cyan-500'
-                },
-                {
-                    id: 'co2',
-                    icon: '🌫️',
-                    title: 'CO2 Calculator',
-                    desc: 'Calculate CO2 requirements',
-                    path: '/tools/co2-calculator',
-                    color: 'from-gray-400 to-gray-600'
-                },
-                {
-                    id: 'ppfd',
-                    icon: '🌡️',
-                    title: 'PPFD Heat Map',
-                    desc: 'Visualize light intensity distribution',
-                    path: '/tools/ppfd-heatmap',
-                    color: 'from-red-400 to-red-600'
-                }
-            ]
+    const tools = [
+        {
+            id: 'cost',
+            icon: '⚡',
+            titleKey: 'toolCostTitle',
+            descKey: 'toolCostDesc',
+            path: '/tools/electricity-cost-calculator',
+            color: 'from-yellow-400 to-orange-500'
         },
-        tr: {
-            title: "Yetiştirme Araçları",
-            subtitle: "İç mekan bahçeniz için temel hesaplayıcılar ve dönüştürücüler",
-            tools: [
-                {
-                    id: 'cost',
-                    icon: '⚡',
-                    title: 'Elektrik Maliyeti Hesaplayıcı',
-                    desc: 'Aylık elektrik maliyetini hesaplayın',
-                    path: '/tools/electricity-cost-calculator',
-                    color: 'from-yellow-400 to-orange-500'
-                },
-                {
-                    id: 'unit',
-                    icon: '💧',
-                    title: 'Birim Çevirici',
-                    desc: 'Litre, Galon ve diğer birimler arası dönüşüm',
-                    path: '/tools/unit-converter',
-                    color: 'from-blue-400 to-cyan-500'
-                },
-                {
-                    id: 'co2',
-                    icon: '🌫️',
-                    title: 'CO2 Hesaplayıcı',
-                    desc: 'CO2 gereksinimlerini hesaplayın',
-                    path: '/tools/co2-calculator',
-                    color: 'from-gray-400 to-gray-600'
-                },
-                {
-                    id: 'ppfd',
-                    icon: '🌡️',
-                    title: 'PPFD Isı Haritası',
-                    desc: 'Işık yoğunluğu dağılımını görselleştirin',
-                    path: '/tools/ppfd-heatmap',
-                    color: 'from-red-400 to-red-600'
-                }
-            ]
+        {
+            id: 'unit',
+            icon: '💧',
+            titleKey: 'toolUnitTitle',
+            descKey: 'toolUnitDesc',
+            path: '/tools/unit-converter',
+            color: 'from-blue-400 to-cyan-500'
+        },
+        {
+            id: 'co2',
+            icon: '🌫️',
+            titleKey: 'toolCo2Title',
+            descKey: 'toolCo2Desc',
+            path: '/tools/co2-calculator',
+            color: 'from-gray-400 to-gray-600'
+        },
+        {
+            id: 'ppfd',
+            icon: '🌡️',
+            titleKey: 'toolPpfdTitle',
+            descKey: 'toolPpfdDesc',
+            path: '/tools/ppfd-heatmap',
+            color: 'from-red-400 to-red-600'
         }
-    }[language];
+    ];
 
     return (
         <div className="page-container">
             <Navbar />
             <div className="tools-content">
                 <div className="tools-header">
-                    <h1>{t.title}</h1>
-                    <p>{t.subtitle}</p>
+                    <h1>{t('toolsTitle')}</h1>
+                    <p>{t('toolsSubtitle')}</p>
                 </div>
 
                 <div className="tools-grid">
-                    {t.tools.map((tool) => (
+                    {tools.map((tool) => (
                         <Link to={tool.path} key={tool.id} className="tool-card">
                             <div className="card-icon">{tool.icon}</div>
-                            <h3>{tool.title}</h3>
-                            <p>{tool.desc}</p>
+                            <h3>{t(tool.titleKey)}</h3>
+                            <p>{t(tool.descKey)}</p>
                             <div className="card-arrow">→</div>
                         </Link>
                     ))}

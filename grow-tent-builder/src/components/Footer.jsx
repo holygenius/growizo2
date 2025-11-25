@@ -3,21 +3,21 @@ import { Link } from 'react-router-dom';
 import { useSettings } from '../context/SettingsContext';
 
 const Footer = () => {
-  const { language, setLanguage, getBuilderUrl } = useSettings();
+  const { language, setLanguage, getBuilderUrl, t } = useSettings();
 
   return (
     <footer className="landing-footer">
       <div className="footer-content">
         <div className="footer-brand">
           <div className="footer-logo">🌱 GroWizard</div>
-          <p>© 2025 GroWizard. All rights reserved.</p>
+          <p>{t('footerRights')}</p>
         </div>
 
         <div className="footer-links">
-          <Link to="/">Home</Link>
-          <Link to={getBuilderUrl()}>Builder</Link>
-          <Link to="/tools">Tools</Link>
-          <Link to="/blog">Blog</Link>
+          <Link to="/">{t('footerHome')}</Link>
+          <Link to={getBuilderUrl()}>{t('footerBuilder')}</Link>
+          <Link to="/tools">{t('footerTools')}</Link>
+          <Link to="/blog">{t('footerBlog')}</Link>
         </div>
 
         <div className="footer-lang-toggle">

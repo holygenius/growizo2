@@ -3,33 +3,10 @@ import { Link, useLocation } from 'react-router-dom';
 import { useSettings } from '../context/SettingsContext';
 
 const Navbar = () => {
-    const { language, setLanguage, getBuilderUrl } = useSettings();
+    const { language, setLanguage, getBuilderUrl, t } = useSettings();
     const location = useLocation();
     const [isToolsOpen, setIsToolsOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-    const t = {
-        en: {
-            home: "🏠 Home",
-            builder: "Go To App 🚀",
-            tools: "🛠️ Tools",
-            blog: "📝 Blog",
-            costCalc: "Electricity Cost Calculator",
-            co2Calc: "CO₂ Calculator",
-            unitConv: "Volume Converter",
-            ppfdTool: "PPFD Heat Map"
-        },
-        tr: {
-            home: "🏠 Ana Sayfa",
-            builder: "Uygulamaya Git 🚀",
-            tools: "🛠️ Araçlar",
-            blog: "📝 Blog",
-            costCalc: "Elektrik Maliyeti Hesaplayıcı",
-            co2Calc: "CO₂ Hesaplayıcı",
-            unitConv: "Hacim Çevirici",
-            ppfdTool: "PPFD Isı Haritası"
-        }
-    }[language];
 
     const isActive = (path) => location.pathname === path;
 
@@ -223,7 +200,7 @@ const Navbar = () => {
                             to="/"
                             className={`nav-link ${isActive('/') ? 'active' : ''}`}
                         >
-                            {t.home}
+                            {t('navHome')}
                         </Link>
 
                         <div
@@ -234,14 +211,14 @@ const Navbar = () => {
                             <span
                                 className={`nav-link ${location.pathname.includes('/tools') ? 'active' : ''}`}
                             >
-                                {t.tools} ▾
+                                {t('navTools')} ▾
                             </span>
                             {isToolsOpen && (
                                 <div className="dropdown-menu">
-                                    <Link to="/tools/electricity-cost-calculator" className="dropdown-item">{t.costCalc}</Link>
-                                    <Link to="/tools/co2-calculator" className="dropdown-item">{t.co2Calc}</Link>
-                                    <Link to="/tools/unit-converter" className="dropdown-item">{t.unitConv}</Link>
-                                    <Link to="/tools/ppfd-heatmap" className="dropdown-item">{t.ppfdTool}</Link>
+                                    <Link to="/tools/electricity-cost-calculator" className="dropdown-item">{t('navCostCalc')}</Link>
+                                    <Link to="/tools/co2-calculator" className="dropdown-item">{t('navCo2Calc')}</Link>
+                                    <Link to="/tools/unit-converter" className="dropdown-item">{t('navUnitConv')}</Link>
+                                    <Link to="/tools/ppfd-heatmap" className="dropdown-item">{t('navPpfdTool')}</Link>
                                 </div>
                             )}
                         </div>
@@ -250,7 +227,7 @@ const Navbar = () => {
                             to="/blog"
                             className={`nav-link ${isActive('/blog') ? 'active' : ''}`}
                         >
-                            {t.blog}
+                            {t('navBlog')}
                         </Link>
                     </div>
 
@@ -265,7 +242,7 @@ const Navbar = () => {
                             to={getBuilderUrl()}
                             className="cta-button"
                         >
-                            {t.builder}
+                            {t('navBuilder')}
                         </Link>
                     </div>
 
@@ -286,39 +263,39 @@ const Navbar = () => {
                             className={`mobile-link ${isActive('/') ? 'active' : ''}`}
                             onClick={() => setIsMobileMenuOpen(false)}
                         >
-                            {t.home}
+                            {t('navHome')}
                         </Link>
 
                         <div>
-                            <div className="mobile-link" style={{ opacity: 0.7 }}>{t.tools}</div>
+                            <div className="mobile-link" style={{ opacity: 0.7 }}>{t('navTools')}</div>
                             <div className="mobile-tools">
                                 <Link
                                     to="/tools/electricity-cost-calculator"
                                     className="mobile-link"
                                     onClick={() => setIsMobileMenuOpen(false)}
                                 >
-                                    {t.costCalc}
+                                    {t('navCostCalc')}
                                 </Link>
                                 <Link
                                     to="/tools/co2-calculator"
                                     className="mobile-link"
                                     onClick={() => setIsMobileMenuOpen(false)}
                                 >
-                                    {t.co2Calc}
+                                    {t('navCo2Calc')}
                                 </Link>
                                 <Link
                                     to="/tools/unit-converter"
                                     className="mobile-link"
                                     onClick={() => setIsMobileMenuOpen(false)}
                                 >
-                                    {t.unitConv}
+                                    {t('navUnitConv')}
                                 </Link>
                                 <Link
                                     to="/tools/ppfd-heatmap"
                                     className="mobile-link"
                                     onClick={() => setIsMobileMenuOpen(false)}
                                 >
-                                    {t.ppfdTool}
+                                    {t('navPpfdTool')}
                                 </Link>
                             </div>
                         </div>
@@ -328,7 +305,7 @@ const Navbar = () => {
                             className={`mobile-link ${isActive('/blog') ? 'active' : ''}`}
                             onClick={() => setIsMobileMenuOpen(false)}
                         >
-                            {t.blog}
+                            {t('navBlog')}
                         </Link>
 
                         <div className="mobile-actions">
@@ -339,14 +316,14 @@ const Navbar = () => {
                                 }}
                                 className="lang-btn"
                             >
-                                {language === 'en' ? 'Switch to TR' : 'Switch to EN'}
+                                {language === 'en' ? t('switchToTr') : t('switchToEn')}
                             </button>
                             <Link
                                 to={getBuilderUrl()}
                                 className="cta-button"
                                 onClick={() => setIsMobileMenuOpen(false)}
                             >
-                                {t.builder}
+                                {t('navBuilder')}
                             </Link>
                         </div>
                     </div>
