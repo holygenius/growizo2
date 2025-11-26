@@ -48,6 +48,13 @@ export function SettingsProvider({ children }) {
     const [currency, setCurrencyState] = useState(getInitialCurrency);
     const [unitSystem, setUnitSystemState] = useState(getInitialUnitSystem);
 
+    // We need to access navigation, but this provider is inside Router in App.jsx
+    // So we can't use useNavigate here directly if it's wrapping the Router.
+    // However, usually SettingsProvider wraps App content.
+    // Let's assume we will move BrowserRouter UP in App.jsx to wrap SettingsProvider,
+    // OR we will handle the URL sync in a separate component inside Router.
+    // For now, let's provide the helper functions.
+
     const setLanguage = (lang) => {
         setLanguageState(lang);
         localStorage.setItem('language', lang);
@@ -111,7 +118,14 @@ export function SettingsProvider({ children }) {
     };
 
     const getBuilderUrl = () => {
-        return language === 'tr' ? '/buyume-cadiri-kurulum-olusturucu' : '/grow-tent-setup-builder';
+        // Return localized URL
+        return `/${language}/builder`;
+    };
+
+    const getLocalizedPath = (path) => {
+        // Ensure path starts with /
+        const cleanPath = path.startsWith('/') ? path : `/${path}`;
+        return `/${language}${cleanPath}`;
     };
 
     return (
@@ -123,7 +137,8 @@ export function SettingsProvider({ children }) {
             formatPrice,
             formatUnit,
             getUnitLabel,
-            getBuilderUrl
+            getBuilderUrl,
+            getLocalizedPath
         }}>
             {children}
         </SettingsContext.Provider>
