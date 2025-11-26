@@ -23,16 +23,42 @@ export default function PPFDHeatMapTool() {
 
     // Store dimensions in the CURRENT unit to avoid typing issues
     // Initialize with default metric values (200x200 cm)
-    const [dimensions, setDimensions] = useState({ width: 200, depth: 200, height: 45 });
+    const [dimensions, setDimensions] = useState({ width: 200, depth: 200, height: 200 });
 
-    const [activeLights, setActiveLights] = useState([]);
+    const [activeLights, setActiveLights] = useState([
+        {
+            ...AVAILABLE_LIGHTS[0], // Quantum Board 100W
+            instanceId: 'default_1',
+            positions: [{ x: 0.5, y: 0.5, rotation: 0 }]
+        },
+        {
+            ...AVAILABLE_LIGHTS[0],
+            instanceId: 'default_2',
+            positions: [{ x: 0.25, y: 0.25, rotation: 0 }]
+        },
+        {
+            ...AVAILABLE_LIGHTS[0],
+            instanceId: 'default_3',
+            positions: [{ x: 0.75, y: 0.25, rotation: 0 }]
+        },
+        {
+            ...AVAILABLE_LIGHTS[0],
+            instanceId: 'default_4',
+            positions: [{ x: 0.25, y: 0.75, rotation: 0 }]
+        },
+        {
+            ...AVAILABLE_LIGHTS[0],
+            instanceId: 'default_5',
+            positions: [{ x: 0.75, y: 0.75, rotation: 0 }]
+        }
+    ]);
 
     const containerRef = useRef(null);
     const heatmapCanvasRef = useRef(null);
     const [dragging, setDragging] = useState(null);
 
     // 3D State
-    const [is3D, setIs3D] = useState(false);
+    const [is3D, setIs3D] = useState(true);
 
     // Filter State
     const [activeFilters, setActiveFilters] = useState({
@@ -323,11 +349,11 @@ export default function PPFDHeatMapTool() {
                             <h3>{t.viewMode}</h3>
                             <div className={styles.unitToggle}>
                                 <button
-                                    className={!is3D ? 'active' : ''}
+                                    className={!is3D ? styles.activeButton : ''}
                                     onClick={() => setIs3D(false)}
                                 >{t.view2D}</button>
                                 <button
-                                    className={is3D ? 'active' : ''}
+                                    className={is3D ? styles.activeButton : ''}
                                     onClick={() => setIs3D(true)}
                                 >{t.view3D}</button>
                             </div>
@@ -387,11 +413,11 @@ export default function PPFDHeatMapTool() {
                             <h3>{t.unitToggle}</h3>
                             <div className={styles.unitToggle}>
                                 <button
-                                    className={unit === 'ft' ? 'active' : ''}
+                                    className={unit === 'ft' ? styles.activeButton : ''}
                                     onClick={() => handleUnitChange('ft')}
                                 >FT</button>
                                 <button
-                                    className={unit === 'cm' ? 'active' : ''}
+                                    className={unit === 'cm' ? styles.activeButton : ''}
                                     onClick={() => handleUnitChange('cm')}
                                 >CM</button>
                             </div>

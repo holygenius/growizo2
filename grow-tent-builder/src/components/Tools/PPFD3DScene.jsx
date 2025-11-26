@@ -1,5 +1,5 @@
-import React, { useMemo, useRef, useEffect } from 'react';
-import { Canvas } from '@react-three/fiber';
+import React, { useMemo, useRef, useEffect, useState } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Text, Grid, PerspectiveCamera } from '@react-three/drei';
 import * as THREE from 'three';
 
@@ -124,13 +124,44 @@ const VoxelGrid = ({ dimensions, activeLights, width, depth, height, unit, activ
             }
         }
 
+        // Sort voxels by PPFD (descending) for the reveal animation
+        voxels.sort((a, b) => b.ppfd - a.ppfd);
+
         return { data: voxels, count: voxels.length };
     }, [dimensions, activeLights, unit, width, depth, height, activeFilters]);
+
+    // Animation State
+    const [revealedCount, setRevealedCount] = useState(0);
+
+    useFrame((state, delta) => {
+        if (revealedCount < count) {
+            // Animate reveal: Reveal ~20% of remaining or min 10 per frame
+            // Adjust speed factor (2.5) to control duration
+            const speed = Math.max(10, (count - revealedCount) * 2.5 * delta);
+            const nextCount = Math.min(count, revealedCount + Math.ceil(speed));
+            setRevealedCount(nextCount);
+
+            // Update the mesh count directly for performance
+            if (meshRef.current) {
+                meshRef.current.count = nextCount;
+            }
+        }
+    });
+
+    useEffect(() => {
+        // Reset animation when data changes
+        setRevealedCount(0);
+    }, [count, activeLights]); // Trigger restart on light change too
 
     useEffect(() => {
         if (!meshRef.current) return;
 
         const tempObject = new THREE.Object3D();
+
+        // Only update matrices for the revealed count
+        // But we need to set ALL matrices initially or at least the ones we want to show
+        // Actually, instancedMesh draws 'count' instances. We can control 'count' prop on the mesh itself.
+        // So we just need to ensure the matrices are set in the correct sorted order (which they are in 'data')
 
         for (let i = 0; i < count; i++) {
             const { position, color } = data[i];
@@ -152,7 +183,7 @@ const VoxelGrid = ({ dimensions, activeLights, width, depth, height, unit, activ
     return (
         <instancedMesh
             ref={meshRef}
-            args={[null, null, count]}
+            args={[null, null, count]} // Initialize with MAX count
         >
             <boxGeometry args={[boxSizeX, boxSizeY, boxSizeZ]} />
             <meshStandardMaterial
@@ -166,40 +197,127 @@ const VoxelGrid = ({ dimensions, activeLights, width, depth, height, unit, activ
 };
 
 const GuideLines = ({ width, depth, height, unit, dimensions }) => {
+    const scaleFactor = unit === 'cm' ? 0.1 : 3.0;
+    const interval = unit === 'cm' ? 10 : 1; // 10cm or 1ft
+
+    const RulerAxis = ({ size, actualSize, color, axis, position, labelOffset }) => {
+        const ticks = [];
+        const count = Math.floor(actualSize / interval);
+
+        for (let i = 0; i <= count; i++) {
+            const val = i * interval;
+            if (val === 0 && i !== 0) continue;
+            const pos = val * scaleFactor;
+
+            // Tick Geometry
+            let tickArgs = [0.05, 0.05, 0.05];
+            let tickPos = [0, 0, 0];
+
+            if (axis === 'x') {
+                tickArgs = [0.02, 0.02, 0.3];
+                tickPos = [pos, 0, 0.15];
+            } else if (axis === 'z') {
+                tickArgs = [0.3, 0.02, 0.02];
+                tickPos = [-0.15, 0, pos];
+            } else if (axis === 'y') {
+                tickArgs = [0.3, 0.02, 0.02];
+                tickPos = [-0.15, pos, 0];
+            }
+
+            ticks.push(
+                <group key={i}>
+                    <mesh position={tickPos}>
+                        <boxGeometry args={tickArgs} />
+                        <meshBasicMaterial color={color} />
+                    </mesh>
+                    <Text
+                        position={[
+                            axis === 'x' ? pos : labelOffset[0],
+                            axis === 'y' ? pos : labelOffset[1],
+                            axis === 'z' ? pos : labelOffset[2]
+                        ]}
+                        fontSize={0.25}
+                        color={color}
+                        anchorX="center"
+                        anchorY="middle"
+                        rotation={axis === 'z' ? [-Math.PI / 2, 0, 0] : [0, 0, 0]}
+                    >
+                        {val}
+                    </Text>
+                </group>
+            );
+        }
+
+        // Main Line Geometry
+        let lineArgs = [0.05, 0.05, 0.05];
+        let linePos = [0, 0, 0];
+
+        if (axis === 'x') {
+            lineArgs = [size, 0.05, 0.05];
+            linePos = [size / 2, 0, 0];
+        } else if (axis === 'z') {
+            lineArgs = [0.05, 0.05, size];
+            linePos = [0, 0, size / 2];
+        } else if (axis === 'y') {
+            lineArgs = [0.05, size, 0.05];
+            linePos = [0, size / 2, 0];
+        }
+
+        return (
+            <group position={position}>
+                <mesh position={linePos}>
+                    <boxGeometry args={lineArgs} />
+                    <meshBasicMaterial color={color} />
+                </mesh>
+                {ticks}
+                {/* Axis Label */}
+                <Text
+                    position={[
+                        axis === 'x' ? size + 0.5 : 0,
+                        axis === 'y' ? size + 0.5 : 0,
+                        axis === 'z' ? size + 0.5 : 0
+                    ]}
+                    fontSize={0.3}
+                    color={color}
+                    fontWeight="bold"
+                >
+                    {unit}
+                </Text>
+            </group>
+        );
+    };
+
     return (
         <group>
-            {/* Width guide (X axis) */}
-            <group position={[-width / 2, -0.1, depth / 2 + 0.5]}>
-                <mesh>
-                    <boxGeometry args={[width, 0.05, 0.05]} />
-                    <meshBasicMaterial color="#ff6600" />
-                </mesh>
-                <Text position={[0, 0.3, 0]} fontSize={0.3} color="#ff6600" anchorX="center" anchorY="middle">
-                    {dimensions.width} {unit}
-                </Text>
-            </group>
+            {/* Width (X) - Front */}
+            <RulerAxis
+                size={width}
+                actualSize={dimensions.width}
+                color="#ff6600"
+                axis="x"
+                position={[-width / 2, -0.1, depth / 2 + 0.5]}
+                labelOffset={[0, 0, 0.5]}
+            />
 
-            {/* Depth guide (Z axis) */}
-            <group position={[-width / 2 - 0.5, -0.1, 0]}>
-                <mesh>
-                    <boxGeometry args={[0.05, 0.05, depth]} />
-                    <meshBasicMaterial color="#00ff66" />
-                </mesh>
-                <Text position={[0, 0.3, 0]} fontSize={0.3} color="#00ff66" anchorX="center" anchorY="middle" rotation={[0, Math.PI / 2, 0]}>
-                    {dimensions.depth} {unit}
-                </Text>
-            </group>
+            {/* Depth (Z) - Left */}
+            <RulerAxis
+                size={depth}
+                actualSize={dimensions.depth}
+                color="#00ff66"
+                axis="z"
+                position={[-width / 2 - 0.5, -0.1, -depth / 2]}
+                labelOffset={[-0.5, 0, 0]}
+            />
 
-            {/* Height guide (Y axis) */}
-            <group position={[-width / 2 - 0.5, height / 2, depth / 2 + 0.5]}>
-                <mesh>
-                    <boxGeometry args={[0.05, height, 0.05]} />
-                    <meshBasicMaterial color="#6600ff" />
-                </mesh>
-                <Text position={[0.3, 0, 0]} fontSize={0.3} color="#6600ff" anchorX="center" anchorY="middle" rotation={[0, 0, Math.PI / 2]}>
-                    {dimensions.height} {unit}
-                </Text>
-            </group>
+            {/* Height (Y) - Back Left */}
+            <RulerAxis
+                size={height}
+                actualSize={dimensions.height}
+                color="#6600ff"
+                axis="y"
+                position={[-width / 2 - 0.5, 0, -depth / 2 - 0.5]}
+                labelOffset={[-0.5, 0, 0]}
+            />
         </group>
     );
 };
@@ -252,6 +370,42 @@ const Lights = ({ activeLights, width, depth, height }) => {
     );
 };
 
+const CameraRig = ({ targetPosition }) => {
+    const { camera } = useThree();
+    const initialPos = useRef(null);
+    const [isAnimating, setIsAnimating] = useState(true);
+    const startTime = useRef(Date.now());
+
+    useEffect(() => {
+        // Set initial position further away
+        if (!initialPos.current) {
+            initialPos.current = camera.position.clone();
+            // Start further out and higher
+            camera.position.set(
+                targetPosition[0] * 2.5,
+                targetPosition[1] * 2.5,
+                targetPosition[2] * 2.5
+            );
+        }
+    }, []);
+
+    useFrame((state, delta) => {
+        if (!isAnimating) return;
+
+        const elapsed = (Date.now() - startTime.current) / 1000;
+        if (elapsed > 2.0) { // Stop after 2 seconds
+            setIsAnimating(false);
+            return;
+        }
+
+        // Smoothly lerp to target
+        camera.position.lerp(new THREE.Vector3(...targetPosition), 2.5 * delta);
+        camera.lookAt(0, 0, 0); // Always look at center
+    });
+
+    return null;
+};
+
 export default function PPFD3DScene({ dimensions, activeLights, unit, activeFilters, showGuideLines = true, voxelOpacity = 0.3 }) {
     const scaleFactor = unit === 'cm' ? 0.1 : 3.0;
     const width = (dimensions.width || 1) * scaleFactor;
@@ -262,7 +416,8 @@ export default function PPFD3DScene({ dimensions, activeLights, unit, activeFilt
         <div style={{ width: '100%', height: '100%', minHeight: '500px', background: '#050505' }}>
             <Canvas shadows dpr={[1, 2]}>
                 <PerspectiveCamera makeDefault position={[width * 1.5, height * 1.2, width * 1.5]} fov={50} />
-                <OrbitControls makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 2} />
+                <CameraRig targetPosition={[width * 1.5, height * 1.2, width * 1.5]} />
+                <OrbitControls makeDefault minPolarAngle={0} maxPolarAngle={Math.PI} />
 
                 <ambientLight intensity={0.5} />
                 <pointLight position={[10, 10, 10]} intensity={1} />

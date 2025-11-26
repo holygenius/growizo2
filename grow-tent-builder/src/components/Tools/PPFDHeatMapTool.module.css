@@ -79,7 +79,8 @@
   transition: all 0.2s;
 }
 
-.unitToggle button.active {
+.unitToggle button.active,
+.unitToggle button.activeButton {
   background: #10b981;
   color: white;
 }
