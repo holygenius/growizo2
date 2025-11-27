@@ -788,6 +788,99 @@
   box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
 }
 
+/* Info Section */
+.infoSection {
+  margin-top: 2rem;
+  padding: 2rem;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+}
+
+.infoSectionTitle {
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin: 0 0 2rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid rgba(34, 139, 34, 0.2);
+}
+
+.infoCategory {
+  margin-bottom: 2rem;
+}
+
+.infoCategory:last-child {
+  margin-bottom: 0;
+}
+
+.infoCategoryTitle {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  margin: 0 0 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.infoCategoryIcon {
+  font-size: 1.25rem;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.infoCard {
+  display: flex;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: var(--bg-surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.infoCard:hover {
+  border-color: rgba(34, 139, 34, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.infoCardIcon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(34, 139, 34, 0.1);
+  border-radius: var(--radius-md);
+  font-size: 1.5rem;
+}
+
+.infoCardContent {
+  flex: 1;
+}
+
+.infoCardContent h4 {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
+}
+
+.infoCardContent p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .container {
@@ -817,5 +910,26 @@
 
   .tipsList {
     grid-template-columns: 1fr;
+  }
+
+  .infoSection {
+    padding: 1.25rem;
+  }
+
+  .infoSectionTitle {
+    font-size: 1.25rem;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .infoCard {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .infoCardIcon {
+    margin: 0 auto;
   }
 }

@@ -484,6 +484,192 @@ export default function FeedingSchedule() {
         </div>
       </div>
 
+      {/* General Information Section */}
+      <div className={styles.infoSection}>
+        <h2 className={styles.infoSectionTitle}>
+          📚 {t('generalInfoTitle') || 'Biobizz Besin Çizelgesi Genel Bilgileri'}
+        </h2>
+
+        {/* Application Fundamentals */}
+        <div className={styles.infoCategory}>
+          <h3 className={styles.infoCategoryTitle}>
+            <span className={styles.infoCategoryIcon}>🌱</span>
+            {t('applicationFundamentals') || 'Uygulama Temelleri'}
+          </h3>
+          <div className={styles.infoGrid}>
+            <div className={styles.infoCard}>
+              <div className={styles.infoCardIcon}>🛏️</div>
+              <div className={styles.infoCardContent}>
+                <h4>{t('substratePreparation') || 'Substrat Hazırlığı'}</h4>
+                <p>{t('substratePreparationDetail') || 'Başlamadan önce Biobizz® substratlarını kullanarak sıcak bir yatak hazırlayın.'}</p>
+              </div>
+            </div>
+            <div className={styles.infoCard}>
+              <div className={styles.infoCardIcon}>📏</div>
+              <div className={styles.infoCardContent}>
+                <h4>{t('fertilizerStartTime') || 'Gübreye Başlama Zamanı'}</h4>
+                <p>{t('fertilizerStartTimeDetail') || 'Fidanınız 10-15 cm uzunluğa ulaştığında veya 2-4 yaprağı olduğunda gübre kullanmaya başlayın.'}</p>
+              </div>
+            </div>
+            <div className={styles.infoCard}>
+              <div className={styles.infoCardIcon}>⏱️</div>
+              <div className={styles.infoCardContent}>
+                <h4>{t('vegetativeDuration') || 'Vejetatif Süre'}</h4>
+                <p>{t('vegetativeDurationDetail') || 'Vejetatif aşama, gerektiği kadar sürebilir.'}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Dosing and Safety */}
+        <div className={styles.infoCategory}>
+          <h3 className={styles.infoCategoryTitle}>
+            <span className={styles.infoCategoryIcon}>⚖️</span>
+            {t('dosingAndSafety') || 'Dozaj ve Güvenlik'}
+          </h3>
+          <div className={styles.infoGrid}>
+            <div className={styles.infoCard}>
+              <div className={styles.infoCardIcon}>⚠️</div>
+              <div className={styles.infoCardContent}>
+                <h4>{t('dosingPrinciple') || 'Dozaj Prensibi'}</h4>
+                <p>{t('dosingPrincipleDetail') || 'Her zaman mütevazı olmak daha iyidir, fazlasını eklemektense. Bir bitki çok az besinden ölmez, ancak aşırı dozdan hayatta kalamaz.'}</p>
+              </div>
+            </div>
+            <div className={styles.infoCard}>
+              <div className={styles.infoCardIcon}>🔀</div>
+              <div className={styles.infoCardContent}>
+                <h4>{t('mixing') || 'Karıştırma'}</h4>
+                <p>{t('mixingDetail') || 'Aynı sulama suyunda birden fazla gübreyi karıştırabilirsiniz.'}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Watering and pH */}
+        <div className={styles.infoCategory}>
+          <h3 className={styles.infoCategoryTitle}>
+            <span className={styles.infoCategoryIcon}>💧</span>
+            {t('wateringAndPH') || 'Sulama ve pH'}
+          </h3>
+          <div className={styles.infoGrid}>
+            <div className={styles.infoCard}>
+              <div className={styles.infoCardIcon}>🚿</div>
+              <div className={styles.infoCardContent}>
+                <h4>{t('wateringFrequency') || 'Sulama Sıklığı'}</h4>
+                <p>{t('wateringFrequencyDetail') || 'Haftada 2-3 kez sulayın, suyun tahliye olmasına (run-off) gerek yoktur.'}</p>
+              </div>
+            </div>
+            <div className={styles.infoCard}>
+              <div className={styles.infoCardIcon}>📊</div>
+              <div className={styles.infoCardContent}>
+                <h4>{t('idealPHRange') || 'İdeal pH Aralığı'}</h4>
+                <p>{t('idealPHRangeDetail') || 'pH değeri 6.2 ile 6.5 arasında idealdir. Kontrollü pH değeri 6.2 ile 6.3 arasında olmalıdır.'}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Calmag Usage */}
+        <div className={styles.infoCategory}>
+          <h3 className={styles.infoCategoryTitle}>
+            <span className={styles.infoCategoryIcon}>🧪</span>
+            {t('calmagUsage') || 'Calmag Kullanımı'}
+          </h3>
+          <div className={styles.infoGrid}>
+            <div className={styles.infoCard}>
+              <div className={styles.infoCardIcon}>🛡️</div>
+              <div className={styles.infoCardContent}>
+                <h4>{t('calmagPrevention') || 'Calmag Önleme'}</h4>
+                <p>{t('calmagPreventionDetail') || 'Ters ozmoz (RO) veya çok yumuşak su ile yetiştirme yapılırken Calmag takviyesinin her sulamada kullanılması önerilir.'}</p>
+              </div>
+            </div>
+            <div className={styles.infoCard}>
+              <div className={styles.infoCardIcon}>🩹</div>
+              <div className={styles.infoCardContent}>
+                <h4>{t('calmagDeficiency') || 'Calmag Eksiklik Düzeltme'}</h4>
+                <p>{t('calmagDeficiencyDetail') || 'Kalsiyum/Magnezyum eksikliği belirtileri fark edildiğinde haftada bir kez kullanılması önerilir.'}</p>
+              </div>
+            </div>
+            <div className={styles.infoCard}>
+              <div className={styles.infoCardIcon}>🎯</div>
+              <div className={styles.infoCardContent}>
+                <h4>{t('calmagPurpose') || 'Calmag Amacı'}</h4>
+                <p>{t('calmagPurposeDetail') || 'Olası Ca ve Mg eksikliklerinden bitkiyi korumak için tasarlanmıştır.'}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Product Flexibility and Foliar */}
+        <div className={styles.infoCategory}>
+          <h3 className={styles.infoCategoryTitle}>
+            <span className={styles.infoCategoryIcon}>🍃</span>
+            {t('productFlexibility') || 'Ürün Esnekliği ve Yaprak Uygulaması'}
+          </h3>
+          <div className={styles.infoGrid}>
+            <div className={styles.infoCard}>
+              <div className={styles.infoCardIcon}>🔄</div>
+              <div className={styles.infoCardContent}>
+                <h4>{t('growthFertilizerFlexibility') || 'Büyüme Gübresi Esnekliği'}</h4>
+                <p>{t('growthFertilizerFlexibilityDetail') || 'Vejetatif aşamada Bio·Grow®\'u Fish·Mix™ ile değiştirmek faydalıdır, ancak çiçeklenmeyi tetiklemek istendiğinde Bio·Grow®\'a geri dönülmelidir.'}</p>
+              </div>
+            </div>
+            <div className={styles.infoCard}>
+              <div className={styles.infoCardIcon}>🌿</div>
+              <div className={styles.infoCardContent}>
+                <h4>{t('foliarApplication') || 'Yaprak Uygulaması (Foliar)'}</h4>
+                <p>{t('foliarApplicationDetail') || 'Alg·A·Mic™, Acti·Vera® ve Fish·Mix™ çiçeklenmenin ikinci haftasına kadar haftada 1-3 kez yaprak spreyi olarak uygulanabilir.'}</p>
+              </div>
+            </div>
+            <div className={styles.infoCard}>
+              <div className={styles.infoCardIcon}>💉</div>
+              <div className={styles.infoCardContent}>
+                <h4>{t('foliarDosage') || 'Yaprak Uygulaması Dozajı'}</h4>
+                <p>{t('foliarDosageDetail') || '1 veya 2 ürün kullanılırken dozaj her biri için 1-2 ml/L sudur. 3 ürün birden kullanılıyorsa, dozaj her biri için maksimum 1 ml/L sudur.'}</p>
+              </div>
+            </div>
+            <div className={styles.infoCard}>
+              <div className={styles.infoCardIcon}>🌐</div>
+              <div className={styles.infoCardContent}>
+                <h4>{t('allSystems') || 'Tüm Sistemler'}</h4>
+                <p>{t('allSystemsDetail') || 'Bio·Bloom™, Bio·Heaven™ ve Top·Max™ dahil birçok ürün tüm sistemler (toprak, hidroponik ve aeroponik) için geçerlidir.'}</p>
+              </div>
+            </div>
+            <div className={styles.infoCard}>
+              <div className={styles.infoCardIcon}>🥥</div>
+              <div className={styles.infoCardContent}>
+                <h4>{t('cocoMixRequirements') || 'Coco Mix Gereksinimleri'}</h4>
+                <p>{t('cocoMixRequirementsDetail') || 'Coco Mix üzerinde yetiştirme için pH ayarlaması yapmak ve bir enzim ürünü (örneğin Acti·Vera®) kullanmak esastır.'}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Environmental Notes */}
+        <div className={styles.infoCategory}>
+          <h3 className={styles.infoCategoryTitle}>
+            <span className={styles.infoCategoryIcon}>🌍</span>
+            {t('environmentalNotes') || 'Çevresel Notlar'}
+          </h3>
+          <div className={styles.infoGrid}>
+            <div className={styles.infoCard}>
+              <div className={styles.infoCardIcon}>♻️</div>
+              <div className={styles.infoCardContent}>
+                <h4>{t('environmentalAttention') || 'Çevresel Dikkat'}</h4>
+                <p>{t('environmentalAttentionDetail') || 'Bu Besin Çizelgesini kullandıktan sonra çevreyi düşünün.'}</p>
+              </div>
+            </div>
+            <div className={styles.infoCard}>
+              <div className={styles.infoCardIcon}>🌿</div>
+              <div className={styles.infoCardContent}>
+                <h4>{t('productFeatures') || 'Ürün Özellikleri'}</h4>
+                <p>{t('productFeaturesDetail') || 'Ürünler %100 Turbasızdır (PEAT FREE) ve Düşük CO2 Ayak İzi\'ne sahiptir (LOW CO2 FOOTPRINT).'}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Empty State */}
       {activeProducts.length === 0 && (
         <div className={styles.emptyState}>
