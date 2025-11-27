@@ -307,8 +307,19 @@ export default function FeedingSchedule() {
                     <span className={styles.checkmark}>✓</span>
                   )}
                 </div>
-                <div className={styles.productCategory}>{product.category}</div>
-                <div className={styles.productPhase}>{product.usage_phase}</div>
+                {product.function && (
+                  <div className={styles.productFunction}>{product.function}</div>
+                )}
+                {product.short_desc && (
+                  <div className={styles.productShortDesc}>{product.short_desc}</div>
+                )}
+                {product.benefits && product.benefits.length > 0 && (
+                  <ul className={styles.productBenefits}>
+                    {product.benefits.slice(0, 2).map((benefit, idx) => (
+                      <li key={idx}>{benefit}</li>
+                    ))}
+                  </ul>
+                )}
               </div>
             ))}
           </div>

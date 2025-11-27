@@ -26,6 +26,13 @@ export const FEEDING_SCHEDULE_DATA = [
     application_type: 'Sulama (Su/Toprak/Hidroponik)',
     usage_phase: 'KÖKLENME (ROOTING)',
     color: '#8B5CF6', // Purple
+    function: 'KÖK STİMÜLASYONU',
+    short_desc: 'Güçlü kök gelişimi için',
+    benefits: [
+      'Birinci sınıf hümik asit ve deniz yosunundan elde edilmiştir',
+      'Güçlü kök gelişimini teşvik eder',
+      'Bitkiyi besinleri daha hızlı emmeye hazırlar'
+    ],
     // Tüm substratlar için aynı dozaj
     schedule: {
       'WK 1': 4,
@@ -51,6 +58,13 @@ export const FEEDING_SCHEDULE_DATA = [
     application_type: 'Sulama',
     usage_phase: 'BÜYÜME VE ÇİÇEKLENME (NUTRITION)',
     color: '#22C55E', // Green
+    function: 'TEMEL BESLENME (Büyüme)',
+    short_desc: 'Büyümeyi teşvik eden temel gübre',
+    benefits: [
+      '%100 organik şeker pancarı özünden (vinasse) elde edilmiştir',
+      'Toprak mikropları için zengin bir gıda kaynağıdır',
+      'B1, B2, C ve E vitaminlerini içerir'
+    ],
     // ALL·MIX için düşük dozaj (ağır gübrelenmiş toprak)
     schedule_allmix: {
       'WK 1': 1,
@@ -107,6 +121,13 @@ export const FEEDING_SCHEDULE_DATA = [
     application_type: 'Sulama (veya Yaprak Spreyi)',
     usage_phase: 'BÜYÜME (NUTRITION)',
     color: '#06B6D4', // Cyan
+    function: 'BESLENME / TOPRAK İYİLEŞTİRME',
+    short_desc: 'Toprak kalitesini artıran gübre',
+    benefits: [
+      'Substrattaki tüm canlı organizmaların büyümesini hızlandırır',
+      'Mikroorganizma ve faydalı bakteri üretimini teşvik eder',
+      'Kötü kaliteli toprağı zengin, yağlı toprağa dönüştürür'
+    ],
     // ALL·MIX için Indoor/Outdoor schedule (düşük dozaj)
     schedule_allmix_indoor: {
       'WK 1': 1,
@@ -205,6 +226,14 @@ export const FEEDING_SCHEDULE_DATA = [
     application_type: 'Sulama (Su/Toprak/Hidroponik)',
     usage_phase: 'ÇİÇEKLENME (BLOOMING)',
     color: '#EC4899', // Pink
+    function: 'TEMEL BESLENME (Çiçeklenme)',
+    short_desc: 'Çiçeklenme için temel gübre',
+    benefits: [
+      'Lezzetli meyvelere yol açan coşkulu çiçekler için',
+      'Nitrojen, fosfor ve potasyumun optimum karışımını sunar',
+      'Bağımsız çalışan bir gübredir',
+      'Eser elementler içerir'
+    ],
     schedule: {
       'WK 1': 1,
       'WK 2': 2,
@@ -229,6 +258,13 @@ export const FEEDING_SCHEDULE_DATA = [
     application_type: 'Sulama (Su/Toprak/Hidroponik)',
     usage_phase: 'ÇİÇEKLENME (BLOOMING STIMULATING)',
     color: '#F59E0B', // Amber
+    function: 'ÇİÇEKLENME STİMÜLASYONU',
+    short_desc: 'Çiçek boyutu ve ağırlığını artırır',
+    benefits: [
+      'Çiçeklenme güçlendiricisidir (boyut ve ağırlık)',
+      'Besin alımını iyileştirir',
+      'Daha tatlı, pürüzsüz tadım sağlayan ürünler yetiştirilmesini sağlar'
+    ],
     schedule: {
       'WK 1': 1,
       'WK 2': 1,
@@ -253,6 +289,14 @@ export const FEEDING_SCHEDULE_DATA = [
     application_type: 'Sulama (Su/Toprak/Hidroponik)',
     usage_phase: 'BÜYÜME VE ÇİÇEKLENME (BOOSTING)',
     color: '#EAB308', // Yellow
+    function: 'ENERJİ GÜÇLENDİRME',
+    short_desc: 'Enerji ve metabolizma desteği',
+    benefits: [
+      'Enerji takviyesi sağlar',
+      'Nem tutma özelliğini iyileştirir',
+      'Enzimatik aktiviteyi ve hızlı besin emilimini uyarır',
+      'Toksinlerden kurtulmayı sağlar'
+    ],
     schedule: {
       'WK 1': 2,
       'WK 2': 2,
@@ -277,6 +321,13 @@ export const FEEDING_SCHEDULE_DATA = [
     application_type: 'Sulama (veya Yaprak Spreyi)',
     usage_phase: 'BÜYÜME VE ÇİÇEKLENME (BOOSTING/PREVENTING)',
     color: '#84CC16', // Lime
+    function: 'GÜÇLENDİRME / ÖNLEME',
+    short_desc: 'Bağışıklık ve metabolizma aktivatörü',
+    benefits: [
+      'Hem içeriden hem dışarıdan daha güçlü ve daha sağlıklı bitkiler sağlar',
+      'Bağışıklık sistemini korur ve aktive eder',
+      'Çimlenmeyi ve bitki metabolizmasını artırır'
+    ],
     schedule: {
       'WK 1': 2,
       'WK 2': 2,
@@ -302,6 +353,13 @@ export const FEEDING_SCHEDULE_DATA = [
     application_type: 'Sulama (veya Yaprak Spreyi)',
     usage_phase: 'BÜYÜME VE ÇİÇEKLENME (STIMULATING/PREVENTING)',
     color: '#14B8A6', // Teal
+    function: 'CANLILIK/ÖNLEME',
+    short_desc: 'Stres kurtarıcısı ve canlandırıcı',
+    benefits: [
+      'Aşırı besleme, eksiklikler, hastalıklar veya sıcaklık dalgalanmaları durumunda kurtarıcıdır',
+      'Yeşil yaprakları garanti eder',
+      'Düşük NPK seviyesine sahip canlandırıcı bir üründür'
+    ],
     schedule: {
       'WK 1': 1,
       'WK 2': 2,
@@ -327,6 +385,11 @@ export const FEEDING_SCHEDULE_DATA = [
     application_type: 'Sulama (Toz Karışımı)',
     usage_phase: 'TÜM AŞAMALAR (NPK ALIMINI ARTIRMA)',
     color: '#A855F7', // Purple
+    function: 'NPK AKIŞINI ARTIRMA',
+    short_desc: 'Faydalı mikroorganizma konsantresi',
+    benefits: [
+      'Büyümeyi ve üretimi artıracak bakteri, mantar ve enzimlerin süper konsantre karışımıdır'
+    ],
     schedule: {
       'WK 1': 0.4,
       'WK 2': 0.2,
@@ -352,6 +415,12 @@ export const FEEDING_SCHEDULE_DATA = [
     application_type: 'Sulama (Su/Toprak/Hidroponik)',
     usage_phase: 'TÜM AŞAMALAR (SUPPLEMENT)',
     color: '#6366F1', // Indigo
+    function: 'CA VE MG TAKVİYESİ',
+    short_desc: 'Kalsiyum ve Magnezyum desteği',
+    benefits: [
+      'Olası Ca (Kalsiyum) ve Mg (Magnezyum) eksikliklerinden bitkiyi korumak için tasarlanmıştır',
+      'Az gübrelenmiş substratlarda ve hidroponik sistemlerde kullanılabilir'
+    ],
     schedule_prevention_substrate: {
       'WK 1-6': '0.3-0.8',
       'WK 6-8': '0.5-0.8',
@@ -387,6 +456,13 @@ export const FEEDING_SCHEDULE_DATA = [
     application_type: 'Yaprak Spreyi',
     usage_phase: 'BÜYÜME VE ÇİÇEKLENME',
     color: '#10B981', // Emerald
+    function: 'KORUYUCU',
+    short_desc: 'Zararlılara karşı doğal koruma',
+    benefits: [
+      'İstenmeyen böceklere ve zararlı yaprak mantarlarına karşı koruma sağlar',
+      'Kullanıma hazır bir üründür',
+      'Pestisitlere karşı çevresel olarak dost bir alternatiftir'
+    ],
     schedule: {
       'WK 1': '✓',
       'WK 2': '✓',
@@ -412,6 +488,11 @@ export const FEEDING_SCHEDULE_DATA = [
     application_type: 'Sulama/Hidroponik',
     usage_phase: 'BÜYÜME VE ÇİÇEKLENME',
     color: '#EF4444', // Red
+    function: 'PH DÜZENLEME',
+    short_desc: 'pH düşürücü',
+    benefits: [
+      'Besin karışımı pH düzenleyicisidir'
+    ],
     schedule: null,
     note: 'Besin karışımının pH\'ını düşürmek gerektiğinde kullanılır (sitrik asit bazlı). Önce diğer Biobizz ürünleri karıştırılır, pH ölçülür ve istenen değere ulaşana kadar Bio·Down eklenip karıştırılır.'
   },
@@ -424,6 +505,11 @@ export const FEEDING_SCHEDULE_DATA = [
     application_type: 'Sulama/Hidroponik',
     usage_phase: 'BÜYÜME VE ÇİÇEKLENME',
     color: '#3B82F6', // Blue
+    function: 'PH DÜZENLEME',
+    short_desc: 'pH yükseltici',
+    benefits: [
+      'Besin karışımı pH düzenleyicisidir'
+    ],
     schedule: null,
     note: 'Besin karışımının pH\'ını yükseltmek gerektiğinde kullanılır (hümik asit bazlı). Önce diğer Biobizz ürünleri karıştırılır, pH ölçülür ve istenen değere ulaşana kadar Bio·Up eklenip karıştırılır.'
   }
