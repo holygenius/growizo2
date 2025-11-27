@@ -53,10 +53,10 @@ const Navbar = () => {
                             </span>
                             {isToolsOpen && (
                                 <div className={styles.dropdownMenu}>
-                                    <Link to={getLocalizedPath('/tools/electricity-cost-calculator')} className={styles.dropdownItem}>{t('navCostCalc')}</Link>
-                                    <Link to={getLocalizedPath('/tools/co2-calculator')} className={styles.dropdownItem}>{t('navCo2Calc')}</Link>
-                                    <Link to={getLocalizedPath('/tools/unit-converter')} className={styles.dropdownItem}>{t('navUnitConv')}</Link>
-                                    <Link to={getLocalizedPath('/tools/ppfd-heatmap')} className={styles.dropdownItem}>{t('navPpfdTool')}</Link>
+                                    <Link to={getLocalizedPath('/tools/electricity-cost-calculator')} className={styles.dropdownItem}>⚡ {t('navCostCalc')}</Link>
+                                    <Link to={getLocalizedPath('/tools/co2-calculator')} className={styles.dropdownItem}>🌫️ {t('navCo2Calc')}</Link>
+                                    <Link to={getLocalizedPath('/tools/unit-converter')} className={styles.dropdownItem}>💧 {t('navUnitConv')}</Link>
+                                    <Link to={getLocalizedPath('/tools/ppfd-heatmap')} className={styles.dropdownItem}>☀️ {t('navPpfdTool')}</Link>
                                 </div>
                             )}
                         </div>

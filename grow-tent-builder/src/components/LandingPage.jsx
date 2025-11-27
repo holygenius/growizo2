@@ -142,6 +142,11 @@ export default function LandingPage() {
                         <h3>{t('landingCo2Calculator')}</h3>
                         <p>{t('landingCo2CalculatorDesc')}</p>
                     </Link>
+                    <Link to={getLocalizedPath('/tools/ppfd-heatmap')} className="tool-preview-card">
+                        <div className="tool-icon">☀️</div>
+                        <h3>{t('landingPpfdMapTitle')}</h3>
+                        <p>{t('landingPpfdMapDesc')}</p>
+                    </Link>
                 </div>
                 <div className="center-btn">
                     <Link to={getLocalizedPath('/tools')} className="secondary-btn">
@@ -166,7 +171,7 @@ export default function LandingPage() {
 
             {/* Info Boxes Section */}
             <section className="info-boxes-section">
-                <div className="info-boxes-header">
+                <div className="section-header">
                     <h2>⚠️ {t('landingInfoTitle')}</h2>
                     <p>{t('landingInfoSubtitle')}</p>
                 </div>
@@ -184,6 +189,66 @@ export default function LandingPage() {
                             </div>
                         </div>
                     ))}
+                </div>
+            </section>
+
+            {/* PPFD Map Section */}
+            <section className="ppfd-section">
+                <div className="section-header">
+                    <h2>🌈 {t('landingPpfdMapTitle')}</h2>
+                    <p>{t('landingPpfdMapDesc')}</p>
+                </div>
+                <div className="ppfd-visual-container">
+                    <div className="ppfd-card-3d">
+                        <div className="ppfd-overlay">
+                            <span className="ppfd-badge">3D Mode</span>
+                        </div>
+                        <div className="ppfd-placeholder-3d">
+                            <div className="grid-floor"></div>
+                            <div className="heat-cone"></div>
+                        </div>
+                    </div>
+                    <div className="ppfd-card-2d">
+                        <div className="ppfd-overlay">
+                            <span className="ppfd-badge">2D Mode</span>
+                        </div>
+                        <div className="ppfd-placeholder-2d">
+                            <div className="heat-circle c1"></div>
+                            <div className="heat-circle c2"></div>
+                            <div className="heat-circle c3"></div>
+                        </div>
+                    </div>
+                </div>
+                <div className="center-btn">
+                    <Link to={getLocalizedPath('/tools/ppfd-heatmap')} className="cta-button secondary">
+                        {t('landingPpfdTitle')} <span className="arrow">→</span>
+                    </Link>
+                </div>
+            </section>
+
+            {/* Feeding Schedules Section */}
+            <section className="feeding-section">
+                <div className="section-header">
+                    <h2>🌱 {t('landingFeedingTitle')}</h2>
+                    <p>{t('landingFeedingDesc')}</p>
+                </div>
+                <div className="feeding-grid">
+                    <Link to={getLocalizedPath('/tools/feeding-schedule')} className="feeding-card biobizz">
+                        <div className="feeding-icon-wrapper">
+                            <img
+                                src="/images/cropped-Biobizz-Icon-Brown-Texture-180x180.jpg"
+                                alt="BioBizz"
+                                className="feeding-icon-img"
+                            />
+                        </div>
+                        <div className="feeding-content">
+                            <h3>{t('biobizzTitle')}</h3>
+                            <p>{t('biobizzDesc')}</p>
+                            <span className="brand-tag">BioBizz</span>
+                        </div>
+                        <div className="feeding-arrow">→</div>
+                    </Link>
+                    {/* Future feeding schedules can be added here */}
                 </div>
             </section>
 

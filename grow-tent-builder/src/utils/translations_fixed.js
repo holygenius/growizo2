@@ -139,6 +139,12 @@ export const translations = {
 
     // Landing Page
     landingTitle: 'Design Your Perfect Harvest',
+    landingFeedingTitle: 'Feeding Schedule',
+    landingFeedingDesc: 'Calculate the amount of nutrients needed for your plants.',
+    biobizzTitle: 'BioBizz',
+    biobizzDesc: 'Calculate the amount of nutrients needed for your plants.',
+    landingPpfdMapTitle: 'PPFD Heat Map',
+    landingPpfdMapDesc: 'Calculate the amount of Light Intensity needed for your plants.',
     landingSubtitle: 'Advanced simulation for serious growers. Calculate PPFD, estimate costs, and optimize your environment before you buy.',
     landingCta: 'Start Building Now',
     landingPpfdTitle: 'PPFD Simulation',
@@ -735,6 +741,12 @@ export const translations = {
 
     // Landing Page
     landingTitle: 'Mükemmel Hasadınızı Tasarlayın',
+    landingFeedingTitle: 'Beslenme Programı',
+    landingFeedingDesc: 'Bitkileriniz için ihtiyaç duyulan besinlerin miktarını hesaplayın.',
+    biobizzTitle: 'BioBizz',
+    biobizzDesc: 'Bitkileriniz için ihtiyaç duyulan besinlerin miktarını hesaplayın.',
+    landingPpfdMapTitle: 'PPFD ısı haritası',
+    landingPpfdMapDesc: 'Bitkileriniz için ihtiyaç duyulan ışık yoğunluğunun miktarını hesaplayın.',
     landingSubtitle: 'Ciddi yetiştiriciler için gelişmiş simülasyon. PPFD hesaplayın, maliyetleri tahmin edin ve satın almadan önce ortamınızı optimize edin.',
     landingCta: 'Hemen Başla',
     landingPpfdTitle: 'PPFD Simülasyonu',

@@ -1,7 +1,8 @@
 import { createContext, useContext, useState } from 'react';
-import { translations } from '../utils/translations';
+import { translations } from '../utils/translations_fixed';
 
 const SettingsContext = createContext();
+// Trigger HMR update
 
 export const CURRENCIES = {
     USD: { symbol: '$', rate: 1 },
@@ -142,12 +143,12 @@ export function SettingsProvider({ children }) {
     const getLocalizedPath = (path) => {
         // Ensure path starts with /
         const cleanPath = path.startsWith('/') ? path : `/${path}`;
-        
+
         // If Turkish, use localized paths
         if (language === 'tr' && pathMappings[cleanPath]) {
             return `/${language}${pathMappings[cleanPath]}`;
         }
-        
+
         return `/${language}${cleanPath}`;
     };
 
