@@ -12,6 +12,7 @@ import CostCalculator from './components/Tools/CostCalculator';
 import UnitConverter from './components/Tools/UnitConverter';
 import CO2Calculator from './components/Tools/CO2Calculator';
 import PPFDHeatMapTool from './components/Tools/PPFDHeatMapTool';
+import FeedingSchedule from './components/Tools/FeedingSchedule';
 
 import { Helmet } from 'react-helmet-async';
 
@@ -75,6 +76,8 @@ function AppContent() {
             <Route path="tools/unit-converter" element={<UnitConverter />} />
             <Route path="tools/co2-calculator" element={<CO2Calculator />} />
             <Route path="tools/ppfd-heatmap" element={<PPFDHeatMapTool />} />
+            <Route path="tools/feeding-schedule" element={<Navigate to="../feeding/biobizz" replace />} />
+            <Route path="feeding/biobizz" element={<FeedingSchedule />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </LanguageWrapper>

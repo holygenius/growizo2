@@ -1,38 +1,37 @@
+import { useState } from 'react';
 import { useBuilder } from '../context/BuilderContext';
 import { useSettings } from '../context/SettingsContext';
-
-const NUTRIENT_OPTIONS = [
-    // Soil Options
-    { id: 'soil-kit', name: 'Organic Soil Starter Kit', type: 'Media', mediaType: 'soil', price: 45, description: 'Premium potting mix + amendments' },
-    { id: 'nutes-soil-basic', name: 'Organic Nutrient Trio', type: 'Nutrients', mediaType: 'soil', price: 35, description: 'Grow, Bloom, and Micro for Soil' },
-
-    // Coco Options
-    { id: 'coco-kit', name: 'Coco Coir + Perlite Brick', type: 'Media', mediaType: 'coco', price: 35, description: '70/30 mix for high drainage' },
-    { id: 'nutes-coco-ab', name: 'Coco A+B Nutrients', type: 'Nutrients', mediaType: 'coco', price: 40, description: 'Specific formula for Coco Coir' },
-    { id: 'calmag', name: 'CalMag Supplement', type: 'Nutrients', mediaType: 'coco', price: 20, description: 'Essential for Coco grows' },
-
-    // Hydro Options
-    { id: 'dwc-bucket', name: 'DWC Hydro Bucket (Single)', type: 'System', mediaType: 'hydro', price: 40, description: 'Deep Water Culture system' },
-    { id: 'rdwc-4', name: 'RDWC System (4 Site)', type: 'System', mediaType: 'hydro', price: 350, description: 'Recirculating Deep Water Culture' },
-    { id: 'nutes-hydro-pro', name: 'Hydro Pro Series', type: 'Nutrients', mediaType: 'hydro', price: 85, description: 'Complete sterile nutrient line' },
-    { id: 'hydroguard', name: 'Root Inoculant', type: 'Additives', mediaType: 'hydro', price: 30, description: 'Prevents root rot' },
-
-    // Universal / Automated
-    { id: 'autopot-2', name: 'AutoPot System (2 Pot)', type: 'System', mediaType: 'soil', price: 120, description: 'Gravity fed watering system' },
-];
+import { BIOBIZZ_PRODUCTS, PRODUCT_CATEGORIES, getProductsByMedia, groupProductsByCategory } from '../data/biobizzProducts';
 
 export default function NutrientSelection() {
     const { state, dispatch } = useBuilder();
     const { t, formatPrice } = useSettings();
     const { selectedItems, mediaType } = state;
     const selectedNutrients = selectedItems.nutrients;
+    const [expandedCategories, setExpandedCategories] = useState({});
+    const [selectedPackaging, setSelectedPackaging] = useState({});
 
     const handleToggleItem = (item) => {
+        const packaging = selectedPackaging[item.id] || item.available_packaging[0];
+        const itemWithPackaging = { ...item, selectedPackaging: packaging };
+        
         const isSelected = selectedNutrients.find(i => i.id === item.id);
         if (isSelected) {
             dispatch({ type: 'REMOVE_ITEM', payload: { category: 'nutrients', itemId: item.id } });
         } else {
-            dispatch({ type: 'ADD_ITEM', payload: { category: 'nutrients', item } });
+            dispatch({ type: 'ADD_ITEM', payload: { category: 'nutrients', item: itemWithPackaging } });
+        }
+    };
+
+    const handlePackagingChange = (itemId, packaging) => {
+        setSelectedPackaging(prev => ({ ...prev, [itemId]: packaging }));
+        
+        // Eğer ürün zaten seçiliyse, paketlemeyi güncelle
+        const existingItem = selectedNutrients.find(i => i.id === itemId);
+        if (existingItem) {
+            const updatedItem = { ...existingItem, selectedPackaging: packaging };
+            dispatch({ type: 'REMOVE_ITEM', payload: { category: 'nutrients', itemId } });
+            dispatch({ type: 'ADD_ITEM', payload: { category: 'nutrients', item: updatedItem } });
         }
     };
 
@@ -44,46 +43,289 @@ export default function NutrientSelection() {
         dispatch({ type: 'PREV_STEP' });
     };
 
+    const toggleCategory = (categoryKey) => {
+        setExpandedCategories(prev => ({
+            ...prev,
+            [categoryKey]: !prev[categoryKey]
+        }));
+    };
+
     // Filter options based on global mediaType
-    const filteredOptions = NUTRIENT_OPTIONS.filter(item => item.mediaType === mediaType || !item.mediaType);
+    const filteredProducts = getProductsByMedia(mediaType);
+    const groupedProducts = groupProductsByCategory(filteredProducts);
 
     return (
         <div className="fade-in">
             <h2 style={{ marginBottom: '1rem', color: 'var(--color-primary)' }}>{t('step6')}</h2>
 
-            <p style={{ marginBottom: '2rem', color: 'var(--text-secondary)' }}>
+            <p style={{ marginBottom: '1rem', color: 'var(--text-secondary)' }}>
                 {t('nutesDesc')}
             </p>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
-                {filteredOptions.map((item) => {
-                    const isSelected = selectedNutrients.find(i => i.id === item.id);
+            {/* BioBizz marka göstergesi */}
+            <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '0.5rem', 
+                marginBottom: '2rem',
+                padding: '0.75rem 1rem',
+                background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%)',
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid rgba(16, 185, 129, 0.2)'
+            }}>
+                <span style={{ fontSize: '1.25rem' }}>🌿</span>
+                <span style={{ fontWeight: 'bold', color: 'var(--color-primary)' }}>BioBizz</span>
+                <span style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
+                    {t('organicProducts') || 'Organik Ürünler'}
+                </span>
+            </div>
+
+            {/* Kategorilere göre gruplandırılmış ürünler */}
+            <div style={{ marginBottom: '2rem' }}>
+                {Object.entries(groupedProducts).map(([categoryKey, products]) => {
+                    const category = PRODUCT_CATEGORIES[categoryKey];
+                    const isExpanded = expandedCategories[categoryKey] !== false; // Varsayılan olarak açık
+
                     return (
-                        <div
-                            key={item.id}
-                            onClick={() => handleToggleItem(item)}
-                            className="card-interactive"
-                            style={{
-                                padding: '1rem',
-                                background: isSelected ? 'var(--bg-surface-hover)' : 'var(--bg-card)',
-                                border: `2px solid ${isSelected ? 'var(--color-primary)' : 'var(--border-color)'}`,
-                                borderRadius: 'var(--radius-md)',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s ease'
-                            }}
-                        >
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-                                <span style={{ fontWeight: 'bold', color: isSelected ? 'var(--color-primary)' : 'var(--text-primary)' }}>{item.name}</span>
-                                <span style={{ fontSize: '0.75rem', background: 'var(--bg-surface)', padding: '2px 6px', borderRadius: '4px', color: 'var(--text-muted)' }}>{item.type}</span>
+                        <div key={categoryKey} style={{ marginBottom: '1rem' }}>
+                            {/* Kategori başlığı */}
+                            <div
+                                onClick={() => toggleCategory(categoryKey)}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    padding: '0.75rem 1rem',
+                                    background: 'var(--bg-surface)',
+                                    borderRadius: 'var(--radius-md)',
+                                    cursor: 'pointer',
+                                    marginBottom: isExpanded ? '0.75rem' : 0,
+                                    transition: 'all 0.2s ease'
+                                }}
+                            >
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                    <span style={{ fontSize: '1.25rem' }}>{category?.icon || '📦'}</span>
+                                    <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
+                                        {category?.name || categoryKey}
+                                    </span>
+                                    <span style={{ 
+                                        fontSize: '0.75rem', 
+                                        background: 'var(--bg-card)', 
+                                        padding: '2px 8px', 
+                                        borderRadius: '12px', 
+                                        color: 'var(--text-muted)' 
+                                    }}>
+                                        {products.length}
+                                    </span>
+                                </div>
+                                <span style={{ 
+                                    transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                                    transition: 'transform 0.2s ease',
+                                    color: 'var(--text-muted)'
+                                }}>
+                                    ▼
+                                </span>
                             </div>
-                            <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
-                                {item.description}
-                            </div>
-                            <div style={{ color: 'var(--color-primary)', fontWeight: 'bold' }}>{formatPrice(item.price)}</div>
+
+                            {/* Ürün kartları */}
+                            {isExpanded && (
+                                <div style={{ 
+                                    display: 'grid', 
+                                    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', 
+                                    gap: '1rem' 
+                                }}>
+                                    {products.map((item) => {
+                                        const isSelected = selectedNutrients.find(i => i.id === item.id);
+                                        const currentPackaging = selectedPackaging[item.id] || item.available_packaging[0];
+
+                                        return (
+                                            <div
+                                                key={item.id}
+                                                className="card-interactive"
+                                                style={{
+                                                    padding: '1rem',
+                                                    background: isSelected ? 'var(--bg-surface-hover)' : 'var(--bg-card)',
+                                                    border: `2px solid ${isSelected ? 'var(--color-primary)' : 'var(--border-color)'}`,
+                                                    borderRadius: 'var(--radius-md)',
+                                                    transition: 'all 0.2s ease'
+                                                }}
+                                            >
+                                                {/* Ürün başlığı */}
+                                                <div 
+                                                    onClick={() => handleToggleItem(item)}
+                                                    style={{ cursor: 'pointer' }}
+                                                >
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                                                        <span style={{ fontSize: '1.5rem' }}>{item.icon}</span>
+                                                        <div style={{ flex: 1 }}>
+                                                            <span style={{ 
+                                                                fontWeight: 'bold', 
+                                                                color: isSelected ? 'var(--color-primary)' : 'var(--text-primary)',
+                                                                fontSize: '0.95rem'
+                                                            }}>
+                                                                {item.product_name}
+                                                            </span>
+                                                        </div>
+                                                        {isSelected && (
+                                                            <span style={{ 
+                                                                color: 'var(--color-primary)', 
+                                                                fontSize: '1.25rem' 
+                                                            }}>
+                                                                ✓
+                                                            </span>
+                                                        )}
+                                                    </div>
+
+                                                    {/* Fonksiyon */}
+                                                    <div style={{ 
+                                                        fontSize: '0.8rem', 
+                                                        color: 'var(--color-primary)', 
+                                                        marginBottom: '0.5rem',
+                                                        opacity: 0.9
+                                                    }}>
+                                                        {item.function_detailed}
+                                                    </div>
+
+                                                    {/* Açıklama */}
+                                                    <div style={{ 
+                                                        fontSize: '0.8rem', 
+                                                        color: 'var(--text-secondary)', 
+                                                        marginBottom: '0.75rem',
+                                                        lineHeight: 1.4
+                                                    }}>
+                                                        {item.key_properties.length > 120 
+                                                            ? item.key_properties.substring(0, 120) + '...' 
+                                                            : item.key_properties}
+                                                    </div>
+                                                </div>
+
+                                                {/* Paketleme seçimi */}
+                                                <div style={{ marginBottom: '0.75rem' }}>
+                                                    <div style={{ 
+                                                        fontSize: '0.7rem', 
+                                                        color: 'var(--text-muted)', 
+                                                        marginBottom: '0.25rem' 
+                                                    }}>
+                                                        {t('packaging') || 'Ambalaj'}:
+                                                    </div>
+                                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem' }}>
+                                                        {item.available_packaging.map(pkg => (
+                                                            <button
+                                                                key={pkg}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handlePackagingChange(item.id, pkg);
+                                                                }}
+                                                                style={{
+                                                                    padding: '0.25rem 0.5rem',
+                                                                    fontSize: '0.7rem',
+                                                                    background: currentPackaging === pkg 
+                                                                        ? 'var(--color-primary)' 
+                                                                        : 'var(--bg-surface)',
+                                                                    color: currentPackaging === pkg 
+                                                                        ? '#000' 
+                                                                        : 'var(--text-secondary)',
+                                                                    border: 'none',
+                                                                    borderRadius: '4px',
+                                                                    cursor: 'pointer',
+                                                                    transition: 'all 0.2s ease'
+                                                                }}
+                                                            >
+                                                                {pkg}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+
+                                                {/* Fiyat */}
+                                                <div style={{ 
+                                                    display: 'flex', 
+                                                    justifyContent: 'space-between', 
+                                                    alignItems: 'center' 
+                                                }}>
+                                                    <div style={{ 
+                                                        color: 'var(--color-primary)', 
+                                                        fontWeight: 'bold',
+                                                        fontSize: '1.1rem'
+                                                    }}>
+                                                        {formatPrice(item.price)}
+                                                    </div>
+                                                    <button
+                                                        onClick={() => handleToggleItem(item)}
+                                                        style={{
+                                                            padding: '0.4rem 0.8rem',
+                                                            fontSize: '0.8rem',
+                                                            background: isSelected 
+                                                                ? 'rgba(239, 68, 68, 0.2)' 
+                                                                : 'rgba(16, 185, 129, 0.2)',
+                                                            color: isSelected 
+                                                                ? '#ef4444' 
+                                                                : 'var(--color-primary)',
+                                                            border: 'none',
+                                                            borderRadius: 'var(--radius-sm)',
+                                                            cursor: 'pointer',
+                                                            transition: 'all 0.2s ease'
+                                                        }}
+                                                    >
+                                                        {isSelected ? (t('remove') || 'Kaldır') : (t('add') || 'Ekle')}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
                         </div>
                     );
                 })}
             </div>
+
+            {/* Seçilen ürünler özeti */}
+            {selectedNutrients.length > 0 && (
+                <div style={{
+                    padding: '1rem',
+                    background: 'var(--bg-surface)',
+                    borderRadius: 'var(--radius-md)',
+                    marginBottom: '2rem',
+                    border: '1px solid var(--border-color)'
+                }}>
+                    <div style={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center',
+                        marginBottom: '0.5rem'
+                    }}>
+                        <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
+                            {t('selectedProducts') || 'Seçilen Ürünler'} ({selectedNutrients.length})
+                        </span>
+                        <span style={{ color: 'var(--color-primary)', fontWeight: 'bold' }}>
+                            {formatPrice(selectedNutrients.reduce((sum, item) => sum + (item.price || 0), 0))}
+                        </span>
+                    </div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                        {selectedNutrients.map(item => (
+                            <span 
+                                key={item.id}
+                                style={{
+                                    padding: '0.25rem 0.5rem',
+                                    background: 'var(--bg-card)',
+                                    borderRadius: '4px',
+                                    fontSize: '0.8rem',
+                                    color: 'var(--text-secondary)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.25rem'
+                                }}
+                            >
+                                {item.icon} {item.product_name}
+                                {item.selectedPackaging && (
+                                    <span style={{ opacity: 0.7 }}>({item.selectedPackaging})</span>
+                                )}
+                            </span>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <button

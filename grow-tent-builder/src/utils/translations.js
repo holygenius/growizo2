@@ -68,6 +68,11 @@ export const translations = {
 
     // Nutrients
     nutesDesc: 'Select nutrients and additives compatible with your chosen medium.',
+    organicProducts: 'Organic Products',
+    packaging: 'Packaging',
+    selectedProducts: 'Selected Products',
+    add: 'Add',
+    remove: 'Remove',
 
     // Monitoring
     monitorDesc: 'Select devices to monitor and control your environment.',
@@ -126,6 +131,9 @@ export const translations = {
     navCo2Calc: 'CO₂ Calculator',
     navUnitConv: 'Volume Converter',
     navPpfdTool: 'PPFD Heat Map',
+    navFeedingSchedule: 'Feeding Schedule',
+    navFeedingPrograms: '🌱 Feeding Programs',
+    navBiobizz: 'BioBizz',
     switchToTr: 'Switch to TR',
     switchToEn: 'Switch to EN',
 
@@ -184,6 +192,35 @@ export const translations = {
     toolCo2Desc: 'Calculate CO2 requirements',
     toolPpfdTitle: 'PPFD Heat Map',
     toolPpfdDesc: 'Visualize light intensity distribution',
+    toolFeedingTitle: 'Feeding Schedule',
+    toolFeedingDesc: 'Create your BioBizz nutrient plan',
+
+    // Feeding Schedule Tool
+    feedingScheduleTitle: 'BioBizz Feeding Schedule',
+    feedingScheduleSubtitle: 'Interactive nutrient plan builder',
+    organic: 'Organic',
+    madeInHolland: 'Made in Holland',
+    sustainable: 'Sustainable',
+    waterAmount: 'Water Amount',
+    growType: 'Grow Type',
+    products: 'Products',
+    productSelected: 'products selected',
+    selectProducts: 'Select Products',
+    selectAll: 'Select All',
+    resetDefault: 'Reset to Default',
+    clearAll: 'Clear All',
+    product: 'Product',
+    unit: 'Unit',
+    totalForWater: 'Total',
+    water: 'water',
+    productNotes: 'Product Notes',
+    usageTips: 'Usage Tips',
+    tip1: 'Always mix products with water, never directly with each other.',
+    tip2: 'Ideal pH range is 6.0-7.0 for soil, 5.5-6.5 for hydroponics.',
+    tip3: 'During FLUSH week, use only clean water, no nutrients.',
+    tip4: 'Adjust dosages according to your plant\'s response, every plant is different.',
+    noProductsSelected: 'No products selected yet',
+    selectProductsPrompt: 'Select products above to create your feeding schedule.',
 
     // Cost Calculator Tool
     costCalcTitle: 'Electricity Cost Calculator',
@@ -437,6 +474,11 @@ export const translations = {
 
     // Nutrients
     nutesDesc: 'Seçtiğiniz medyaya uygun besinleri ve katkı maddelerini seçin.',
+    organicProducts: 'Organik Ürünler',
+    packaging: 'Ambalaj',
+    selectedProducts: 'Seçilen Ürünler',
+    add: 'Ekle',
+    remove: 'Kaldır',
 
     // Monitoring
     monitorDesc: 'Ortamınızı izlemek ve kontrol etmek için cihazlar seçin.',
@@ -495,6 +537,9 @@ export const translations = {
     navCo2Calc: 'CO₂ Hesaplayıcı',
     navUnitConv: 'Hacim Çevirici',
     navPpfdTool: 'PPFD Isı Haritası',
+    navFeedingSchedule: 'Beslenme Programı',
+    navFeedingPrograms: '🌱 Beslenme Programları',
+    navBiobizz: 'BioBizz',
     switchToTr: 'Switch to TR',
     switchToEn: 'Switch to EN',
 
@@ -553,6 +598,35 @@ export const translations = {
     toolCo2Desc: 'CO2 gereksinimlerini hesaplayın',
     toolPpfdTitle: 'PPFD Isı Haritası',
     toolPpfdDesc: 'Işık yoğunluğu dağılımını görselleştirin',
+    toolFeedingTitle: 'Beslenme Programı',
+    toolFeedingDesc: 'BioBizz besin planınızı oluşturun',
+
+    // Feeding Schedule Tool
+    feedingScheduleTitle: 'BioBizz Beslenme Programı',
+    feedingScheduleSubtitle: 'İnteraktif besin planı oluşturucu',
+    organic: 'Organik',
+    madeInHolland: 'Hollanda\'da Üretildi',
+    sustainable: 'Sürdürülebilir',
+    waterAmount: 'Su Miktarı',
+    growType: 'Yetiştirme Tipi',
+    products: 'Ürünler',
+    productSelected: 'ürün seçili',
+    selectProducts: 'Ürün Seçin',
+    selectAll: 'Tümünü Seç',
+    resetDefault: 'Varsayılana Dön',
+    clearAll: 'Temizle',
+    product: 'Ürün',
+    unit: 'Birim',
+    totalForWater: 'Toplam',
+    water: 'su',
+    productNotes: 'Ürün Notları',
+    usageTips: 'Kullanım İpuçları',
+    tip1: 'Ürünleri her zaman su ile karıştırın, asla birbiriyle doğrudan karıştırmayın.',
+    tip2: 'İdeal pH aralığı toprak için 6.0-7.0, hidroponik için 5.5-6.5 arasındadır.',
+    tip3: 'FLUSH haftasında sadece temiz su kullanın, besin vermeyin.',
+    tip4: 'Dozajları bitkinizin tepkisine göre ayarlayın, her bitki farklıdır.',
+    noProductsSelected: 'Henüz ürün seçilmedi',
+    selectProductsPrompt: 'Beslenme programınızı oluşturmak için yukarıdan ürün seçin.',
 
     // Cost Calculator Tool
     costCalcTitle: 'Elektrik Maliyeti Hesaplayıcı',

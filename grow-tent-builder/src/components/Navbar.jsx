@@ -8,6 +8,7 @@ const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [isToolsOpen, setIsToolsOpen] = useState(false);
+    const [isFeedingOpen, setIsFeedingOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     // Helper to check active state ignoring language prefix
@@ -56,6 +57,26 @@ const Navbar = () => {
                                     <Link to={getLocalizedPath('/tools/co2-calculator')} className={styles.dropdownItem}>{t('navCo2Calc')}</Link>
                                     <Link to={getLocalizedPath('/tools/unit-converter')} className={styles.dropdownItem}>{t('navUnitConv')}</Link>
                                     <Link to={getLocalizedPath('/tools/ppfd-heatmap')} className={styles.dropdownItem}>{t('navPpfdTool')}</Link>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Feeding Schedules Dropdown */}
+                        <div
+                            className={styles.dropdownContainer}
+                            onMouseEnter={() => setIsFeedingOpen(true)}
+                            onMouseLeave={() => setIsFeedingOpen(false)}
+                        >
+                            <span
+                                className={`${styles.navLink} ${location.pathname.includes('/feeding') ? styles.navLinkActive : ''}`}
+                            >
+                                {t('navFeedingPrograms')} ▾
+                            </span>
+                            {isFeedingOpen && (
+                                <div className={styles.dropdownMenu}>
+                                    <Link to={getLocalizedPath('/feeding/biobizz')} className={styles.dropdownItem}>
+                                        <span className={styles.brandIcon}>🌿</span> {t('navBiobizz')}
+                                    </Link>
                                 </div>
                             )}
                         </div>
@@ -133,6 +154,20 @@ const Navbar = () => {
                                     onClick={() => setIsMobileMenuOpen(false)}
                                 >
                                     {t('navPpfdTool')}
+                                </Link>
+                            </div>
+                        </div>
+
+                        {/* Mobile Feeding Schedules */}
+                        <div>
+                            <div className={styles.mobileLink} style={{ opacity: 0.7 }}>{t('navFeedingPrograms')}</div>
+                            <div className={styles.mobileTools}>
+                                <Link
+                                    to={getLocalizedPath('/feeding/biobizz')}
+                                    className={styles.mobileLink}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                >
+                                    🌿 {t('navBiobizz')}
                                 </Link>
                             </div>
                         </div>

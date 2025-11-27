@@ -81,12 +81,18 @@
   font-size: 0.9rem;
   transition: background 0.2s, color 0.2s;
   white-space: nowrap;
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .dropdownItem:hover {
   background: rgba(255, 255, 255, 0.05);
   color: white;
+}
+
+.brandIcon {
+  font-size: 1rem;
 }
 
 .navRight {
