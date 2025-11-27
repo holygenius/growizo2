@@ -1,5 +1,20 @@
 // BioBizz Beslenme Programı Verileri
 // Haftalık dozaj bilgileri ve uygulama talimatları
+// Substrat bazlı iki farklı program: ALL·MIX ve LIGHT·MIX/COCO·MIX
+
+// Substrat Tipleri
+export const SUBSTRATE_TYPES = {
+  ALL_MIX: 'all-mix',
+  LIGHT_MIX: 'light-mix',
+  COCO_MIX: 'coco-mix'
+};
+
+// Substrat Grupları (hangi programın kullanılacağını belirler)
+export const SUBSTRATE_SCHEDULE_MAP = {
+  'all-mix': 'SCHEDULE_ALLMIX',
+  'light-mix': 'SCHEDULE_LIGHTMIX_COCOMIX',
+  'coco-mix': 'SCHEDULE_LIGHTMIX_COCOMIX'
+};
 
 export const FEEDING_SCHEDULE_DATA = [
   {
@@ -11,6 +26,7 @@ export const FEEDING_SCHEDULE_DATA = [
     application_type: 'Sulama (Su/Toprak/Hidroponik)',
     usage_phase: 'KÖKLENME (ROOTING)',
     color: '#8B5CF6', // Purple
+    // Tüm substratlar için aynı dozaj
     schedule: {
       'WK 1': 4,
       'WK 2': 4,
@@ -35,6 +51,37 @@ export const FEEDING_SCHEDULE_DATA = [
     application_type: 'Sulama',
     usage_phase: 'BÜYÜME VE ÇİÇEKLENME (NUTRITION)',
     color: '#22C55E', // Green
+    // ALL·MIX için düşük dozaj (ağır gübrelenmiş toprak)
+    schedule_allmix: {
+      'WK 1': 1,
+      'WK 2': 1,
+      'WK 3': 1,
+      'WK 4': 1,
+      'WK 5': 1,
+      'WK 6': 1,
+      'WK 7': 4,
+      'WK 8': 4,
+      'WK 9': 4,
+      'WK 10': 4,
+      'WK 11': 'FLUSH',
+      'WK 12': 'HARVEST'
+    },
+    // LIGHT·MIX / COCO·MIX için yüksek dozaj
+    schedule_lightmix_coco: {
+      'WK 1': 2,
+      'WK 2': 2,
+      'WK 3': 2,
+      'WK 4': 3,
+      'WK 5': 3,
+      'WK 6': 4,
+      'WK 7': 4,
+      'WK 8': 4,
+      'WK 9': 4,
+      'WK 10': 4,
+      'WK 11': 'FLUSH',
+      'WK 12': 'HARVEST'
+    },
+    // Varsayılan schedule (ALL·MIX bazlı)
     schedule: {
       'WK 1': 1,
       'WK 2': 1,
@@ -60,6 +107,65 @@ export const FEEDING_SCHEDULE_DATA = [
     application_type: 'Sulama (veya Yaprak Spreyi)',
     usage_phase: 'BÜYÜME (NUTRITION)',
     color: '#06B6D4', // Cyan
+    // ALL·MIX için Indoor/Outdoor schedule (düşük dozaj)
+    schedule_allmix_indoor: {
+      'WK 1': 1,
+      'WK 2': 1,
+      'WK 3': 1,
+      'WK 4': 1,
+      'WK 5': 1,
+      'WK 6': 1,
+      'WK 7': 1,
+      'WK 8': 1,
+      'WK 9': 1,
+      'WK 10': 'N/A',
+      'WK 11': 'FLUSH',
+      'WK 12': 'HARVEST'
+    },
+    schedule_allmix_outdoor: {
+      'WK 1': 1,
+      'WK 2': 1,
+      'WK 3': 1,
+      'WK 4': 1,
+      'WK 5': 1,
+      'WK 6': 1,
+      'WK 7': 1,
+      'WK 8': 1,
+      'WK 9': 1,
+      'WK 10': 'N/A',
+      'WK 11': 'FLUSH',
+      'WK 12': 'HARVEST'
+    },
+    // LIGHT·MIX / COCO·MIX için yüksek dozaj
+    schedule_lightmix_coco_indoor: {
+      'WK 1': 2,
+      'WK 2': 2,
+      'WK 3': 2,
+      'WK 4': 3,
+      'WK 5': 3,
+      'WK 6': 4,
+      'WK 7': 4,
+      'WK 8': 4,
+      'WK 9': 4,
+      'WK 10': 'N/A',
+      'WK 11': 'FLUSH',
+      'WK 12': 'HARVEST'
+    },
+    schedule_lightmix_coco_outdoor: {
+      'WK 1': 1,
+      'WK 2': 1,
+      'WK 3': 1,
+      'WK 4': 1,
+      'WK 5': 1,
+      'WK 6': 1,
+      'WK 7': 1,
+      'WK 8': 1,
+      'WK 9': 1,
+      'WK 10': 'N/A',
+      'WK 11': 'FLUSH',
+      'WK 12': 'HARVEST'
+    },
+    // Varsayılan schedule (Indoor)
     schedule_indoor: {
       'WK 1': 2,
       'WK 2': 2,

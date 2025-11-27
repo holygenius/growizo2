@@ -5,7 +5,8 @@ import {
   WEEK_LABELS, 
   PHASE_INFO, 
   DEFAULT_SELECTED_PRODUCTS,
-  PRODUCT_CATEGORIES 
+  PRODUCT_CATEGORIES,
+  SUBSTRATE_TYPES 
 } from '../../data/feedingScheduleData';
 import Navbar from '../Navbar';
 import Footer from '../Footer';
@@ -16,6 +17,7 @@ export default function FeedingSchedule() {
   const [selectedProducts, setSelectedProducts] = useState(DEFAULT_SELECTED_PRODUCTS);
   const [waterAmount, setWaterAmount] = useState(10); // Litre
   const [growType, setGrowType] = useState('indoor'); // indoor or outdoor
+  const [substrate, setSubstrate] = useState('all-mix'); // all-mix, light-mix, coco-mix
   const [showProductSelector, setShowProductSelector] = useState(false);
   const [highlightedWeek, setHighlightedWeek] = useState(null);
 
@@ -45,14 +47,39 @@ export default function FeedingSchedule() {
     setSelectedProducts(DEFAULT_SELECTED_PRODUCTS);
   };
 
+  // Substrat tipine göre schedule seç
+  const getScheduleForSubstrate = (product, growType) => {
+    const isLightOrCoco = substrate === 'light-mix' || substrate === 'coco-mix';
+    
+    // Fish·Mix için özel logic
+    if (product.id === 'fish-mix') {
+      if (isLightOrCoco) {
+        return growType === 'indoor' 
+          ? product.schedule_lightmix_coco_indoor || product.schedule_indoor
+          : product.schedule_lightmix_coco_outdoor || product.schedule_outdoor;
+      } else {
+        return growType === 'indoor' 
+          ? product.schedule_allmix_indoor || product.schedule_indoor
+          : product.schedule_allmix_outdoor || product.schedule_outdoor;
+      }
+    }
+    
+    // Bio·Grow için substrat bazlı schedule
+    if (product.id === 'bio-grow') {
+      if (isLightOrCoco) {
+        return product.schedule_lightmix_coco || product.schedule;
+      } else {
+        return product.schedule_allmix || product.schedule;
+      }
+    }
+    
+    // Diğer ürünler için varsayılan schedule
+    return product.schedule;
+  };
+
   // Hafta için doz hesapla
   const calculateDoseForWeek = (product, weekLabel) => {
-    let schedule = product.schedule;
-    
-    // Fish·Mix için indoor/outdoor seçimine göre schedule seç
-    if (product.id === 'fish-mix') {
-      schedule = growType === 'indoor' ? product.schedule_indoor : product.schedule_outdoor;
-    }
+    let schedule = getScheduleForSubstrate(product, growType);
     
     if (!schedule) return null;
     
@@ -155,6 +182,39 @@ export default function FeedingSchedule() {
             <span className={styles.featureTag}>🇳🇱 {t('madeInHolland') || 'Hollanda\'da Üretildi'}</span>
             <span className={styles.featureTag}>♻️ {t('sustainable') || 'Sürdürülebilir'}</span>
           </div>
+        </div>
+      </div>
+
+      {/* Substrate Selection */}
+      <div className={styles.substrateSelector}>
+        <h3 className={styles.substrateSelectorTitle}>
+          {t('selectSubstrate') || 'Substrat Seçin'}
+        </h3>
+        <p className={styles.substrateSelectorDesc}>
+          {t('substrateDesc') || 'Dozaj miktarları seçtiğiniz substrata göre otomatik ayarlanır.'}
+        </p>
+        <div className={styles.substrateOptions}>
+          <button
+            className={`${styles.substrateBtn} ${substrate === 'all-mix' ? styles.active : ''}`}
+            onClick={() => setSubstrate('all-mix')}
+          >
+            <span className={styles.substrateName}>ALL·MIX®</span>
+            <span className={styles.substrateInfo}>{t('heavilyFertilized') || 'Ağır Gübrelenmiş'}</span>
+          </button>
+          <button
+            className={`${styles.substrateBtn} ${substrate === 'light-mix' ? styles.active : ''}`}
+            onClick={() => setSubstrate('light-mix')}
+          >
+            <span className={styles.substrateName}>LIGHT·MIX®</span>
+            <span className={styles.substrateInfo}>{t('lightlyFertilized') || 'Hafif Gübrelenmiş'}</span>
+          </button>
+          <button
+            className={`${styles.substrateBtn} ${substrate === 'coco-mix' ? styles.active : ''}`}
+            onClick={() => setSubstrate('coco-mix')}
+          >
+            <span className={styles.substrateName}>COCO·MIX™</span>
+            <span className={styles.substrateInfo}>{t('unfertilized') || 'Gübresiz'}</span>
+          </button>
         </div>
       </div>
 

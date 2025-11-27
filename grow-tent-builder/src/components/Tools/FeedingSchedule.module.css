@@ -110,6 +110,79 @@
   font-weight: 500;
 }
 
+/* Substrate Selector */
+.substrateSelector {
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.substrateSelectorTitle {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
+}
+
+.substrateSelectorDesc {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0 0 1rem 0;
+}
+
+.substrateOptions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.substrateBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 1.25rem 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.substrateBtn:hover {
+  background: var(--bg-surface-hover);
+  border-color: rgba(34, 139, 34, 0.4);
+}
+
+.substrateBtn.active {
+  background: rgba(34, 139, 34, 0.15);
+  border-color: #228B22;
+  box-shadow: 0 0 0 3px rgba(34, 139, 34, 0.1);
+}
+
+.substrateName {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+}
+
+.substrateInfo {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.substrateBtn.active .substrateName {
+  color: #228B22;
+}
+
+.substrateBtn.active .substrateInfo {
+  color: #228B22;
+}
+
 /* Controls */
 .controls {
   display: flex;
