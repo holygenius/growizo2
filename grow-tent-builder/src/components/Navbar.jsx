@@ -75,7 +75,7 @@ const Navbar = () => {
                             {isFeedingOpen && (
                                 <div className={styles.dropdownMenu}>
                                     <Link to={getLocalizedPath('/feeding/biobizz')} className={styles.dropdownItem}>
-                                        <span className={styles.brandIcon}>🌿</span> {t('navBiobizz')}
+                                        <img src="/images/cropped-Biobizz-Icon-Brown-Texture-180x180.jpg" alt="BioBizz" className={styles.brandIcon} /> {t('navBiobizz')}
                                     </Link>
                                 </div>
                             )}
@@ -167,7 +167,7 @@ const Navbar = () => {
                                     className={styles.mobileLink}
                                     onClick={() => setIsMobileMenuOpen(false)}
                                 >
-                                    🌿 {t('navBiobizz')}
+                                    <img src="/images/cropped-Biobizz-Icon-Brown-Texture-180x180.jpg" alt="BioBizz" className={styles.brandIconMobile} /> {t('navBiobizz')}
                                 </Link>
                             </div>
                         </div>

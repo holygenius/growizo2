@@ -227,6 +227,19 @@ export const translations = {
     noProductsSelected: 'No products selected yet',
     selectProductsPrompt: 'Select products above to create your feeding schedule.',
 
+    // Product Categories
+    base_nutrient: 'Base Nutrients',
+    stimulator_root: 'Root Stimulators',
+    stimulator_bloom: 'Bloom Stimulators',
+    stimulator_vitality: 'Vitality Stimulators',
+    booster: 'Boosters',
+    activator: 'Activators',
+    microorganisms: 'Microorganisms',
+    supplement: 'Supplements',
+    protector: 'Protectors',
+    ph_regulator: 'pH Regulators',
+    phaseLabelStop: 'Stop',
+
     // General Info Section
     generalInfoTitle: 'BioBizz Feeding Schedule General Information',
     applicationFundamentals: 'Application Fundamentals',
@@ -452,17 +465,7 @@ export const translations = {
     onboardingQ5Tip1: 'Manual systems are low budget but require attention; daily checks should not be neglected.',
     onboardingQ5Tip2: 'Simple timers and sensor-supported fans increase efficiency and reduce error margin.',
     onboardingQ5Tip3: 'Full automation increases yield but has high initial cost; ideal for advanced users.',
-    // BioBizz Feeding Schedule Data
-    catBaseNutrient: 'Base Nutrients',
-    catStimRoot: 'Root Stimulator',
-    catStimBloom: 'Bloom Stimulator',
-    catStimVitality: 'Vitality Stimulator',
-    catBooster: 'Booster',
-    catActivator: 'Activator',
-    catMicrobes: 'Microorganisms',
-    catSupplement: 'Supplement',
-    catProtector: 'Protector',
-    catPhReg: 'pH Regulator',
+    // BioBizz Feeding Schedule Data - Categories moved to Product Categories section
 
     appTypeWater: 'Watering (Water/Soil/Hydro)',
     appTypeWaterFoliar: 'Watering (or Foliar Spray)',
@@ -819,6 +822,19 @@ export const translations = {
     noProductsSelected: 'Henüz ürün seçilmedi',
     selectProductsPrompt: 'Beslenme programınızı oluşturmak için yukarıdan ürün seçin.',
 
+    // Product Categories
+    base_nutrient: 'Temel Besinler',
+    stimulator_root: 'Kök Stimülatörleri',
+    stimulator_bloom: 'Çiçek Stimülatörleri',
+    stimulator_vitality: 'Canlılık Stimülatörleri',
+    booster: 'Güçlendiriciler',
+    activator: 'Aktivatörler',
+    microorganisms: 'Mikroorganizmalar',
+    supplement: 'Takviyeler',
+    protector: 'Koruyucular',
+    ph_regulator: 'pH Düzenleyiciler',
+    phaseLabelStop: 'Dur',
+
     // General Info Section
     generalInfoTitle: 'Biobizz Besin Çizelgesi Genel Bilgileri',
     applicationFundamentals: 'Uygulama Temelleri',
@@ -1044,17 +1060,7 @@ export const translations = {
     onboardingQ5Tip1: 'Manuel sistemler düşük bütçelidir ama dikkat gerektirir; günlük kontroller ihmal edilmemelidir.',
     onboardingQ5Tip2: 'Basit zamanlayıcılar ve sensör destekli fanlar verimliliği artırır ve hata payını azaltır.',
     onboardingQ5Tip3: 'Tam otomasyon, verim artışı sağlar ancak başlangıç maliyeti yüksektir; ileri düzey kullanıcılar için idealdir.',
-    // BioBizz Beslenme Programı Verileri
-    catBaseNutrient: 'Temel Gübreler',
-    catStimRoot: 'Kök Stimülatörü',
-    catStimBloom: 'Çiçek Stimülatörü',
-    catStimVitality: 'Canlılık Stimülatörü',
-    catBooster: 'Booster',
-    catActivator: 'Aktivatör',
-    catMicrobes: 'Mikroorganizmalar',
-    catSupplement: 'Takviye',
-    catProtector: 'Koruyucu',
-    catPhReg: 'pH Düzenleyici',
+    // BioBizz Beslenme Programı Verileri - Kategoriler Product Categories bölümünde
 
     appTypeWater: 'Sulama (Su/Toprak/Hidroponik)',
     appTypeWaterFoliar: 'Sulama (veya Yaprak Spreyi)',

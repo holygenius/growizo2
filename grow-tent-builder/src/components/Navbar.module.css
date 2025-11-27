@@ -92,7 +92,21 @@
 }
 
 .brandIcon {
-  font-size: 1rem;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  object-fit: cover;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+.brandIconMobile {
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  object-fit: cover;
+  vertical-align: middle;
+  margin-right: 6px;
 }
 
 .navRight {
