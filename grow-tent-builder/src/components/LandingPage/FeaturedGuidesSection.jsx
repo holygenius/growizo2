@@ -66,6 +66,8 @@ export default function FeaturedGuidesSection() {
                         key={index}
                         className={`slider-dot ${currentSlide === index ? 'active' : ''}`}
                         onClick={() => setCurrentSlide(index)}
+                        aria-label={`Go to slide ${index + 1}`}
+                        aria-current={currentSlide === index ? 'true' : 'false'}
                     />
                 ))}
             </div>
