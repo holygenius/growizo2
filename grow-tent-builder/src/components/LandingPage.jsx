@@ -248,7 +248,18 @@ export default function LandingPage() {
                         </div>
                         <div className="feeding-arrow">→</div>
                     </Link>
-                    {/* Future feeding schedules can be added here */}
+
+                    <Link to={getLocalizedPath('/feeding/advanced-nutrients')} className="feeding-card advanced-nutrients">
+                        <div className="feeding-icon-wrapper">
+                            <img src="/images/advanced-nutrients-logo.png" alt="Advanced Nutrients" className="feeding-icon-img" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                        </div>
+                        <div className="feeding-content">
+                            <h3>{t('anFeedingScheduleTitle')}</h3>
+                            <p>{t('anFeedingScheduleSubtitle')}</p>
+                            <span className="brand-tag">Advanced Nutrients</span>
+                        </div>
+                        <div className="feeding-arrow">→</div>
+                    </Link>
                 </div>
             </section>
 

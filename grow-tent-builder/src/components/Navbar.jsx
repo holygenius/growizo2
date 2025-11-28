@@ -74,6 +74,9 @@ const Navbar = () => {
                             </span>
                             {isFeedingOpen && (
                                 <div className={styles.dropdownMenu}>
+                                    <Link to={getLocalizedPath('/feeding/advanced-nutrients')} className={styles.dropdownItem}>
+                                        <img src="/images/advanced-nutrients-logo.png" alt="Advanced Nutrients" className={styles.brandIcon} /> {t('anFeedingScheduleTitle')}
+                                    </Link>
                                     <Link to={getLocalizedPath('/feeding/biobizz')} className={styles.dropdownItem}>
                                         <img src="/images/cropped-Biobizz-Icon-Brown-Texture-180x180.jpg" alt="BioBizz" className={styles.brandIcon} /> {t('navBiobizz')}
                                     </Link>
@@ -162,6 +165,13 @@ const Navbar = () => {
                         <div>
                             <div className={styles.mobileLink} style={{ opacity: 0.7 }}>{t('navFeedingPrograms')}</div>
                             <div className={styles.mobileTools}>
+                                <Link
+                                    to={getLocalizedPath('/feeding/advanced-nutrients')}
+                                    className={styles.mobileLink}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                >
+                                    <img src="/images/advanced-nutrients-logo.png" alt="Advanced Nutrients" className={styles.brandIconMobile} /> {t('anFeedingScheduleTitle')}
+                                </Link>
                                 <Link
                                     to={getLocalizedPath('/feeding/biobizz')}
                                     className={styles.mobileLink}
