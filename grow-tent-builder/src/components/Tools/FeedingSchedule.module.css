@@ -1317,6 +1317,668 @@
   }
 }
 
+/* ========================================
+   GLASSMORPHIC INFO SECTION STYLES
+   ======================================== */
+
+.infoHero {
+  position: relative;
+  padding: 4rem 1.5rem;
+  margin-bottom: 3rem;
+  border-radius: 24px;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(16, 185, 129, 0.1) 50%, rgba(6, 78, 59, 0.2) 100%);
+}
+
+.infoHero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+}
+
+.infoHeroContent {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.infoHeroTitle {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #22c55e, #10b981, #34d399);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+}
+
+.infoHeroDescription {
+  font-size: 1.15rem;
+  color: #94a3b8;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
+.infoHeroStats {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.infoHeroStat {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.25rem 2rem;
+  text-align: center;
+  min-width: 140px;
+}
+
+.infoHeroStatValue {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #22c55e;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.infoHeroStatLabel {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Glassmorphic Cards Grid */
+.glassGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.glassCard {
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 1.75rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.glassCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+}
+
+.glassCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.glassCardIcon {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(16, 185, 129, 0.1));
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.glassCardTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-bottom: 0.75rem;
+}
+
+.glassCardText {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  line-height: 1.6;
+}
+
+.glassCardList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.glassCardList li {
+  padding: 0.5rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+  color: #cbd5e1;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glassCardList li:last-child {
+  border-bottom: none;
+}
+
+.glassCardList li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #22c55e;
+  font-weight: bold;
+}
+
+/* Product Series Section */
+.seriesSection {
+  margin-bottom: 3rem;
+}
+
+.seriesSectionTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.seriesSectionTitle::before {
+  content: '';
+  width: 4px;
+  height: 24px;
+  background: linear-gradient(to bottom, #22c55e, #10b981);
+  border-radius: 2px;
+}
+
+.seriesCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
+
+.seriesCard {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.seriesCard::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--series-color, #22c55e);
+}
+
+.seriesCard:hover {
+  transform: translateY(-2px);
+  border-color: var(--series-color, rgba(34, 197, 94, 0.4));
+}
+
+.seriesCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.seriesCardBadge {
+  padding: 0.35rem 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.seriesCardName {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.seriesCardDesc {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.seriesCardFeatures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.seriesFeatureTag {
+  padding: 0.3rem 0.6rem;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  color: #86efac;
+}
+
+/* Pro Tips Section */
+.proTipsSection {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.08) 0%, rgba(245, 158, 11, 0.05) 100%);
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 3rem;
+}
+
+.proTipsHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.proTipsIcon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(245, 158, 11, 0.1));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.proTipsTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fbbf24;
+}
+
+.proTipsList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.proTipItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  border: 1px solid rgba(251, 191, 36, 0.1);
+}
+
+.proTipNumber {
+  width: 24px;
+  height: 24px;
+  background: rgba(251, 191, 36, 0.2);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fbbf24;
+  flex-shrink: 0;
+}
+
+.proTipText {
+  font-size: 0.9rem;
+  color: #e2e8f0;
+  line-height: 1.5;
+}
+
+/* Lifecycle Section */
+.lifecycleSection {
+  margin-bottom: 3rem;
+}
+
+.lifecycleGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.lifecycleCard {
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.lifecycleCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 3px;
+  background: var(--phase-color, #22c55e);
+  border-radius: 0 0 4px 4px;
+}
+
+.lifecycleIcon {
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  margin: 0 auto 1.25rem;
+  border: 2px solid var(--phase-color, rgba(255, 255, 255, 0.1));
+}
+
+.lifecycleTitle {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-bottom: 0.5rem;
+}
+
+.lifecycleDuration {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-bottom: 1rem;
+}
+
+.lifecycleLight {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #fbbf24;
+  margin-bottom: 1rem;
+}
+
+.lifecycleDesc {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
+/* Guarantee Banner */
+.guaranteeBanner {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(6, 78, 59, 0.2) 100%);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+.guaranteeIcon {
+  font-size: 3rem;
+}
+
+.guaranteeContent h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #22c55e;
+  margin-bottom: 0.5rem;
+}
+
+.guaranteeContent p {
+  color: #94a3b8;
+  font-size: 0.95rem;
+}
+
+.guaranteeYear {
+  background: rgba(34, 197, 94, 0.2);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  text-align: center;
+}
+
+.guaranteeYearValue {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #22c55e;
+  display: block;
+}
+
+.guaranteeYearLabel {
+  font-size: 0.75rem;
+  color: #86efac;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Accordion for mobile-friendly content */
+.accordion {
+  margin-bottom: 3rem;
+}
+
+.accordionItem {
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+}
+
+.accordionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.accordionHeader:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.accordionHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.accordionIcon {
+  font-size: 1.5rem;
+}
+
+.accordionTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+.accordionArrow {
+  font-size: 0.8rem;
+  color: #64748b;
+  transition: transform 0.3s ease;
+}
+
+.accordionArrow.open {
+  transform: rotate(180deg);
+}
+
+.accordionContent {
+  padding: 0 1.5rem 1.5rem;
+  color: #94a3b8;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Responsive for info sections */
+@media (max-width: 768px) {
+  .infoHero {
+    padding: 2.5rem 1rem;
+  }
+
+  .infoHeroTitle {
+    font-size: 1.75rem;
+  }
+
+  .infoHeroDescription {
+    font-size: 1rem;
+  }
+
+  .infoHeroStats {
+    gap: 1rem;
+  }
+
+  .infoHeroStat {
+    padding: 1rem 1.25rem;
+    min-width: 120px;
+  }
+
+  .infoHeroStatValue {
+    font-size: 1.5rem;
+  }
+
+  .glassGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .glassCard {
+    padding: 1.25rem;
+  }
+
+  .seriesSectionTitle {
+    font-size: 1.35rem;
+  }
+
+  .seriesCards {
+    grid-template-columns: 1fr;
+  }
+
+  .proTipsSection {
+    padding: 1.5rem;
+  }
+
+  .proTipsTitle {
+    font-size: 1.25rem;
+  }
+
+  .proTipsList {
+    grid-template-columns: 1fr;
+  }
+
+  .lifecycleGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .lifecycleCard {
+    padding: 1.5rem;
+  }
+
+  .guaranteeBanner {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  .guaranteeContent h3 {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .infoHero {
+    padding: 2rem 0.75rem;
+    border-radius: 16px;
+  }
+
+  .infoHeroTitle {
+    font-size: 1.5rem;
+  }
+
+  .infoHeroStats {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .infoHeroStat {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .glassCardIcon {
+    width: 48px;
+    height: 48px;
+    font-size: 1.5rem;
+  }
+
+  .glassCardTitle {
+    font-size: 1.1rem;
+  }
+
+  .seriesCard {
+    padding: 1.25rem;
+  }
+
+  .lifecycleIcon {
+    width: 60px;
+    height: 60px;
+    font-size: 2rem;
+  }
+
+  .lifecycleTitle {
+    font-size: 1.15rem;
+  }
+
+  .proTipItem {
+    padding: 0.75rem;
+  }
+
+  .accordionHeader {
+    padding: 1rem;
+  }
+
+  .accordionTitle {
+    font-size: 1rem;
+  }
+}
+
 /* Extra small screens */
 @media (max-width: 360px) {
   .title {

@@ -12,6 +12,91 @@ import Footer from '../Footer';
 import styles from './FeedingSchedule.module.css'; // Reusing styles for consistency
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Info section data
+const NUTRIENT_SERIES = [
+    {
+        id: 'connoisseur',
+        name: 'pH Perfect® Connoisseur®',
+        badge: 'Premium',
+        color: '#DC2626',
+        description: 'Hem standart topraksız tarım hem de coco coir ortamları için özel olarak formüle edilmiş üst düzey besin serisi.',
+        features: ['pH Perfect', 'Coco & Hydro', 'Top Shelf & Master']
+    },
+    {
+        id: 'sensi',
+        name: 'pH Perfect® Sensi',
+        badge: 'Professional',
+        color: '#2563EB',
+        description: 'pH dengelemesini otomatikleştiren teknoloji ile donatılmış profesyonel seviye besin sistemi.',
+        features: ['pH Perfect', '2-Part System', 'Coco Formülü']
+    },
+    {
+        id: 'iguana',
+        name: 'OG Organics™ Iguana Juice®',
+        badge: 'Organic',
+        color: '#16A34A',
+        description: 'CDFA tarafından "Organik Girdi Malzemesi" olarak tescillenmiş, tamamen organik besin serisi.',
+        features: ['CDFA Certified', '100% Organic', 'Vegan']
+    },
+    {
+        id: 'gmb',
+        name: 'pH Perfect® Grow/Micro/Bloom',
+        badge: '3-Part',
+        color: '#7C3AED',
+        description: 'Esnek 3 parçalı temel sistem ile her aşamada tam kontrol sağlayan besin programı.',
+        features: ['3-Part System', 'Flexible Ratios', 'All Media']
+    }
+];
+
+const PRO_TIPS = [
+    'Daha uzun vejetatif dönemler için 4. haftanın besleme programı tekrar edilebilir.',
+    'Klonlar ve fideler için 1. haftanın oranları "ön-vejetatif" bir aşama olarak tekrarlanabilir.',
+    'Uç yanığı gibi belirtiler gözlemlenirse, temel besin gücünün %25 oranında azaltılması önerilir.',
+    'Her ürün eklendikten sonra suyun iyice karıştırılması gerekmektedir.',
+    'Besin ihtiyacı bitki genetiği ve yetiştirme ortamına göre değişir.',
+    'Coco coir ortamları en iyi sonucu, bol drenajla birlikte en az günde bir kez beslendiğinde verir.'
+];
+
+const LIFECYCLE_PHASES = [
+    {
+        id: 'vegetative',
+        icon: '🌿',
+        title: 'Büyüme Döngüsü',
+        titleEn: 'Grow Cycle',
+        duration: '~4 Hafta',
+        light: '18/6',
+        color: '#22C55E',
+        description: 'Bitkinin vejetatif gelişimi için tasarlanmış dönem. Yaprak ve gövde gelişimi ön plandadır.'
+    },
+    {
+        id: 'flowering',
+        icon: '🌸',
+        title: 'Çiçeklenme Döngüsü',
+        titleEn: 'Bloom Cycle',
+        duration: '~8 Hafta',
+        light: '12/12',
+        color: '#EC4899',
+        description: 'Tomurcuklanma, çiçeklenme ve meyve gelişimi hedeflenir. En kritik dönemdir.'
+    },
+    {
+        id: 'flush',
+        icon: '💧',
+        title: 'Yıkama Periyodu',
+        titleEn: 'Flush Period',
+        duration: 'Son Hafta',
+        light: '12/12',
+        color: '#6B7280',
+        description: 'Besin uygulaması durdurulur veya Flawless Finish® gibi özel yıkama solüsyonu kullanılır.'
+    }
+];
+
+const SUPPLEMENT_CATEGORIES = [
+    { icon: '🌳', title: 'Kök Geliştiriciler', description: 'Güçlü kök sistemi için Voodoo Juice, Piranha, Tarantula gibi ürünler.' },
+    { icon: '🌺', title: 'Tomurcuk Büyütücüler', description: 'Big Bud, Overdrive gibi çiçeklenme döneminde verim artırıcılar.' },
+    { icon: '🍬', title: 'Aroma & Tat Artırıcılar', description: 'Bud Candy, Nirvana ile terpene profili ve tat optimizasyonu.' },
+    { icon: '🛡️', title: 'Bitki Sağlığı', description: 'Rhino Skin, Bud Factor X ile strese karşı direnç ve koruma.' }
+];
+
 export default function AdvancedNutrientsSchedule() {
     const { t } = useSettings();
     const [selectedBaseNutrientId, setSelectedBaseNutrientId] = useState(BASE_NUTRIENT_OPTIONS[0].id);
@@ -19,6 +104,7 @@ export default function AdvancedNutrientsSchedule() {
     const [waterAmount, setWaterAmount] = useState(10); // Litre
     const [showProductSelector, setShowProductSelector] = useState(false);
     const [highlightedWeek, setHighlightedWeek] = useState(null);
+    const [openAccordion, setOpenAccordion] = useState(null);
 
     // Get current base nutrient option
     const currentBaseNutrient = useMemo(() => {
@@ -418,6 +504,294 @@ export default function AdvancedNutrientsSchedule() {
                     </tbody>
                 </table>
             </div>
+
+            {/* ========================================
+                GLASSMORPHIC INFO SECTIONS
+               ======================================== */}
+
+            {/* Info Hero Section */}
+            <motion.div 
+                className={styles.infoHero}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+            >
+                <div className={styles.infoHeroContent}>
+                    <h2 className={styles.infoHeroTitle}>
+                        🌱 Advanced Nutrients Besleme Rehberi
+                    </h2>
+                    <p className={styles.infoHeroDescription}>
+                        Advanced Nutrients tarafından sunulan çeşitli bitki besin serilerine ait besleme programları ve temel ilkeleri. 
+                        Hem organik hem de sentetik yetiştiricilik yöntemlerine yönelik, farklı uzmanlık seviyeleri ve 
+                        yetiştirme ortamları için tasarlanmış ürün serileri.
+                    </p>
+                    <div className={styles.infoHeroStats}>
+                        <div className={styles.infoHeroStat}>
+                            <span className={styles.infoHeroStatValue}>12</span>
+                            <span className={styles.infoHeroStatLabel}>Haftalık Program</span>
+                        </div>
+                        <div className={styles.infoHeroStat}>
+                            <span className={styles.infoHeroStatValue}>4+</span>
+                            <span className={styles.infoHeroStatLabel}>Besin Serisi</span>
+                        </div>
+                        <div className={styles.infoHeroStat}>
+                            <span className={styles.infoHeroStatValue}>pH</span>
+                            <span className={styles.infoHeroStatLabel}>Perfect Tech</span>
+                        </div>
+                    </div>
+                </div>
+            </motion.div>
+
+            {/* Lifecycle Phases */}
+            <div className={styles.lifecycleSection}>
+                <h3 className={styles.seriesSectionTitle}>Yaşam Döngüsü Fazları</h3>
+                <div className={styles.lifecycleGrid}>
+                    {LIFECYCLE_PHASES.map((phase, index) => (
+                        <motion.div
+                            key={phase.id}
+                            className={styles.lifecycleCard}
+                            style={{ '--phase-color': phase.color }}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                        >
+                            <div className={styles.lifecycleIcon}>{phase.icon}</div>
+                            <h4 className={styles.lifecycleTitle}>{phase.title}</h4>
+                            <span className={styles.lifecycleDuration}>{phase.duration}</span>
+                            <div className={styles.lifecycleLight}>
+                                ☀️ Fotoperiyot: {phase.light}
+                            </div>
+                            <p className={styles.lifecycleDesc}>{phase.description}</p>
+                        </motion.div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Product Series */}
+            <div className={styles.seriesSection}>
+                <h3 className={styles.seriesSectionTitle}>Öne Çıkan Besin Serileri</h3>
+                <div className={styles.seriesCards}>
+                    {NUTRIENT_SERIES.map((series, index) => (
+                        <motion.div
+                            key={series.id}
+                            className={styles.seriesCard}
+                            style={{ '--series-color': series.color }}
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                        >
+                            <div className={styles.seriesCardHeader}>
+                                <span className={styles.seriesCardBadge}>{series.badge}</span>
+                            </div>
+                            <h4 className={styles.seriesCardName}>{series.name}</h4>
+                            <p className={styles.seriesCardDesc}>{series.description}</p>
+                            <div className={styles.seriesCardFeatures}>
+                                {series.features.map((feature, i) => (
+                                    <span key={i} className={styles.seriesFeatureTag}>{feature}</span>
+                                ))}
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Supplement Categories */}
+            <div className={styles.glassGrid}>
+                {SUPPLEMENT_CATEGORIES.map((cat, index) => (
+                    <motion.div
+                        key={index}
+                        className={styles.glassCard}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.4, delay: index * 0.1 }}
+                    >
+                        <div className={styles.glassCardIcon}>{cat.icon}</div>
+                        <h4 className={styles.glassCardTitle}>{cat.title}</h4>
+                        <p className={styles.glassCardText}>{cat.description}</p>
+                    </motion.div>
+                ))}
+            </div>
+
+            {/* Pro Tips Section */}
+            <motion.div 
+                className={styles.proTipsSection}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+            >
+                <div className={styles.proTipsHeader}>
+                    <div className={styles.proTipsIcon}>💡</div>
+                    <h3 className={styles.proTipsTitle}>Profesyonel İpuçları</h3>
+                </div>
+                <div className={styles.proTipsList}>
+                    {PRO_TIPS.map((tip, index) => (
+                        <motion.div
+                            key={index}
+                            className={styles.proTipItem}
+                            initial={{ opacity: 0, x: -10 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.3, delay: index * 0.05 }}
+                        >
+                            <span className={styles.proTipNumber}>{index + 1}</span>
+                            <p className={styles.proTipText}>{tip}</p>
+                        </motion.div>
+                    ))}
+                </div>
+            </motion.div>
+
+            {/* Application Guidelines Accordion */}
+            <div className={styles.accordion}>
+                <h3 className={styles.seriesSectionTitle}>Uygulama Kılavuzu</h3>
+                
+                <motion.div className={styles.accordionItem} initial={false}>
+                    <div 
+                        className={styles.accordionHeader}
+                        onClick={() => setOpenAccordion(openAccordion === 'dosage' ? null : 'dosage')}
+                    >
+                        <div className={styles.accordionHeaderLeft}>
+                            <span className={styles.accordionIcon}>📏</span>
+                            <span className={styles.accordionTitle}>Uygulama Oranları</span>
+                        </div>
+                        <motion.span 
+                            className={styles.accordionArrow}
+                            animate={{ rotate: openAccordion === 'dosage' ? 180 : 0 }}
+                        >
+                            ▼
+                        </motion.span>
+                    </div>
+                    <AnimatePresence>
+                        {openAccordion === 'dosage' && (
+                            <motion.div
+                                className={styles.accordionContent}
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <p>Tüm ürünlerin dozajı <strong>litre başına mililitre (mL/L)</strong> olarak belirtilmiştir. Temel besinlerin oranları genellikle büyüme döneminin ilk haftalarında kademeli olarak artırılır. Yukarıdaki tabloda belirlediğiniz su miktarına göre toplam dozaj otomatik hesaplanmaktadır.</p>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </motion.div>
+
+                <motion.div className={styles.accordionItem} initial={false}>
+                    <div 
+                        className={styles.accordionHeader}
+                        onClick={() => setOpenAccordion(openAccordion === 'flush' ? null : 'flush')}
+                    >
+                        <div className={styles.accordionHeaderLeft}>
+                            <span className={styles.accordionIcon}>🚿</span>
+                            <span className={styles.accordionTitle}>Hasat Öncesi Yıkama (Flush)</span>
+                        </div>
+                        <motion.span 
+                            className={styles.accordionArrow}
+                            animate={{ rotate: openAccordion === 'flush' ? 180 : 0 }}
+                        >
+                            ▼
+                        </motion.span>
+                    </div>
+                    <AnimatePresence>
+                        {openAccordion === 'flush' && (
+                            <motion.div
+                                className={styles.accordionContent}
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <p>Çiçeklenme döneminin <strong>son haftası</strong> genellikle "Flush Periyodu" olarak adlandırılır. Bu dönemde ya besin uygulaması tamamen durdurulur ya da <strong>Flawless Finish®</strong> gibi özel bir yıkama solüsyonu kullanılır. Bu işlem, bitkide biriken mineralleri temizleyerek daha pürüzsüz bir son ürün elde edilmesini sağlar.</p>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </motion.div>
+
+                <motion.div className={styles.accordionItem} initial={false}>
+                    <div 
+                        className={styles.accordionHeader}
+                        onClick={() => setOpenAccordion(openAccordion === 'coco' ? null : 'coco')}
+                    >
+                        <div className={styles.accordionHeaderLeft}>
+                            <span className={styles.accordionIcon}>🥥</span>
+                            <span className={styles.accordionTitle}>Coco Coir Özel Notları</span>
+                        </div>
+                        <motion.span 
+                            className={styles.accordionArrow}
+                            animate={{ rotate: openAccordion === 'coco' ? 180 : 0 }}
+                        >
+                            ▼
+                        </motion.span>
+                    </div>
+                    <AnimatePresence>
+                        {openAccordion === 'coco' && (
+                            <motion.div
+                                className={styles.accordionContent}
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <p>Coco coir ortamları, en iyi sonucu <strong>bol drenajla birlikte en az günde bir kez beslendiğinde</strong> verir. Coco'nun doğal yapısı nedeniyle kalsiyum ve magnezyum tutma kapasitesi düşüktür, bu yüzden Sensi Coco veya Connoisseur Coco serileri bu eksikliği gidermek için özel olarak formüle edilmiştir.</p>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </motion.div>
+
+                <motion.div className={styles.accordionItem} initial={false}>
+                    <div 
+                        className={styles.accordionHeader}
+                        onClick={() => setOpenAccordion(openAccordion === 'customize' ? null : 'customize')}
+                    >
+                        <div className={styles.accordionHeaderLeft}>
+                            <span className={styles.accordionIcon}>⚙️</span>
+                            <span className={styles.accordionTitle}>Kişiselleştirme</span>
+                        </div>
+                        <motion.span 
+                            className={styles.accordionArrow}
+                            animate={{ rotate: openAccordion === 'customize' ? 180 : 0 }}
+                        >
+                            ▼
+                        </motion.span>
+                    </div>
+                    <AnimatePresence>
+                        {openAccordion === 'customize' && (
+                            <motion.div
+                                className={styles.accordionContent}
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <p>Her bitki farklıdır! Besin ihtiyacının <strong>bitki genetiği ve yetiştirme ortamına</strong> göre değişeceği unutulmamalıdır. Resmi Advanced Nutrients hesaplayıcısı için <a href="https://www.advancednutrients.com/nutrient-calculator" target="_blank" rel="noopener noreferrer" style={{color: '#22c55e'}}>advancednutrients.com/nutrient-calculator</a> adresini ziyaret edebilirsiniz.</p>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </motion.div>
+            </div>
+
+            {/* Guarantee Banner */}
+            <motion.div 
+                className={styles.guaranteeBanner}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+            >
+                <span className={styles.guaranteeIcon}>🏆</span>
+                <div className={styles.guaranteeContent}>
+                    <h3>Yetiştirici Garantisi</h3>
+                    <p>Grower's Guarantee - %100 Para İadesi</p>
+                </div>
+                <div className={styles.guaranteeYear}>
+                    <span className={styles.guaranteeYearValue}>1999</span>
+                    <span className={styles.guaranteeYearLabel}>yılından beri</span>
+                </div>
+            </motion.div>
         </motion.div>
     );
 
