@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from 'react';
-import { translations } from '../utils/translations_fixed';
+import { translations } from '../utils/translations';
 
 const SettingsContext = createContext();
 // Trigger HMR update

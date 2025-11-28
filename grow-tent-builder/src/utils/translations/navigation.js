@@ -1,0 +1,78 @@
+export const navigationTranslations = {
+  en: {
+    // Blog / Knowledge Base
+    knowledgeBase: 'Knowledge Base',
+    knowledgeBaseSubtitle: 'Expert guides, tips, and deep dives into plant technology.',
+    featuredArticle: 'FEATURED ARTICLE',
+    blogCategoriesLabel: 'blog categories :',
+    categoryAll: 'All',
+    categoryLighting: 'Lighting',
+    categoryHydroponics: 'Hydroponics',
+    categoryEnvironment: 'Environment',
+    categoryAutomation: 'Automation',
+    categoryTraining: 'Training',
+    categoryNutrients: 'Nutrients',
+    categoryHarvest: 'Harvest',
+
+    // Footer
+    footer: 'GroWizard © 2025 - Built for growers, by growers.',
+    footerHome: 'Home',
+    footerBuilder: 'Builder',
+    footerTools: 'Tools',
+    footerBlog: 'Blog',
+    footerRights: '© 2025 GroWizard. All rights reserved.',
+
+    // Navbar
+    navHome: '🏠 Home',
+    navBuilder: 'Go To App 🚀',
+    navTools: '🛠️ Tools',
+    navBlog: '📝 Blog',
+    navCostCalc: 'Electricity Cost Calculator',
+    navCo2Calc: 'CO₂ Calculator',
+    navUnitConv: 'Volume Converter',
+    navPpfdTool: 'PPFD Heat Map',
+    navFeedingSchedule: 'Feeding Schedule',
+    navFeedingPrograms: '🌱 Feeding Programs',
+    navBiobizz: 'BioBizz',
+    switchToTr: 'Switch to TR',
+    switchToEn: 'Switch to EN',
+  },
+  tr: {
+    // Blog / Knowledge Base
+    knowledgeBase: 'Bilgi Bankası',
+    knowledgeBaseSubtitle: 'Bitki teknolojisine dair uzman rehberleri, ipuçları ve derinlemesine incelemeler.',
+    featuredArticle: 'ÖNE ÇIKAN MAKALE',
+    blogCategoriesLabel: 'blog kategorileri :',
+    categoryAll: 'Tümü',
+    categoryLighting: 'Aydınlatma',
+    categoryHydroponics: 'Hidroponik',
+    categoryEnvironment: 'Ortam',
+    categoryAutomation: 'Otomasyon',
+    categoryTraining: 'Eğitim',
+    categoryNutrients: 'Besinler',
+    categoryHarvest: 'Hasat',
+
+    // Footer
+    footer: 'GroWizard © 2025 - Yetiştiriciler için, yetiştiriciler tarafından yapıldı.',
+    footerHome: 'Ana Sayfa',
+    footerBuilder: 'Oluşturucu',
+    footerTools: 'Araçlar',
+    footerBlog: 'Blog',
+    footerRights: '© 2025 GroWizard. Tüm hakları saklıdır.',
+
+    // Navbar
+    navHome: '🏠 Ana Sayfa',
+    navBuilder: 'Uygulamaya Git 🚀',
+    navTools: '🛠️ Araçlar',
+    navBlog: '📝 Blog',
+    navCostCalc: 'Elektrik Maliyeti Hesaplayıcı',
+    navCo2Calc: 'CO₂ Hesaplayıcı',
+    navUnitConv: 'Hacim Çevirici',
+    navPpfdTool: 'PPFD Isı Haritası',
+    navFeedingSchedule: 'Beslenme Programı',
+    navFeedingPrograms: '🌱 Beslenme Programları',
+    navBiobizz: 'BioBizz',
+    switchToTr: 'Switch to TR',
+    switchToEn: 'Switch to EN',
+  }
+};
