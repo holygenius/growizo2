@@ -805,6 +805,52 @@
     transform: translateX(5px);
 }
 
+/* Brand-specific feeding card styles */
+.feeding-card.canna {
+    border-color: rgba(34, 197, 94, 0.2);
+}
+
+.feeding-card.canna:hover {
+    border-color: rgba(34, 197, 94, 0.4);
+    box-shadow: 0 20px 40px -10px rgba(34, 197, 94, 0.2);
+}
+
+.feeding-card.canna .brand-tag {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+    border-color: rgba(34, 197, 94, 0.3);
+}
+
+.feeding-card.advanced-nutrients {
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.feeding-card.advanced-nutrients:hover {
+    border-color: rgba(239, 68, 68, 0.4);
+    box-shadow: 0 20px 40px -10px rgba(239, 68, 68, 0.2);
+}
+
+.feeding-card.advanced-nutrients .brand-tag {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.feeding-card.biobizz {
+    border-color: rgba(146, 64, 14, 0.2);
+}
+
+.feeding-card.biobizz:hover {
+    border-color: rgba(146, 64, 14, 0.4);
+    box-shadow: 0 20px 40px -10px rgba(146, 64, 14, 0.2);
+}
+
+.feeding-card.biobizz .brand-tag {
+    background: rgba(146, 64, 14, 0.15);
+    color: #b45309;
+    border-color: rgba(146, 64, 14, 0.3);
+}
+
 /* Slider */
 .slider-container {
     position: relative;

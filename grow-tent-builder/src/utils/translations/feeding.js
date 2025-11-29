@@ -247,6 +247,106 @@ export const feedingTranslations = {
     funcOrganics: 'Organic Biocatalyst',
     funcEnzymes: 'Enzymes',
     funcFlush: 'Flushing Agent',
+
+    // CANNA Feeding Schedule
+    cannaFeedingScheduleTitle: 'CANNA Feeding Schedule',
+    cannaFeedingScheduleDesc: 'Professional nutrient calculator for CANNA growing systems',
+    navCanna: 'CANNA',
+    
+    // CANNA Systems
+    cannaAquaName: 'CANNA AQUA',
+    cannaAquaDesc: 'Specially developed for recirculating hydroponic systems (like NFT) where drain water is reused.',
+    cannaAquaFeature1: 'Recirculating Systems',
+    cannaAquaFeature2: 'pH Self-Regulating',
+    cannaAquaFeature3: 'NFT Compatible',
+    
+    cannaCocoName: 'CANNA COCO',
+    cannaCocoDesc: 'Designed for coconut coir substrate, combining organic feel of soil with precision of Rockwool.',
+    cannaCocoFeature1: 'Coco Substrate',
+    cannaCocoFeature2: 'Combined A&B Formula',
+    cannaCocoFeature3: 'Organic Feel + Precision',
+    
+    cannaCOGrName: 'CANNA COGr',
+    cannaCOGrDesc: 'Complete coco growing method using compressed unbuffered coco slabs, designed for experienced growers.',
+    cannaCOGrFeature1: 'Compressed Coco Slabs',
+    cannaCOGrFeature2: 'Buffering Required',
+    cannaCOGrFeature3: 'Expert Level',
+    
+    cannaSubstraName: 'CANNA SUBSTRA',
+    cannaSubstraDesc: 'Developed for run-to-waste systems where drain water is not returned to the nutrient tank.',
+    cannaSubstraFeature1: 'Run-to-Waste',
+    cannaSubstraFeature2: 'Hard/Soft Water Versions',
+    cannaSubstraFeature3: 'Inert Media',
+    
+    cannaTerraName: 'CANNA TERRA',
+    cannaTerraDesc: 'For soil-based growing in containers or beds, suitable for indoor and outdoor cultivation.',
+    cannaTerraFeature1: 'Soil-Based',
+    cannaTerraFeature2: 'Indoor/Outdoor',
+    cannaTerraFeature3: 'Forgiving Medium',
+
+    // CANNA Plants
+    plantGeneral: 'General',
+    plantWasabi: 'Wasabi',
+    plantBasil: 'Basil',
+    plantCucumber: 'Cucumber',
+    plantTomatoes: 'Tomatoes',
+    plantOrchids: 'Orchids',
+    plantGrape: 'Grape',
+
+    // CANNA Phases
+    phaseRooting: 'Rooting',
+    phaseVegetative: 'Vegetative',
+    phaseVegetative1: 'Vegetative 1',
+    phaseGenerative1: 'Generative 1',
+    phaseGenerative2: 'Generative 2',
+    phaseGenerative3: 'Generative 3',
+    phaseFinal: 'Final',
+    phaseFlowering: 'Flowering',
+    phaseRecovery: 'Recovery',
+    phaseSeedling: 'Seedling',
+    phaseStart: 'Start',
+    phaseBudBreak: 'Bud Break',
+    phaseDormancy: 'Dormancy',
+    phaseRipening: 'Ripening',
+
+    // CANNA Products
+    descAquaVega: 'Base nutrient for vegetative phase in recirculating systems',
+    descAquaFlores: 'Base nutrient for flowering phase in recirculating systems',
+    descCoco: 'Complete nutrition for coco coir substrate - all growth phases',
+    descCOGrVega: 'Vegetative nutrient for COGr slabs with pH stabilizers',
+    descCOGrFlores: 'Flowering nutrient for COGr slabs',
+    descCOGrBuffer: 'Buffering agent for preparing COGr slabs before use',
+    descSubstraVega: 'Base vegetative nutrient for run-to-waste systems',
+    descSubstraFlores: 'Base flowering nutrient for run-to-waste systems',
+    descTerraVega: 'Vegetative nutrient for soil-based growing',
+    descTerraFlores: 'Flowering nutrient for soil-based growing',
+    descRhizotonic: 'Powerful root stimulator for strong root development',
+    descCannazym: 'High-quality enzyme product that breaks down dead root material',
+    descPK1314: 'Powerful PK booster for the flowering phase',
+    descCannaboost: 'Flowering accelerator that increases yield and taste',
+
+    // CANNA Functions
+    funcBaseNutrientAll: 'Base Nutrition (All Phases)',
+    funcBuffer: 'Buffering Agent',
+    funcBooster: 'Growth Accelerator',
+
+    // CANNA Notes
+    wasabiNotes: 'Wasabi requires low light (50-80% shade) and cool water temperatures (11-14°C). Very long growth cycle of 18-24 months.',
+    orchidNotes: 'Over 800 species with varying requirements. Overwatering is the leading cause of death. Fertilize every other watering unless plant is stressed.',
+    basilTerraNote: 'Continuous feeding only - no intermittent plain water applications.',
+    grapeNotes: 'Calcium can be limiting factor - add liquid calcium if needed. Not recommended for long-term container growing.',
+    cogrBufferNote: 'COGr slabs must be soaked with COGr Buffering Agent before first use.',
+
+    // Special Requirements
+    wasabiLight: 'Light Requirement',
+    wasabiWaterTemp: 'Water Temperature',
+    wasabiStartEC: 'Starting EC',
+    orchidDayTemp: 'Day Temperature',
+    orchidNightTemp: 'Night Temperature',
+    orchidWatering: 'Watering Caution',
+    orchidFeeding: 'Feeding Frequency',
+    grapeCalcium: 'Calcium Note',
+    grapeContainer: 'Container Growing',
   },
   tr: {
     // Feeding Schedule Tool
@@ -496,5 +596,105 @@ export const feedingTranslations = {
     funcOrganics: 'Organik Biyokatalizör',
     funcEnzymes: 'Enzimler',
     funcFlush: 'Yıkama Ajanı',
+
+    // CANNA Feeding Schedule
+    cannaFeedingScheduleTitle: 'CANNA Beslenme Programı',
+    cannaFeedingScheduleDesc: 'CANNA yetiştirme sistemleri için profesyonel besin hesaplayıcı',
+    navCanna: 'CANNA',
+    
+    // CANNA Systems
+    cannaAquaName: 'CANNA AQUA',
+    cannaAquaDesc: 'Drenaj suyunun yeniden kullanıldığı devridaimli (NFT gibi) hidroponik sistemler için özel olarak geliştirilmiştir.',
+    cannaAquaFeature1: 'Devridaimli Sistemler',
+    cannaAquaFeature2: 'Kendi Kendine pH Düzenleme',
+    cannaAquaFeature3: 'NFT Uyumlu',
+    
+    cannaCocoName: 'CANNA COCO',
+    cannaCocoDesc: 'Toprağın organik yapısını Rockwool\'un hassasiyetiyle birleştiren hindistan cevizi kabuğu substratı için tasarlanmıştır.',
+    cannaCocoFeature1: 'Coco Substratı',
+    cannaCocoFeature2: 'Birleşik A&B Formülü',
+    cannaCocoFeature3: 'Organik His + Hassasiyet',
+    
+    cannaCOGrName: 'CANNA COGr',
+    cannaCOGrDesc: 'Deneyimli kullanıcılar için sıkıştırılmış tamponlanmamış coco levhalarını kullanan kapsamlı coco yetiştirme yöntemi.',
+    cannaCOGrFeature1: 'Sıkıştırılmış Coco Levhaları',
+    cannaCOGrFeature2: 'Tamponlama Gerekli',
+    cannaCOGrFeature3: 'Uzman Seviyesi',
+    
+    cannaSubstraName: 'CANNA SUBSTRA',
+    cannaSubstraDesc: 'Drenaj suyunun besin tankına geri döndürülmeyip dışarı atıldığı (Run-to-Waste) sistemler için özel olarak geliştirilmiştir.',
+    cannaSubstraFeature1: 'Tek Kullanımlık Drenaj',
+    cannaSubstraFeature2: 'Sert/Yumuşak Su Versiyonları',
+    cannaSubstraFeature3: 'Atıl Ortamlar',
+    
+    cannaTerraName: 'CANNA TERRA',
+    cannaTerraDesc: 'Hem kaplarda hem de yataklarda, iç mekan ve dış mekan yetiştiriciliği için kullanılan toprak bazlı sistemler.',
+    cannaTerraFeature1: 'Toprak Bazlı',
+    cannaTerraFeature2: 'İç/Dış Mekan',
+    cannaTerraFeature3: 'Hoşgörülü Ortam',
+
+    // CANNA Plants
+    plantGeneral: 'Genel',
+    plantWasabi: 'Wasabi',
+    plantBasil: 'Fesleğen',
+    plantCucumber: 'Salatalık',
+    plantTomatoes: 'Domates',
+    plantOrchids: 'Orkide',
+    plantGrape: 'Üzüm',
+
+    // CANNA Phases
+    phaseRooting: 'Köklenme',
+    phaseVegetative: 'Vejetatif',
+    phaseVegetative1: 'Vejetatif 1',
+    phaseGenerative1: 'Generatif 1',
+    phaseGenerative2: 'Generatif 2',
+    phaseGenerative3: 'Generatif 3',
+    phaseFinal: 'Son Aşama',
+    phaseFlowering: 'Çiçeklenme',
+    phaseRecovery: 'İyileşme',
+    phaseSeedling: 'Fide',
+    phaseStart: 'Başlangıç',
+    phaseBudBreak: 'Göz Kırılması',
+    phaseDormancy: 'Uyku Dönemi',
+    phaseRipening: 'Olgunlaşma',
+
+    // CANNA Products
+    descAquaVega: 'Devridaimli sistemlerde vejetatif dönem için temel besin',
+    descAquaFlores: 'Devridaimli sistemlerde çiçeklenme dönemi için temel besin',
+    descCoco: 'Coco coir substratı için tüm büyüme aşamalarında eksiksiz beslenme',
+    descCOGrVega: 'pH stabilizatörleri içeren COGr levhaları için vejetatif besin',
+    descCOGrFlores: 'COGr levhaları için çiçeklenme besini',
+    descCOGrBuffer: 'COGr levhalarını kullanmadan önce hazırlamak için tamponlama ajanı',
+    descSubstraVega: 'Tek kullanımlık drenaj sistemleri için temel vejetatif besin',
+    descSubstraFlores: 'Tek kullanımlık drenaj sistemleri için temel çiçeklenme besini',
+    descTerraVega: 'Toprak bazlı yetiştirme için vejetatif besin',
+    descTerraFlores: 'Toprak bazlı yetiştirme için çiçeklenme besini',
+    descRhizotonic: 'Güçlü kök gelişimi için etkili kök stimülatörü',
+    descCannazym: 'Ölü kök materyalini parçalayan yüksek kaliteli enzim ürünü',
+    descPK1314: 'Çiçeklenme dönemi için güçlü PK takviyesi',
+    descCannaboost: 'Verim ve tadı artıran çiçeklenme hızlandırıcı',
+
+    // CANNA Functions
+    funcBaseNutrientAll: 'Temel Beslenme (Tüm Aşamalar)',
+    funcBuffer: 'Tamponlama Ajanı',
+    funcBooster: 'Büyüme Hızlandırıcı',
+
+    // CANNA Notes
+    wasabiNotes: 'Wasabi düşük ışık (%50-80 gölge) ve serin su sıcaklıkları (11-14°C) gerektirir. 18-24 aylık çok uzun bir büyüme döngüsüne sahiptir.',
+    orchidNotes: '800\'den fazla tür, farklı gereksinimlerle. Aşırı sulama ölümün önde gelen nedenidir. Bitki stresli görünmüyorsa her iki sulamada bir gübreleyin.',
+    basilTerraNote: 'Sadece sürekli besleme yapılmalı, aralıklı sade su uygulamaları olmamalıdır.',
+    grapeNotes: 'Kalsiyum sınırlayıcı bir faktör olabilir - gerekirse sıvı kalsiyum ekleyin. Uzun süreli kaplarda yetiştirme önerilmez.',
+    cogrBufferNote: 'COGr levhaları ilk kullanımdan önce COGr Buffering Agent ile ıslatılmalıdır.',
+
+    // Special Requirements
+    wasabiLight: 'Işık Gereksinimi',
+    wasabiWaterTemp: 'Su Sıcaklığı',
+    wasabiStartEC: 'Başlangıç EC',
+    orchidDayTemp: 'Gündüz Sıcaklığı',
+    orchidNightTemp: 'Gece Sıcaklığı',
+    orchidWatering: 'Sulama Uyarısı',
+    orchidFeeding: 'Besleme Sıklığı',
+    grapeCalcium: 'Kalsiyum Notu',
+    grapeContainer: 'Kaplarda Yetiştirme',
   }
 };

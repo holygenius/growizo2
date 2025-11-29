@@ -34,6 +34,7 @@ export const navigationTranslations = {
     navFeedingSchedule: 'Feeding Schedule',
     navFeedingPrograms: '🌱 Feeding Programs',
     navBiobizz: 'BioBizz',
+    navCanna: 'CANNA',
     switchToTr: 'Switch to TR',
     switchToEn: 'Switch to EN',
   },
@@ -72,6 +73,7 @@ export const navigationTranslations = {
     navFeedingSchedule: 'Beslenme Programı',
     navFeedingPrograms: '🌱 Beslenme Programları',
     navBiobizz: 'BioBizz',
+    navCanna: 'CANNA',
     switchToTr: 'Switch to TR',
     switchToEn: 'Switch to EN',
   }

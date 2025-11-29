@@ -134,6 +134,7 @@ export const translations = {
     navFeedingSchedule: 'Feeding Schedule',
     navFeedingPrograms: '🌱 Feeding Programs',
     navBiobizz: 'BioBizz',
+    navCanna: 'CANNA',
     switchToTr: 'Switch to TR',
     switchToEn: 'Switch to EN',
 
@@ -766,6 +767,7 @@ export const translations = {
     navFeedingSchedule: 'Beslenme Programı',
     navFeedingPrograms: '🌱 Beslenme Programları',
     navBiobizz: 'BioBizz',
+    navCanna: 'CANNA',
     switchToTr: 'Switch to TR',
     switchToEn: 'Switch to EN',
 

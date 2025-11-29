@@ -80,6 +80,9 @@ const Navbar = () => {
                                     <Link to={getLocalizedPath('/feeding/biobizz')} className={styles.dropdownItem}>
                                         <img src="/images/cropped-Biobizz-Icon-Brown-Texture-180x180.jpg" alt="BioBizz" className={styles.brandIcon} /> {t('navBiobizz')}
                                     </Link>
+                                    <Link to={getLocalizedPath('/feeding/canna')} className={styles.dropdownItem}>
+                                        <img src="/images/canna-logo.svg" alt="CANNA" className={styles.brandIcon} /> {t('navCanna')}
+                                    </Link>
                                 </div>
                             )}
                         </div>
@@ -178,6 +181,13 @@ const Navbar = () => {
                                     onClick={() => setIsMobileMenuOpen(false)}
                                 >
                                     <img src="/images/cropped-Biobizz-Icon-Brown-Texture-180x180.jpg" alt="BioBizz" className={styles.brandIconMobile} /> {t('navBiobizz')}
+                                </Link>
+                                <Link
+                                    to={getLocalizedPath('/feeding/canna')}
+                                    className={styles.mobileLink}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                >
+                                    <img src="/images/canna-logo.svg" alt="CANNA" className={styles.brandIconMobile} /> {t('navCanna')}
                                 </Link>
                             </div>
                         </div>

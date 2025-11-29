@@ -14,6 +14,7 @@ import CO2Calculator from './components/Tools/CO2Calculator';
 import PPFDHeatMapTool from './components/Tools/PPFDHeatMapTool';
 import FeedingSchedule from './components/Tools/FeedingSchedule';
 import AdvancedNutrientsSchedule from './components/Tools/AdvancedNutrientsSchedule';
+import CannaSchedule from './components/Tools/CannaSchedule';
 
 import { Helmet } from 'react-helmet-async';
 
@@ -81,6 +82,7 @@ function AppContent() {
             <Route path="tools/feeding-schedule/advanced-nutrients" element={<Navigate to="../../feeding/advanced-nutrients" replace />} />
             <Route path="feeding/biobizz" element={<FeedingSchedule />} />
             <Route path="feeding/advanced-nutrients" element={<AdvancedNutrientsSchedule />} />
+            <Route path="feeding/canna" element={<CannaSchedule />} />
             {/* TR Routes - Türkçe URL'ler */}
             <Route path="baslangic" element={<Onboarding />} />
             <Route path="olusturucu" element={<BuilderApp />} />
@@ -94,6 +96,7 @@ function AppContent() {
             <Route path="araclar/ppfd-isi-haritasi" element={<PPFDHeatMapTool />} />
             <Route path="beslenme/biobizz" element={<FeedingSchedule />} />
             <Route path="beslenme/advanced-nutrients" element={<AdvancedNutrientsSchedule />} />
+            <Route path="beslenme/canna" element={<CannaSchedule />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </LanguageWrapper>

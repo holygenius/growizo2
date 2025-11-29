@@ -39,6 +39,18 @@ export default function FeedingSection() {
                     </div>
                     <div className="feeding-arrow">→</div>
                 </Link>
+
+                <Link to={getLocalizedPath('/feeding/canna')} className="feeding-card canna">
+                    <div className="feeding-icon-wrapper">
+                        <img src="/images/canna-logo.svg" alt="CANNA" className="feeding-icon-img" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                    </div>
+                    <div className="feeding-content">
+                        <h3>{t('cannaScheduleTitle')}</h3>
+                        <p>{t('cannaScheduleSubtitle')}</p>
+                        <span className="brand-tag">CANNA</span>
+                    </div>
+                    <div className="feeding-arrow">→</div>
+                </Link>
             </div>
         </section>
     );
