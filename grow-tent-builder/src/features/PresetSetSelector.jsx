@@ -56,8 +56,20 @@ const convertPresetToBuilderItems = (preset) => {
                 items.lighting.push({
                     id: product.id,
                     name: product.fullName || product.name,
+                    brand: product.brand,
+                    type: product.type || 'LED',
                     price: product.price,
-                    watts: product.specs?.wattage || 0,
+                    watts: product.watts || 0,
+                    coverage: product.coverage || 0,
+                    physicalWidth: product.physicalWidth || 1,
+                    physicalDepth: product.physicalDepth || 1,
+                    maxPPFD: product.maxPPFD || 0,
+                    beamAngle: product.beamAngle || 120,
+                    recommendedHeight: product.recommendedHeight || 18,
+                    spectrum: product.spectrum,
+                    efficiency: product.efficiency,
+                    tier: product.tier,
+                    features: product.features,
                     quantity: light.qty || 1
                 });
             }

@@ -13,7 +13,39 @@ export default function LightPlacementCanvas() {
     const containerRef = useRef(null);
     const heatmapCanvasRef = useRef(null);
     const [dragging, setDragging] = useState(null); // { id, index, startX, startY, initialLeft, initialTop }
-    const [lightHeight, setLightHeight] = useState(1.5); // Default global height in feet
+    
+    // Calculate default light height based on tent height
+    const calculateDefaultHeight = useMemo(() => {
+        const tentHeightFt = tentSize.height || 6; // Default 6ft if not set
+        
+        // Find the tallest lamp's physical height (in feet)
+        let maxLampHeight = 0;
+        lights.forEach(light => {
+            // physicalHeight might be in feet already, or we estimate ~0.3ft (10cm) if not provided
+            const lampHeight = light.physicalHeight || 0.3;
+            if (lampHeight > maxLampHeight) {
+                maxLampHeight = lampHeight;
+            }
+        });
+        
+        // Subtract lamp height and add some buffer for hanging hardware (~0.5ft)
+        const hangingBuffer = 0.5; // ~15cm for hooks/hangers
+        const defaultHeight = tentHeightFt - maxLampHeight - hangingBuffer;
+        
+        // Ensure minimum height of 0.5ft and maximum of tent height - 0.5ft
+        return Math.max(0.5, Math.min(defaultHeight, tentHeightFt - 0.5));
+    }, [tentSize.height, lights]);
+    
+    // Initialize with tent height as default
+    const [lightHeight, setLightHeight] = useState(() => {
+        const tentHeightFt = tentSize.height || 6;
+        return Math.max(0.5, tentHeightFt - 1);
+    });
+    
+    // Update light height when tent size changes (not on every light change to preserve user edits)
+    useEffect(() => {
+        setLightHeight(calculateDefaultHeight);
+    }, [tentSize.height]);
 
     // Initialize positions if not present
     useEffect(() => {
@@ -231,7 +263,7 @@ export default function LightPlacementCanvas() {
                     <input
                         type="range"
                         min="0.5"
-                        max="5"
+                        max={Math.min(328, tentSize.height || 6)}
                         step="0.1"
                         value={lightHeight}
                         onChange={(e) => setLightHeight(parseFloat(e.target.value))}
