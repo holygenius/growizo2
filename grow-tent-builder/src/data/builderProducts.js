@@ -1013,6 +1013,92 @@ export const FAN_PRODUCTS = [
         price: 350,
         features: ['Giriş fanı', 'Güçlü'],
         tier: 'standard'
+    },
+    // S&P Silent Series (New Additions)
+    {
+        id: 'sp-td160-mini',
+        brand: 'Soler&Palau',
+        series: 'TD Silent',
+        name: 'S&P TD-160 Silent Mini',
+        fullName: 'S&P TD-160 Silent Mini - 100 mm/180 m3/s Sessiz Fan',
+        type: 'Inline Fan',
+        diameter: 100,
+        cfm: 105, // ~180 m3/h
+        m3h: 180,
+        watts: 29,
+        price: 3976.05,
+        features: ['Ultra sessiz', '2 kademeli hız', 'Yüksek basınç', 'Sızdırmazlık'],
+        tier: 'pro'
+    },
+    {
+        id: 'sp-td250-silent',
+        brand: 'Soler&Palau',
+        series: 'TD Silent',
+        name: 'S&P TD-250 Silent',
+        fullName: 'S&P TD-250 Silent - 100 mm/240 m3 Sessiz Fan',
+        type: 'Inline Fan',
+        diameter: 100,
+        cfm: 141, // ~240 m3/h
+        m3h: 240,
+        price: 7566.78,
+        features: ['Ultra sessiz', '2 kademeli hız', 'Yüksek basınç'],
+        tier: 'pro'
+    },
+    {
+        id: 'sp-td350-silent',
+        brand: 'Soler&Palau',
+        series: 'TD Silent',
+        name: 'S&P TD-350 Silent',
+        fullName: 'S&P TD-350 Silent - 125 mm/380 m3 Sessiz Fan',
+        type: 'Inline Fan',
+        diameter: 125,
+        cfm: 223, // ~380 m3/h
+        m3h: 380,
+        price: 8155.40,
+        features: ['Ultra sessiz', '2 kademeli hız', 'Yüksek basınç'],
+        tier: 'pro'
+    },
+    {
+        id: 'sp-td500-silent',
+        brand: 'Soler&Palau',
+        series: 'TD Silent',
+        name: 'S&P TD-500 Silent',
+        fullName: 'S&P TD-500 Silent - 150 mm/580 m3 Sessiz Fan',
+        type: 'Inline Fan',
+        diameter: 150,
+        cfm: 341, // ~580 m3/h
+        m3h: 580,
+        price: 9911.42,
+        features: ['Ultra sessiz', '2 kademeli hız', 'Yüksek basınç'],
+        tier: 'pro'
+    },
+    {
+        id: 'sp-td800-silent',
+        brand: 'Soler&Palau',
+        series: 'TD Silent',
+        name: 'S&P TD-800 Silent',
+        fullName: 'S&P TD-800 Silent - 200 mm/880 m3 Sessiz Fan',
+        type: 'Inline Fan',
+        diameter: 200,
+        cfm: 517, // ~880 m3/h
+        m3h: 880,
+        price: 10766.47,
+        features: ['Ultra sessiz', '2 kademeli hız', 'Yüksek basınç'],
+        tier: 'commercial'
+    },
+    {
+        id: 'sp-td1000-silent',
+        brand: 'Soler&Palau',
+        series: 'TD Silent',
+        name: 'S&P TD-1000 Silent',
+        fullName: 'S&P TD-1000 Silent - 200 mm/1100 m3 Sessiz Fan',
+        type: 'Inline Fan',
+        diameter: 200,
+        cfm: 647, // ~1100 m3/h
+        m3h: 1100,
+        price: 11417.86,
+        features: ['Ultra sessiz', '2 kademeli hız', 'Yüksek basınç'],
+        tier: 'commercial'
     }
 ];
 
@@ -1091,6 +1177,200 @@ export const CARBON_FILTER_PRODUCTS = [
         lifespan: '24+ ay',
         features: ['RC 48 aktif karbon', 'Ön filtreli', 'Max serisi'],
         tier: 'pro'
+    },
+    // CAN-Lite Series
+    {
+        id: 'can-lite-1000',
+        brand: 'CAN-Lite',
+        name: 'CAN-Lite 1000 m3/s 200 mm Karbon Filtre',
+        type: 'Carbon Filter',
+        diameter: 200,
+        capacity: 1000,
+        maxCapacity: 1100,
+        price: 8578.50,
+        dimensions: { length: 500, diameter: 300, unit: 'mm' },
+        weight: 11, // kg
+        features: ['1100 m³/h Maksimum Akış', 'Çelik Gövde', 'Lite Karbon'],
+        tier: 'pro'
+    },
+    {
+        id: 'can-lite-3500',
+        brand: 'CAN-Lite',
+        name: 'CAN-Lite 3500 m3/s 315 mm Karbon Filtre',
+        type: 'Carbon Filter',
+        diameter: 315,
+        capacity: 3500,
+        maxCapacity: 3850,
+        price: 20338.02,
+        dimensions: { length: 100, diameter: 45, unit: 'cm' },
+        weight: 33.5, // kg
+        carbonWeight: 16.3, // kg
+        carbonBed: 5, // cm
+        features: ['3850 m³/h Teknik Kapasite', 'Çelik Gövde', 'Lite Karbon', '5cm Karbon Yatağı'],
+        tier: 'commercial'
+    },
+    {
+        id: 'can-lite-4500',
+        brand: 'CAN-Lite',
+        name: 'CAN-Lite 4500 m3/s 315 mm Karbon Filtre',
+        type: 'Carbon Filter',
+        diameter: 315,
+        capacity: 4500,
+        maxCapacity: 4950,
+        price: 23986.73,
+        dimensions: { length: 100, diameter: 50, unit: 'cm' },
+        weight: 36.5, // kg
+        carbonWeight: 18.5, // kg
+        carbonBed: 5, // cm
+        features: ['4950 m³/h Teknik Kapasite', 'Çelik Gövde', 'Lite Karbon', '5cm Karbon Yatağı'],
+        tier: 'commercial'
+    },
+    {
+        id: 'can-lite-2500-315',
+        brand: 'CAN-Lite',
+        name: 'CAN-Lite 2500 m3/s 315 mm Karbon Filtre',
+        type: 'Carbon Filter',
+        diameter: 250, // Flange is 250mm per specs
+        capacity: 2500,
+        price: 15727.95,
+        dimensions: { length: 100, diameter: 35, unit: 'cm' },
+        weight: 23, // kg
+        features: ['2500 m³/h İdeal Akış', 'Çelik Gövde', '35cm Filtre Çapı'],
+        tier: 'pro'
+    },
+    {
+        id: 'can-lite-3000-250',
+        brand: 'CAN-Lite',
+        name: 'CAN-Lite 3000 m3/s 250 mm Karbon Filtre',
+        type: 'Carbon Filter',
+        diameter: 250,
+        capacity: 3000,
+        maxCapacity: 3300,
+        price: 16828.21,
+        dimensions: { length: 100, diameter: 40, unit: 'cm' },
+        weight: 26, // kg
+        carbonWeight: 14.3, // kg
+        carbonBed: 5, // cm
+        features: ['3300 m³/h Teknik Kapasite', 'Çelik Gövde', 'Lite Karbon', '5cm Karbon Yatağı'],
+        tier: 'pro'
+    },
+    {
+        id: 'can-lite-3000-315',
+        brand: 'CAN-Lite',
+        name: 'CAN-Lite 3000 m3/s 315 mm Karbon Filtre',
+        type: 'Carbon Filter',
+        diameter: 315,
+        capacity: 3000,
+        maxCapacity: 3300,
+        price: 16828.21,
+        dimensions: { length: 100, diameter: 40, unit: 'cm' },
+        weight: 26, // kg
+        carbonWeight: 14.3, // kg
+        carbonBed: 5, // cm
+        features: ['3300 m³/h Teknik Kapasite', 'Çelik Gövde', 'Lite Karbon', '5cm Karbon Yatağı'],
+        tier: 'pro'
+    },
+    {
+        id: 'can-lite-2500-250',
+        brand: 'CAN-Lite',
+        name: 'CAN-Lite 2500 m3/s 250 mm Karbon Filtre',
+        type: 'Carbon Filter',
+        diameter: 250,
+        capacity: 2500,
+        maxCapacity: 2750,
+        price: 15728.74,
+        dimensions: { length: 100, diameter: 35, unit: 'cm' },
+        weight: 24, // kg
+        carbonWeight: 12.2, // kg
+        carbonBed: 5, // cm
+        features: ['2750 m³/h Teknik Kapasite', 'Çelik Gövde', 'Lite Karbon', '5cm Karbon Yatağı'],
+        tier: 'pro'
+    },
+    {
+        id: 'can-lite-1500',
+        brand: 'CAN-Lite',
+        name: 'CAN-Lite 1500 m3/s 250 mm Karbon Filtre',
+        type: 'Carbon Filter',
+        diameter: 250,
+        capacity: 1500,
+        maxCapacity: 1650,
+        price: 10426.50,
+        dimensions: { length: 750, diameter: 300, unit: 'mm' },
+        weight: 15.5, // kg
+        features: ['1650 m³/h Maksimum Akış', 'Çelik Gövde', 'Model 1500'],
+        tier: 'standard'
+    },
+    {
+        id: 'can-lite-800',
+        brand: 'CAN-Lite',
+        name: 'CAN-Lite 800 m3/s 200 mm Karbon Filtre',
+        type: 'Carbon Filter',
+        diameter: 200,
+        capacity: 800,
+        maxCapacity: 880,
+        price: 6562.50,
+        dimensions: { length: 33, diameter: 30, unit: 'cm' },
+        weight: 5, // kg
+        carbonWeight: 3.4, // kg
+        carbonBed: 5, // cm
+        features: ['880 m³/h Teknik Kapasite', 'Çelik Gövde', 'Granül Hafif RC Avustralya Karbonu'],
+        tier: 'standard'
+    },
+    {
+        id: 'can-lite-425',
+        brand: 'CAN-Lite',
+        name: 'CAN-Lite 425 m3/s 125 mm Karbon Filtre',
+        type: 'Carbon Filter',
+        diameter: 125, // Flange 130mm -> mapped to 125mm
+        capacity: 425,
+        maxCapacity: 467,
+        price: 3756.90,
+        dimensions: { length: 60, diameter: 14.5, unit: 'cm' },
+        weight: 2.2, // kg
+        features: ['467 m³/h Teknik Kapasite', '130mm Flanş (133mm kanal önerilir)', 'Hafif Tasarım'],
+        tier: 'entry'
+    },
+    {
+        id: 'can-lite-300',
+        brand: 'CAN-Lite',
+        name: 'CAN-Lite 300 m3/s 100 mm Karbon Filtre',
+        type: 'Carbon Filter',
+        diameter: 100, // Flange 106mm -> mapped to 100mm
+        capacity: 300,
+        maxCapacity: 330,
+        price: 2937.90,
+        dimensions: { length: 45, diameter: 14.5, unit: 'cm' },
+        weight: 1.8, // kg
+        features: ['330 m³/h Teknik Kapasite', '106mm Flanş (112mm kanal önerilir)', 'Hafif Tasarım'],
+        tier: 'entry'
+    },
+    {
+        id: 'can-lite-600',
+        brand: 'CAN-Lite',
+        name: 'CAN-Lite 600 m3/s 150 mm Karbon Filtre',
+        type: 'Carbon Filter',
+        diameter: 150,
+        capacity: 600,
+        price: 5407.50,
+        dimensions: { length: 47.5, diameter: 20, unit: 'cm' },
+        weight: 4, // kg
+        carbonWeight: 2.2, // kg
+        features: ['600 m³/h Maksimum Akış', 'Çelik Gövde', '20cm Filtre Çapı'],
+        tier: 'standard'
+    },
+    {
+        id: 'can-lite-150',
+        brand: 'CAN-Lite',
+        name: 'CAN-Lite 150 m3/s 100 mm Karbon Filtre',
+        type: 'Carbon Filter',
+        diameter: 100, // Flange 106mm -> mapped to 100mm
+        capacity: 150,
+        maxCapacity: 165,
+        price: 2089.50,
+        dimensions: { length: 25, diameter: 14.5, unit: 'cm' },
+        weight: 1.45, // kg
+        features: ['165 m³/h Teknik Kapasite', '106mm Flanş (112mm kanal önerilir)', 'Hafif Tasarım'],
+        tier: 'entry'
     }
 ];
 
@@ -1714,7 +1994,7 @@ export const NUTRIENT_PRODUCTS = [
         price: 130,
         tier: 'entry'
     },
-    
+
     // CANNA Terra Nutrients
     {
         id: 'canna-terra-vega-500ml',
@@ -1824,7 +2104,7 @@ export const NUTRIENT_PRODUCTS = [
         price: 450,
         tier: 'standard'
     },
-    
+
     // Terra Aquatica (TA) Nutrients
     {
         id: 'ta-pro-organic-grow-500ml',
@@ -1922,7 +2202,7 @@ export const NUTRIENT_PRODUCTS = [
         price: 200,
         tier: 'standard'
     },
-    
+
     // Advanced Nutrients
     {
         id: 'an-ph-perfect-grow-1l',
@@ -1996,7 +2276,7 @@ export const NUTRIENT_PRODUCTS = [
         price: 200,
         tier: 'standard'
     },
-    
+
     // Other Brands
     {
         id: 'xtreme-mykos-454g',
@@ -2032,9 +2312,9 @@ export const NUTRIENT_PRODUCTS = [
  * Get tent by dimensions
  */
 export function getTentByDimensions(width, depth, height) {
-    return TENT_PRODUCTS.find(t => 
-        t.dimensions.width === width && 
-        t.dimensions.depth === depth && 
+    return TENT_PRODUCTS.find(t =>
+        t.dimensions.width === width &&
+        t.dimensions.depth === depth &&
         t.dimensions.height === height
     );
 }
@@ -2045,7 +2325,7 @@ export function getTentByDimensions(width, depth, height) {
 export function getRecommendedLEDs(tentWidthCm, tentDepthCm) {
     const areaM2 = (tentWidthCm * tentDepthCm) / 10000;
     const recommendedWatts = areaM2 * 400; // ~400W per m²
-    
+
     return LED_PRODUCTS.filter(led => {
         const ledWatts = led.watts;
         return ledWatts >= recommendedWatts * 0.7 && ledWatts <= recommendedWatts * 1.3;
@@ -2058,7 +2338,7 @@ export function getRecommendedLEDs(tentWidthCm, tentDepthCm) {
 export function getRecommendedVentilation(tentWidthCm, tentDepthCm, tentHeightCm) {
     const volumeM3 = (tentWidthCm * tentDepthCm * tentHeightCm) / 1000000;
     const requiredM3h = volumeM3 * 60; // Air exchange 1x per minute
-    
+
     return VENTILATION_SETS.filter(set => set.capacity >= requiredM3h)
         .sort((a, b) => a.capacity - b.capacity);
 }
@@ -2075,7 +2355,7 @@ export function getSubstrateAmount(potVolumeLiters, potCount) {
  */
 export function getRecommendedPotCount(tentWidthCm, tentDepthCm, potVolumeLiters) {
     const areaM2 = (tentWidthCm * tentDepthCm) / 10000;
-    
+
     if (potVolumeLiters <= 15) {
         return Math.floor(areaM2 * 6); // 6 per m² for small pots
     } else if (potVolumeLiters <= 25) {
