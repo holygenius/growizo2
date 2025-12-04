@@ -60,11 +60,12 @@ export default function UserMenu() {
                 onClick={() => setIsOpen(!isOpen)}
                 aria-expanded={isOpen}
             >
-                {user?.user_metadata?.avatar_url ? (
+                {user?.user_metadata?.avatar_url || user?.user_metadata?.picture ? (
                     <img 
-                        src={user.user_metadata.avatar_url} 
+                        src={user.user_metadata.avatar_url || user.user_metadata.picture} 
                         alt={user.user_metadata.full_name || 'User'} 
                         className={styles.avatar}
+                        referrerPolicy="no-referrer"
                     />
                 ) : (
                     <div className={styles.avatarPlaceholder}>
