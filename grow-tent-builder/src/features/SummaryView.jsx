@@ -162,7 +162,9 @@ export default function SummaryView() {
                                 <div style={{ background: 'var(--bg-card)', borderRadius: 'var(--radius-md)', overflow: 'hidden' }}>
                                     {items.map((item, idx) => {
                                         const quantity = item.quantity || 1;
-                                        const totalPrice = item.price * quantity;
+                                        const totalPrice = (item.price || 0) * quantity;
+                                        // Support both name and product_name for nutrients
+                                        const displayName = item.name || item.product_name || 'Unknown';
 
                                         return (
                                             <div key={idx} style={{
@@ -175,11 +177,13 @@ export default function SummaryView() {
                                                 <div>
                                                     <div style={{ fontWeight: '500' }}>
                                                         {quantity > 1 && <span style={{ color: 'var(--color-primary)', marginRight: '0.5rem' }}>{quantity}x</span>}
-                                                        {item.name}
+                                                        {displayName}
+                                                        {item.selectedPackaging && <span style={{ color: 'var(--text-muted)', marginLeft: '0.5rem', fontSize: '0.85rem' }}>({item.selectedPackaging})</span>}
                                                     </div>
                                                     <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                                                        {item.brand && <span>{item.brand} • </span>}
                                                         {item.type} {item.watts ? `• ${item.watts}W` : ''} {item.cfm ? `• ${item.cfm} CFM` : ''}
-                                                        {quantity > 1 && <span style={{ marginLeft: '0.5rem' }}>({formatPrice(item.price)} each)</span>}
+                                                        {quantity > 1 && item.price > 0 && <span style={{ marginLeft: '0.5rem' }}>({formatPrice(item.price)} each)</span>}
                                                     </div>
                                                 </div>
                                                 <div style={{ fontWeight: 'bold' }}>{formatPrice(totalPrice)}</div>

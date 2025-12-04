@@ -212,14 +212,13 @@ export default function MediaSelection() {
                                                 <button
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        if (currentQty <= 1) {
-                                                            handleRemoveSubstrate(substrate.id);
-                                                        } else {
-                                                            // Update quantity
-                                                            const updatedItem = { ...selected, quantity: currentQty - 1 };
-                                                            dispatch({ type: 'REMOVE_ITEM', payload: { category: 'substrates', itemId: substrate.id } });
-                                                            dispatch({ type: 'ADD_ITEM', payload: { category: 'substrates', item: updatedItem } });
-                                                        }
+                                                        dispatch({ 
+                                                            type: 'DECREMENT_ITEM', 
+                                                            payload: { 
+                                                                category: 'substrates', 
+                                                                itemId: substrate.id 
+                                                            } 
+                                                        });
                                                     }}
                                                     style={{
                                                         width: '28px',
@@ -243,9 +242,13 @@ export default function MediaSelection() {
                                                 <button
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        const updatedItem = { ...selected, quantity: currentQty + 1 };
-                                                        dispatch({ type: 'REMOVE_ITEM', payload: { category: 'substrates', itemId: substrate.id } });
-                                                        dispatch({ type: 'ADD_ITEM', payload: { category: 'substrates', item: updatedItem } });
+                                                        dispatch({ 
+                                                            type: 'INCREMENT_ITEM', 
+                                                            payload: { 
+                                                                category: 'substrates', 
+                                                                itemId: substrate.id 
+                                                            } 
+                                                        });
                                                     }}
                                                     style={{
                                                         width: '28px',
