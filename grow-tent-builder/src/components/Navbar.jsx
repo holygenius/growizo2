@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSettings } from '../context/SettingsContext';
+import { UserMenu } from './Auth';
 import styles from './Navbar.module.css';
 
 const Navbar = () => {
@@ -96,6 +97,7 @@ const Navbar = () => {
                     </div>
 
                     <div className={styles.navRight}>
+                        <UserMenu />
                         <button
                             onClick={handleLanguageSwitch}
                             className={styles.langBtn}

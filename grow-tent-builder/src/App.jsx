@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate, useParams, useLocation, useNavi
 import { BuilderProvider } from './context/BuilderContext';
 import { SettingsProvider, useSettings } from './context/SettingsContext';
 import { OnboardingProvider } from './context/OnboardingContext';
+import { AuthProvider } from './context/AuthContext';
 import LandingPage from './components/LandingPage';
 import Onboarding from './components/Onboarding';
 import BuilderApp from './components/BuilderApp';
@@ -15,6 +16,7 @@ import PPFDHeatMapTool from './components/Tools/PPFDHeatMapTool';
 import FeedingSchedule from './components/Tools/FeedingSchedule';
 import AdvancedNutrientsSchedule from './components/Tools/AdvancedNutrientsSchedule';
 import CannaSchedule from './components/Tools/CannaSchedule';
+import { AuthCallback } from './components/Auth';
 
 import { Helmet } from 'react-helmet-async';
 
@@ -62,6 +64,7 @@ function AppContent() {
   return (
     <Routes>
       <Route path="/" element={<RootRedirect />} />
+      <Route path="/auth/callback" element={<AuthCallback />} />
 
       <Route path="/:lang/*" element={
         <LanguageWrapper>
@@ -109,15 +112,17 @@ function App() {
   return (
     <BrowserRouter>
       <SettingsProvider>
-        <OnboardingProvider>
-          <BuilderProvider>
-            <Helmet>
-              <title>GroWizard</title>
-              <meta name="description" content="Plan and optimize your perfect grow tent setup with advanced PPFD lighting simulation" />
-            </Helmet>
-            <AppContent />
-          </BuilderProvider>
-        </OnboardingProvider>
+        <AuthProvider>
+          <OnboardingProvider>
+            <BuilderProvider>
+              <Helmet>
+                <title>GroWizard</title>
+                <meta name="description" content="Plan and optimize your perfect grow tent setup with advanced PPFD lighting simulation" />
+              </Helmet>
+              <AppContent />
+            </BuilderProvider>
+          </OnboardingProvider>
+        </AuthProvider>
       </SettingsProvider>
     </BrowserRouter>
   );

@@ -1,0 +1,183 @@
+.signInBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.signInBtn:hover {
+    background: var(--bg-hover);
+    border-color: var(--color-primary);
+}
+
+.googleIcon {
+    flex-shrink: 0;
+}
+
+.skeleton {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, var(--bg-surface) 25%, var(--bg-hover) 50%, var(--bg-surface) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.userMenu {
+    position: relative;
+}
+
+.avatarBtn {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.avatarBtn:hover {
+    border-color: var(--color-primary);
+}
+
+.avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatarPlaceholder {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.adminBadge {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    font-size: 0.75rem;
+    line-height: 1;
+}
+
+.dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 220px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    overflow: hidden;
+    animation: dropdownFade 0.15s ease;
+}
+
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.userInfo {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.userName {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.userEmail {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.adminLabel {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.2rem 0.5rem;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    width: fit-content;
+}
+
+.divider {
+    height: 1px;
+    background: var(--border-color);
+}
+
+.menuItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.875rem 1rem;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.menuItem:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .signInBtn {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.8rem;
+    }
+    
+    .signInBtn span {
+        display: none;
+    }
+    
+    .dropdown {
+        right: -1rem;
+    }
+}
