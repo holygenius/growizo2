@@ -46,6 +46,7 @@ const generateSitemap = async () => {
     
     if (error) {
         console.error('Error fetching blog posts:', error.message);
+        // Continue with empty blogPosts array - sitemap will have static routes only
     } else {
         blogPosts = data || [];
     }
