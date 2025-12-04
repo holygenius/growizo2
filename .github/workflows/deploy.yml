@@ -22,6 +22,8 @@ jobs:
       - name: Install and Build
         env:
           VITE_GTAG_ID: ${{ secrets.VITE_GTAG_ID }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
         run: |
           cd grow-tent-builder
           npm ci
