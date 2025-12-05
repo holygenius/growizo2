@@ -72,6 +72,9 @@ export default function UserMenu() {
                         {(user?.user_metadata?.full_name || user?.email || 'U')[0].toUpperCase()}
                     </div>
                 )}
+                <span className={styles.avatarName}>
+                    {user?.user_metadata?.full_name || user?.email?.split('@')[0]}
+                </span>
                 {isAdmin && <span className={styles.adminBadge}>👑</span>}
             </button>
 

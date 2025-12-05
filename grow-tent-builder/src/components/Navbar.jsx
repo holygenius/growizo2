@@ -203,6 +203,7 @@ const Navbar = () => {
                         </Link>
 
                         <div className={styles.mobileActions}>
+                            <UserMenu />
                             <button
                                 onClick={() => {
                                     handleLanguageSwitch();
