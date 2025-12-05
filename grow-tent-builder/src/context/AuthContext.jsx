@@ -57,9 +57,9 @@ export function AuthProvider({ children }) {
             const { data, error } = await supabase
                 .from('admin_users')
                 .select('id')
-                .eq('user_id', userId)
+                .eq('id', userId)
                 .eq('is_active', true)
-                .single();
+                .maybeSingle();
 
             setIsAdmin(!!data && !error);
         } catch (err) {
