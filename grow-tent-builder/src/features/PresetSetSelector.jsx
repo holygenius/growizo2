@@ -1,27 +1,42 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { useBuilder } from '../context/BuilderContext';
 import { useSettings } from '../context/SettingsContext';
 import { fetchPresetSets } from '../services/api/presetSetsApi';
 import { 
-    TENT_PRODUCTS, 
-    LED_PRODUCTS,
-    FAN_PRODUCTS,
-    CARBON_FILTER_PRODUCTS,
-    DUCTING_PRODUCTS,
-    SUBSTRATE_PRODUCTS, 
-    POT_PRODUCTS,
-    TIMER_PRODUCTS,
-    MONITORING_PRODUCTS,
-    HANGER_PRODUCTS,
-    VENTILATION_SETS,
-    NUTRIENT_PRODUCTS
-} from '../data/builderProducts';
+    fetchTentProducts,
+    fetchLEDProducts,
+    fetchFanProducts,
+    fetchCarbonFilterProducts,
+    fetchDuctingProducts,
+    fetchSubstrateProducts,
+    fetchPotProducts,
+    fetchTimerProducts,
+    fetchMonitoringProducts,
+    fetchHangerProducts,
+    fetchVentilationSets,
+    fetchNutrientProducts
+} from '../services/api/builderProductsApi';
 
 // Helper function to find product by ID
 const findProduct = (id, products) => products.find(p => p.id === id);
 
 // Convert preset items to builder-compatible format
-const convertPresetToBuilderItems = (preset) => {
+const convertPresetToBuilderItems = (preset, productCatalog) => {
+    const {
+        tentProducts,
+        ledProducts,
+        fanProducts,
+        filterProducts,
+        ductingProducts,
+        substrateProducts,
+        potProducts,
+        timerProducts,
+        monitoringProducts,
+        hangerProducts,
+        ventilationSets,
+        nutrientProducts
+    } = productCatalog;
+
     const items = {
         tent: [], // Tent product
         lighting: [],
@@ -32,10 +47,9 @@ const convertPresetToBuilderItems = (preset) => {
         substrates: [],
         accessories: []
     };
-
     // Tent
     if (preset.items.tent) {
-        const tentProduct = findProduct(preset.items.tent, TENT_PRODUCTS);
+        const tentProduct = findProduct(preset.items.tent, tentProducts);
         if (tentProduct) {
             items.tent.push({
                 id: tentProduct.id,
@@ -51,7 +65,7 @@ const convertPresetToBuilderItems = (preset) => {
     // Lighting
     if (preset.items.lighting) {
         preset.items.lighting.forEach(light => {
-            const product = findProduct(light.id, LED_PRODUCTS);
+            const product = findProduct(light.id, ledProducts);
             if (product) {
                 items.lighting.push({
                     id: product.id,
@@ -82,7 +96,7 @@ const convertPresetToBuilderItems = (preset) => {
         
         // Check if using a complete ventilation set
         if (ventSetId) {
-            const ventSet = findProduct(ventSetId, VENTILATION_SETS);
+            const ventSet = findProduct(ventSetId, ventilationSets);
             if (ventSet) {
                 items.ventilation.push({
                     id: ventSet.id,
@@ -96,7 +110,7 @@ const convertPresetToBuilderItems = (preset) => {
         } else {
             // Individual components
             if (fan) {
-                const fanProduct = findProduct(fan, FAN_PRODUCTS);
+                const fanProduct = findProduct(fan, fanProducts);
                 if (fanProduct) {
                     items.ventilation.push({
                         id: fanProduct.id,
@@ -111,7 +125,7 @@ const convertPresetToBuilderItems = (preset) => {
             }
 
             if (filter) {
-                const filterProduct = findProduct(filter, CARBON_FILTER_PRODUCTS);
+                const filterProduct = findProduct(filter, filterProducts);
                 if (filterProduct) {
                     items.ventilation.push({
                         id: filterProduct.id,
@@ -124,7 +138,7 @@ const convertPresetToBuilderItems = (preset) => {
             }
 
             if (ducting) {
-                const ductProduct = findProduct(ducting, DUCTING_PRODUCTS);
+                const ductProduct = findProduct(ducting, ductingProducts);
                 if (ductProduct) {
                     items.ventilation.push({
                         id: ductProduct.id,
@@ -141,7 +155,7 @@ const convertPresetToBuilderItems = (preset) => {
     // Substrates
     if (preset.items.substrate) {
         preset.items.substrate.forEach(sub => {
-            const product = findProduct(sub.id, SUBSTRATE_PRODUCTS);
+            const product = findProduct(sub.id, substrateProducts);
             if (product) {
                 items.substrates.push({
                     id: product.id,
@@ -156,7 +170,7 @@ const convertPresetToBuilderItems = (preset) => {
     // Pots (go to accessories)
     if (preset.items.pots) {
         preset.items.pots.forEach(pot => {
-            const product = findProduct(pot.id, POT_PRODUCTS);
+            const product = findProduct(pot.id, potProducts);
             if (product) {
                 items.accessories.push({
                     id: product.id,
@@ -172,7 +186,7 @@ const convertPresetToBuilderItems = (preset) => {
     // Monitoring items
     if (preset.items.monitoring) {
         preset.items.monitoring.forEach(monId => {
-            const product = findProduct(monId, MONITORING_PRODUCTS);
+            const product = findProduct(monId, monitoringProducts);
             if (product) {
                 items.monitoring.push({
                     id: product.id,
@@ -188,9 +202,9 @@ const convertPresetToBuilderItems = (preset) => {
     if (preset.items.accessories) {
         preset.items.accessories.forEach(accId => {
             // Check in all accessory categories
-            let product = findProduct(accId, TIMER_PRODUCTS);
-            if (!product) product = findProduct(accId, HANGER_PRODUCTS);
-            if (!product) product = findProduct(accId, DUCTING_PRODUCTS);
+            let product = findProduct(accId, timerProducts);
+            if (!product) product = findProduct(accId, hangerProducts);
+            if (!product) product = findProduct(accId, ductingProducts);
             
             if (product) {
                 items.accessories.push({
@@ -206,7 +220,7 @@ const convertPresetToBuilderItems = (preset) => {
     // Nutrients
     if (preset.items.nutrients) {
         preset.items.nutrients.forEach(nutId => {
-            const product = findProduct(nutId, NUTRIENT_PRODUCTS);
+            const product = findProduct(nutId, nutrientProducts);
             if (product) {
                 items.nutrients.push({
                     id: product.id,
@@ -226,10 +240,10 @@ const convertPresetToBuilderItems = (preset) => {
 };
 
 // Get tent dimensions from preset
-const getTentDimensions = (preset) => {
+const getTentDimensions = (preset, tentProducts) => {
     // Try to find tent product from items
-    if (preset.items && preset.items.tent) {
-        const tent = findProduct(preset.items.tent, TENT_PRODUCTS);
+    if (preset.items && preset.items.tent && tentProducts) {
+        const tent = findProduct(preset.items.tent, tentProducts);
         if (tent && tent.dimensionsFt) {
             return {
                 width: tent.dimensionsFt.width,
@@ -268,27 +282,73 @@ export default function PresetSetSelector() {
     const { language } = useSettings();
     
     const [presetSets, setPresetSets] = useState([]);
+    const [productCatalog, setProductCatalog] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedTier, setSelectedTier] = useState('all');
     const [selectedBrand, setSelectedBrand] = useState('all');
 
-    // Fetch preset sets from Supabase
+    // Fetch preset sets and all products from Supabase
     useEffect(() => {
-        async function loadPresetSets() {
+        async function loadData() {
             try {
                 setLoading(true);
-                const data = await fetchPresetSets();
-                setPresetSets(data);
+                
+                // Fetch all data in parallel
+                const [
+                    presetData,
+                    tentProducts,
+                    ledProducts,
+                    fanProducts,
+                    filterProducts,
+                    ductingProducts,
+                    substrateProducts,
+                    potProducts,
+                    timerProducts,
+                    monitoringProducts,
+                    hangerProducts,
+                    ventilationSets,
+                    nutrientProducts
+                ] = await Promise.all([
+                    fetchPresetSets(),
+                    fetchTentProducts(),
+                    fetchLEDProducts(),
+                    fetchFanProducts(),
+                    fetchCarbonFilterProducts(),
+                    fetchDuctingProducts(),
+                    fetchSubstrateProducts(),
+                    fetchPotProducts(),
+                    fetchTimerProducts(),
+                    fetchMonitoringProducts(),
+                    fetchHangerProducts(),
+                    fetchVentilationSets(),
+                    fetchNutrientProducts()
+                ]);
+                
+                setPresetSets(presetData);
+                setProductCatalog({
+                    tentProducts,
+                    ledProducts,
+                    fanProducts,
+                    filterProducts,
+                    ductingProducts,
+                    substrateProducts,
+                    potProducts,
+                    timerProducts,
+                    monitoringProducts,
+                    hangerProducts,
+                    ventilationSets,
+                    nutrientProducts
+                });
                 setError(null);
             } catch (err) {
-                console.error('Error loading preset sets:', err);
+                console.error('Error loading data:', err);
                 setError(err.message);
             } finally {
                 setLoading(false);
             }
         }
-        loadPresetSets();
+        loadData();
     }, []);
 
     // Filter presets
@@ -306,9 +366,11 @@ export default function PresetSetSelector() {
         return uniqueBrands;
     }, [presetSets]);
 
-    const handleSelectPreset = (preset) => {
-        const items = convertPresetToBuilderItems(preset);
-        const tentDims = getTentDimensions(preset);
+    const handleSelectPreset = useCallback((preset) => {
+        if (!productCatalog) return;
+        
+        const items = convertPresetToBuilderItems(preset, productCatalog);
+        const tentDims = getTentDimensions(preset, productCatalog.tentProducts);
         
         dispatch({
             type: 'LOAD_PRESET',
@@ -319,7 +381,7 @@ export default function PresetSetSelector() {
                 mediaType: preset.mediaType
             }
         });
-    };
+    }, [productCatalog, dispatch]);
 
     const handleSkipToCustom = () => {
         dispatch({ type: 'NEXT_STEP' });

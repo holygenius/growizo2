@@ -1,52 +1,58 @@
+import { useMemo } from 'react';
 import { useBuilder } from '../context/BuilderContext';
 import { useSettings } from '../context/SettingsContext';
-import { MONITORING_PRODUCTS, TIMER_PRODUCTS, HANGER_PRODUCTS, POT_PRODUCTS } from '../data/builderProducts';
-
-// Combine monitoring and timer products
-const MONITORING_OPTIONS = [
-    ...MONITORING_PRODUCTS.map(m => ({
-        id: m.id,
-        name: m.fullName || m.name,
-        type: m.type || 'Sensor',
-        price: m.price,
-        description: m.features?.join(', ') || '',
-        tier: m.tier
-    })),
-    ...TIMER_PRODUCTS.map(t => ({
-        id: t.id,
-        name: t.fullName || t.name,
-        type: 'Timer',
-        price: t.price,
-        description: t.features?.join(', ') || '',
-        tier: t.tier
-    }))
-];
-
-// Accessory products (hangers, pots, etc.)
-const ACCESSORY_OPTIONS = [
-    ...HANGER_PRODUCTS.map(h => ({
-        id: h.id,
-        name: h.name,
-        type: 'Askı',
-        price: h.price,
-        description: h.capacity ? `${h.capacity}kg kapasiteli` : '',
-        tier: h.tier
-    })),
-    ...POT_PRODUCTS.filter(p => p.type === 'fabric' || p.type === 'plastic').map(p => ({
-        id: p.id,
-        name: p.name,
-        type: 'Saksı',
-        price: p.price,
-        description: p.volume ? `${p.volume}L` : '',
-        tier: p.tier
-    }))
-];
+import { useMultipleBuilderProducts } from '../hooks';
 
 export default function MonitoringSelection() {
     const { state, dispatch } = useBuilder();
     const { t, language, formatPrice } = useSettings();
     const selectedMonitoring = state.selectedItems.monitoring;
     const selectedAccessories = state.selectedItems.accessories || [];
+
+    // Load products from API
+    const { products, loading, error } = useMultipleBuilderProducts(['monitoring', 'timer', 'hanger', 'pot']);
+
+    // Combine monitoring and timer products
+    const monitoringOptions = useMemo(() => {
+        const monitoringItems = (products.monitoring || []).map(m => ({
+            id: m.id,
+            name: m.fullName || m.name,
+            type: m.type || 'Sensor',
+            price: m.price,
+            description: m.features?.join(', ') || '',
+            tier: m.tier
+        }));
+        const timerItems = (products.timer || []).map(t => ({
+            id: t.id,
+            name: t.fullName || t.name,
+            type: 'Timer',
+            price: t.price,
+            description: t.features?.join(', ') || '',
+            tier: t.tier
+        }));
+        return [...monitoringItems, ...timerItems];
+    }, [products.monitoring, products.timer]);
+
+    // Accessory products (hangers, pots, etc.)
+    const accessoryOptions = useMemo(() => {
+        const hangerItems = (products.hanger || []).map(h => ({
+            id: h.id,
+            name: h.name,
+            type: 'Askı',
+            price: h.price,
+            description: h.capacity ? `${h.capacity}kg kapasiteli` : '',
+            tier: h.tier
+        }));
+        const potItems = (products.pot || []).filter(p => p.type === 'fabric' || p.type === 'plastic').map(p => ({
+            id: p.id,
+            name: p.name,
+            type: 'Saksı',
+            price: p.price,
+            description: p.volume ? `${p.volume}L` : '',
+            tier: p.tier
+        }));
+        return [...hangerItems, ...potItems];
+    }, [products.hanger, products.pot]);
 
     const handleToggleItem = (item, category = 'monitoring') => {
         const selectedList = category === 'monitoring' ? selectedMonitoring : selectedAccessories;
@@ -268,13 +274,23 @@ export default function MonitoringSelection() {
             <h3 style={{ marginBottom: '1rem', color: 'var(--text-primary)' }}>
                 {language === 'tr' ? '📊 İzleme ve Ölçüm Ekipmanları' : '📊 Monitoring Equipment'}
             </h3>
+            {loading ? (
+                <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)', marginBottom: '2rem' }}>
+                    {language === 'tr' ? 'Yükleniyor...' : 'Loading...'}
+                </div>
+            ) : error ? (
+                <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--color-danger)', marginBottom: '2rem' }}>
+                    {language === 'tr' ? 'Ürünler yüklenirken hata oluştu' : 'Error loading products'}
+                </div>
+            ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
-                {MONITORING_OPTIONS.map((item) => {
+                {monitoringOptions.map((item) => {
                     const selected = selectedMonitoring.find(i => i.id === item.id);
                     const currentQty = selected?.quantity || 1;
                     return renderProductCard(item, 'monitoring', !!selected, currentQty);
                 })}
             </div>
+            )}
 
             {/* Accessories Section */}
             <h3 style={{ marginBottom: '1rem', color: 'var(--text-primary)' }}>
@@ -347,7 +363,7 @@ export default function MonitoringSelection() {
             )}
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
-                {ACCESSORY_OPTIONS.map((item) => {
+                {accessoryOptions.map((item) => {
                     const selected = selectedAccessories.find(i => i.id === item.id);
                     const currentQty = selected?.quantity || 1;
                     return renderProductCard(item, 'accessories', !!selected, currentQty);

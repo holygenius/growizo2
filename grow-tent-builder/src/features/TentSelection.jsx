@@ -1,31 +1,37 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useBuilder } from '../context/BuilderContext';
 import { useSettings } from '../context/SettingsContext';
-import { TENT_PRODUCTS } from '../data/builderProducts';
-
-// Convert TENT_PRODUCTS to presets format for display
-const TENT_PRESETS = TENT_PRODUCTS.map(tent => ({
-    id: tent.id,
-    label: tent.name,
-    brand: tent.brand,
-    fullName: tent.fullName,
-    width: tent.dimensionsFt.width,
-    depth: tent.dimensionsFt.depth,
-    height: tent.dimensionsFt.height,
-    widthCm: tent.dimensions.width,
-    depthCm: tent.dimensions.depth,
-    heightCm: tent.dimensions.height,
-    price: tent.price,
-    tier: tent.tier,
-    features: tent.features
-}));
+import { useBuilderProducts } from '../hooks';
 
 export default function TentSelection() {
     const { state, dispatch } = useBuilder();
     const { t, language, unitSystem, formatUnit, getUnitLabel, formatPrice } = useSettings();
     const { tentSize, selectedItems, selectedPreset } = state;
 
+    // Load tent products from API
+    const { products: tentProducts, loading, error } = useBuilderProducts('tent');
+
+    // Convert tent products to presets format for display
+    const tentPresets = useMemo(() => {
+        return tentProducts.map(tent => ({
+            id: tent.id,
+            label: tent.name,
+            brand: tent.brand,
+            fullName: tent.fullName,
+            width: tent.dimensionsFt?.width || tent.dimensions?.width / 30.48,
+            depth: tent.dimensionsFt?.depth || tent.dimensions?.depth / 30.48,
+            height: tent.dimensionsFt?.height || tent.dimensions?.height / 30.48,
+            widthCm: tent.dimensions?.width,
+            depthCm: tent.dimensions?.depth,
+            heightCm: tent.dimensions?.height,
+            price: tent.price,
+            tier: tent.tier,
+            features: tent.features
+        }));
+    }, [tentProducts]);
+
     const [custom, setCustom] = useState(false);
+
     // Use tentSize directly as the source of truth, with local state only for uncommitted custom dimensions
     const [customDims, setCustomDims] = useState({
         width: tentSize.width,
@@ -44,7 +50,7 @@ export default function TentSelection() {
         dispatch({ type: 'SET_TENT_SIZE', payload: { width: preset.width, depth: preset.depth, height: preset.height, unit: 'ft' } });
         
         // Also add/update the tent product in selectedItems
-        const tentProduct = TENT_PRODUCTS.find(t => t.id === preset.id);
+        const tentProduct = tentProducts.find(t => t.id === preset.id);
         if (tentProduct) {
             // Remove existing tent first
             if (selectedItems.tent.length > 0) {
@@ -168,8 +174,17 @@ export default function TentSelection() {
                 {language === 'tr' ? 'Kabin Seçenekleri' : 'Tent Options'}
             </h3>
 
+            {loading ? (
+                <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
+                    {language === 'tr' ? 'Yükleniyor...' : 'Loading...'}
+                </div>
+            ) : error ? (
+                <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--color-danger)' }}>
+                    {language === 'tr' ? 'Ürünler yüklenirken hata oluştu' : 'Error loading products'}
+                </div>
+            ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
-                {TENT_PRESETS.map((preset) => {
+                {tentPresets.map((preset) => {
                     const isSelected = (selectedTentFromPreset && selectedTentFromPreset.id === preset.id) ||
                         (!selectedTentFromPreset && !custom &&
                         Math.abs(state.tentSize.width - preset.width) < 0.1 &&
@@ -254,6 +269,7 @@ export default function TentSelection() {
                     );
                 })}
             </div>
+            )}
 
             <div style={{ marginBottom: '2rem' }}>
                 <button

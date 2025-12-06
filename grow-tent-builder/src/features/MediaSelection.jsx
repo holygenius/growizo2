@@ -1,6 +1,7 @@
+import { useMemo } from 'react';
 import { useBuilder } from '../context/BuilderContext';
 import { useSettings } from '../context/SettingsContext';
-import { SUBSTRATE_PRODUCTS } from '../data/builderProducts';
+import { useBuilderProducts } from '../hooks';
 
 const MEDIA_OPTIONS = [
     { id: 'soil', nameKey: 'mediaSoil', descKey: 'mediaSoilDesc', icon: '🌱' },
@@ -8,19 +9,20 @@ const MEDIA_OPTIONS = [
     { id: 'hydro', nameKey: 'mediaHydro', descKey: 'mediaHydroDesc', icon: '💧' },
 ];
 
-// Filter substrate products by media type
-const getSubstratesForMedia = (mediaType) => {
-    if (!mediaType) return [];
-    return SUBSTRATE_PRODUCTS.filter(s => s.type === mediaType);
-};
-
 export default function MediaSelection() {
     const { state, dispatch } = useBuilder();
     const { t, language, formatPrice } = useSettings();
     const { mediaType, selectedItems } = state;
     const selectedSubstrates = selectedItems.substrates || [];
 
-    const availableSubstrates = getSubstratesForMedia(mediaType);
+    // Load substrate products from API
+    const { products: substrateProducts, loading, error } = useBuilderProducts('substrate');
+
+    // Filter substrate products by media type
+    const availableSubstrates = useMemo(() => {
+        if (!mediaType) return [];
+        return substrateProducts.filter(s => s.type === mediaType);
+    }, [substrateProducts, mediaType]);
 
     const handleSelect = (id) => {
         dispatch({ type: 'SET_MEDIA_TYPE', payload: id });
@@ -163,11 +165,24 @@ export default function MediaSelection() {
             </div>
 
             {/* Substrate Products */}
-            {mediaType && availableSubstrates.length > 0 && (
+            {mediaType && (
                 <div style={{ marginBottom: '2rem' }}>
                     <h3 style={{ marginBottom: '1rem', color: 'var(--text-primary)' }}>
                         {language === 'tr' ? '🌿 Substrat Ürünleri' : '🌿 Substrate Products'}
                     </h3>
+                    {loading ? (
+                        <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
+                            {language === 'tr' ? 'Yükleniyor...' : 'Loading...'}
+                        </div>
+                    ) : error ? (
+                        <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--color-danger)' }}>
+                            {language === 'tr' ? 'Ürünler yüklenirken hata oluştu' : 'Error loading products'}
+                        </div>
+                    ) : availableSubstrates.length === 0 ? (
+                        <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
+                            {language === 'tr' ? 'Bu ortam için ürün bulunamadı' : 'No products found for this medium'}
+                        </div>
+                    ) : (
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
                         {availableSubstrates.map(substrate => {
                             const selected = selectedSubstrates.find(s => s.id === substrate.id);
@@ -300,6 +315,7 @@ export default function MediaSelection() {
                             );
                         })}
                     </div>
+                    )}
                 </div>
             )}
 

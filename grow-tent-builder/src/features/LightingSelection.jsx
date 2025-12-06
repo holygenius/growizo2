@@ -1,28 +1,8 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useBuilder } from '../context/BuilderContext';
 import { useSettings } from '../context/SettingsContext';
 import LightPlacementCanvas from '../components/LightPlacementCanvas';
-import { LED_PRODUCTS } from '../data/builderProducts';
-
-// Convert LED_PRODUCTS to light options format
-const LIGHT_OPTIONS = LED_PRODUCTS.map(led => ({
-    id: led.id,
-    name: led.fullName || led.name,
-    brand: led.brand,
-    type: 'LED',
-    watts: led.watts || led.specs?.wattage || 0,
-    price: led.price,
-    coverage: led.coverage || led.specs?.coverage || 0,
-    physicalWidth: led.physicalWidth || (led.specs?.dimensions?.width || 30) / 30.48, // Convert cm to feet
-    physicalDepth: led.physicalDepth || (led.specs?.dimensions?.depth || 30) / 30.48,
-    maxPPFD: led.maxPPFD || led.specs?.ppfd || 0,
-    beamAngle: led.beamAngle || 120,
-    recommendedHeight: led.recommendedHeight || 18,
-    tier: led.tier,
-    spectrum: led.spectrum || led.specs?.spectrum,
-    efficiency: led.efficiency || led.specs?.efficiency,
-    features: led.features
-}));
+import { useBuilderProducts } from '../hooks';
 
 export default function LightingSelection() {
     const { state, dispatch } = useBuilder();
@@ -30,6 +10,31 @@ export default function LightingSelection() {
     const { tentSize, selectedItems, selectedPreset } = state;
     const selectedLights = selectedItems.lighting;
     const [conflictError, setConflictError] = useState(null);
+
+    // Load LED products from API
+    const { products: ledProducts, loading, error } = useBuilderProducts('light');
+
+    // Convert LED products to light options format
+    const lightOptions = useMemo(() => {
+        return ledProducts.map(led => ({
+            id: led.id,
+            name: led.fullName || led.name,
+            brand: led.brand,
+            type: 'LED',
+            watts: led.watts || led.specs?.wattage || 0,
+            price: led.price,
+            coverage: led.coverage || led.specs?.coverage || 0,
+            physicalWidth: led.physicalWidth || (led.specs?.dimensions?.width || 30) / 30.48,
+            physicalDepth: led.physicalDepth || (led.specs?.dimensions?.depth || 30) / 30.48,
+            maxPPFD: led.maxPPFD || led.specs?.ppfd || 0,
+            beamAngle: led.beamAngle || 120,
+            recommendedHeight: led.recommendedHeight || 18,
+            tier: led.tier,
+            spectrum: led.spectrum || led.specs?.spectrum,
+            efficiency: led.efficiency || led.specs?.efficiency,
+            features: led.features
+        }));
+    }, [ledProducts]);
 
     const area = tentSize.width * tentSize.depth;
     const totalCoverage = selectedLights.reduce((sum, light) => sum + (light.coverage * (light.quantity || 1)), 0);
@@ -209,7 +214,15 @@ export default function LightingSelection() {
             )}
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
-                {LIGHT_OPTIONS.map((item) => {
+                {loading ? (
+                    <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
+                        {language === 'tr' ? 'Yükleniyor...' : 'Loading...'}
+                    </div>
+                ) : error ? (
+                    <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '2rem', color: 'var(--color-danger)' }}>
+                        {language === 'tr' ? 'Ürünler yüklenirken hata oluştu' : 'Error loading products'}
+                    </div>
+                ) : lightOptions.map((item) => {
                     const selectedItem = selectedLights.find(i => i.id === item.id);
                     const isSelected = !!selectedItem;
                     const quantity = selectedItem?.quantity || 0;

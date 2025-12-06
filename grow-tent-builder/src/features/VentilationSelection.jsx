@@ -1,44 +1,54 @@
+import { useMemo } from 'react';
 import { useBuilder } from '../context/BuilderContext';
 import { useSettings } from '../context/SettingsContext';
-import { FAN_PRODUCTS, CARBON_FILTER_PRODUCTS, VENTILATION_SETS } from '../data/builderProducts';
-
-// Combine individual products and sets for display
-const INLINE_FAN_OPTIONS = FAN_PRODUCTS.map(fan => ({
-    id: fan.id,
-    name: fan.fullName || fan.name,
-    type: 'Inline Fan',
-    cfm: fan.specs?.cfm || fan.capacity || 0,
-    watts: fan.specs?.wattage || 0,
-    price: fan.price,
-    tier: fan.tier,
-    brand: fan.brand
-}));
-
-const VENTILATION_SET_OPTIONS = VENTILATION_SETS.map(set => ({
-    id: set.id,
-    name: set.name,
-    type: 'set',
-    cfm: set.capacity || 0,
-    watts: 0,
-    price: set.price,
-    tier: set.tier,
-    includes: set.includes
-}));
-
-const FILTER_OPTIONS = CARBON_FILTER_PRODUCTS.map(filter => ({
-    id: filter.id,
-    name: filter.name,
-    type: 'filter',
-    capacity: filter.capacity,
-    price: filter.price,
-    tier: filter.tier
-}));
+import { useMultipleBuilderProducts } from '../hooks';
 
 export default function VentilationSelection() {
     const { state, dispatch } = useBuilder();
     const { t, language, formatPrice } = useSettings();
     const { totals, selectedItems } = state;
     const selectedVentilation = selectedItems.ventilation;
+
+    // Load ventilation products from API
+    const { products, loading, error } = useMultipleBuilderProducts(['fan', 'filter', 'ventilationSet']);
+
+    // Convert products to display format
+    const inlineFanOptions = useMemo(() => {
+        return (products.fan || []).map(fan => ({
+            id: fan.id,
+            name: fan.fullName || fan.name,
+            type: 'Inline Fan',
+            cfm: fan.specs?.cfm || fan.capacity || 0,
+            watts: fan.specs?.wattage || 0,
+            price: fan.price,
+            tier: fan.tier,
+            brand: fan.brand
+        }));
+    }, [products.fan]);
+
+    const ventilationSetOptions = useMemo(() => {
+        return (products.ventilationSet || []).map(set => ({
+            id: set.id,
+            name: set.name,
+            type: 'set',
+            cfm: set.capacity || 0,
+            watts: 0,
+            price: set.price,
+            tier: set.tier,
+            includes: set.includes
+        }));
+    }, [products.ventilationSet]);
+
+    const filterOptions = useMemo(() => {
+        return (products.filter || []).map(filter => ({
+            id: filter.id,
+            name: filter.name,
+            type: 'filter',
+            capacity: filter.capacity,
+            price: filter.price,
+            tier: filter.tier
+        }));
+    }, [products.filter]);
 
     const handleToggleItem = (item) => {
         const isSelected = selectedVentilation.find(i => i.id === item.id);
@@ -161,8 +171,17 @@ export default function VentilationSelection() {
                 <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem' }}>
                     {language === 'tr' ? '🎁 Hazır Setler (Fan + Filtre)' : '🎁 Ready Sets (Fan + Filter)'}
                 </h3>
+                {loading ? (
+                    <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
+                        {language === 'tr' ? 'Yükleniyor...' : 'Loading...'}
+                    </div>
+                ) : error ? (
+                    <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--color-danger)' }}>
+                        {language === 'tr' ? 'Ürünler yüklenirken hata oluştu' : 'Error loading products'}
+                    </div>
+                ) : (
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
-                    {VENTILATION_SET_OPTIONS.map((item) => {
+                    {ventilationSetOptions.map((item) => {
                         const isSelected = selectedVentilation.find(i => i.id === item.id);
                         return (
                             <div
@@ -186,12 +205,13 @@ export default function VentilationSelection() {
                         );
                     })}
                 </div>
+                )}
             </div>
 
             <div style={{ marginBottom: '2rem' }}>
                 <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem' }}>{t('inlineFans')}</h3>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem' }}>
-                    {INLINE_FAN_OPTIONS.map((item) => {
+                    {inlineFanOptions.map((item) => {
                         const isSelected = selectedVentilation.find(i => i.id === item.id);
                         return (
                             <div
@@ -224,7 +244,7 @@ export default function VentilationSelection() {
                     {language === 'tr' ? '🌫️ Karbon Filtreler' : '🌫️ Carbon Filters'}
                 </h3>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem' }}>
-                    {FILTER_OPTIONS.map((item) => {
+                    {filterOptions.map((item) => {
                         const isSelected = selectedVentilation.find(i => i.id === item.id);
                         return (
                             <div
