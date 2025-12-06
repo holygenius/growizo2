@@ -18,6 +18,17 @@ const supabase = hasSupabaseCredentials ? createClient(supabaseUrl, supabaseKey)
 const BASE_URL = 'https://growizard.app';
 const LANGUAGES = ['en', 'tr'];
 
+// Route translations for different languages
+const ROUTE_TRANSLATIONS = {
+    '/blog': { en: '/blog', tr: '/yazilar' },
+    '/tools': { en: '/tools', tr: '/araclar' },
+    '/tools/electricity-cost-calculator': { en: '/tools/electricity-cost-calculator', tr: '/araclar/elektrik-maliyet-hesaplayici' },
+    '/tools/unit-converter': { en: '/tools/unit-converter', tr: '/araclar/birim-donusturucu' },
+    '/tools/co2-calculator': { en: '/tools/co2-calculator', tr: '/araclar/co2-hesaplayici' },
+    '/tools/ppfd-heatmap': { en: '/tools/ppfd-heatmap', tr: '/araclar/ppfd-isi-haritasi' },
+    '/faq': { en: '/faq', tr: '/sss' }
+};
+
 const STATIC_ROUTES = [
     '', // Home
     '/builder',
@@ -29,6 +40,19 @@ const STATIC_ROUTES = [
     '/blog',
     '/faq'
 ];
+
+// Get translated route for a language
+const getTranslatedRoute = (route, lang) => {
+    if (ROUTE_TRANSLATIONS[route]) {
+        return ROUTE_TRANSLATIONS[route][lang];
+    }
+    return route;
+};
+
+// Get blog path for a language
+const getBlogPath = (lang) => {
+    return lang === 'tr' ? '/yazilar' : '/blog';
+};
 
 const generateSitemap = async () => {
     // Skip sitemap generation if Supabase credentials are not available
@@ -57,7 +81,8 @@ const generateSitemap = async () => {
     // Add static routes
     LANGUAGES.forEach(lang => {
         STATIC_ROUTES.forEach(route => {
-            const url = `${BASE_URL}/${lang}${route}`;
+            const translatedRoute = getTranslatedRoute(route, lang);
+            const url = `${BASE_URL}/${lang}${translatedRoute}`;
             xml += '  <url>\n';
             xml += `    <loc>${url}</loc>\n`;
             xml += `    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>\n`;
@@ -71,7 +96,8 @@ const generateSitemap = async () => {
     blogPosts.forEach(post => {
         LANGUAGES.forEach(lang => {
             if (post.slug && post.slug[lang]) {
-                const url = `${BASE_URL}/${lang}/blog/${post.slug[lang]}`;
+                const blogPath = getBlogPath(lang);
+                const url = `${BASE_URL}/${lang}${blogPath}/${post.slug[lang]}`;
                 xml += '  <url>\n';
                 xml += `    <loc>${url}</loc>\n`;
                 xml += `    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>\n`;

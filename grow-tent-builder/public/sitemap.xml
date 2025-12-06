@@ -67,43 +67,43 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://growizard.app/tr/tools</loc>
+    <loc>https://growizard.app/tr/araclar</loc>
     <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://growizard.app/tr/tools/electricity-cost-calculator</loc>
+    <loc>https://growizard.app/tr/araclar/elektrik-maliyet-hesaplayici</loc>
     <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://growizard.app/tr/tools/unit-converter</loc>
+    <loc>https://growizard.app/tr/araclar/birim-donusturucu</loc>
     <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://growizard.app/tr/tools/co2-calculator</loc>
+    <loc>https://growizard.app/tr/araclar/co2-hesaplayici</loc>
     <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://growizard.app/tr/tools/ppfd-heatmap</loc>
+    <loc>https://growizard.app/tr/araclar/ppfd-isi-haritasi</loc>
     <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://growizard.app/tr/blog</loc>
+    <loc>https://growizard.app/tr/yazilar</loc>
     <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://growizard.app/tr/faq</loc>
+    <loc>https://growizard.app/tr/sss</loc>
     <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -115,7 +115,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://growizard.app/tr/blog/ppfd-anlamak-buyuk-verimler-icin-anahtar</loc>
+    <loc>https://growizard.app/tr/yazilar/ppfd-anlamak-buyuk-verimler-icin-anahtar</loc>
     <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -127,7 +127,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://growizard.app/tr/blog/hidroponik-vs-toprak-hangisi-dogru</loc>
+    <loc>https://growizard.app/tr/yazilar/hidroponik-vs-toprak-hangisi-dogru</loc>
     <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -139,7 +139,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://growizard.app/tr/blog/buyume-cadirinizi-otomatiklestirmek</loc>
+    <loc>https://growizard.app/tr/yazilar/buyume-cadirinizi-otomatiklestirmek</loc>
     <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -151,7 +151,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://growizard.app/tr/blog/vpd-mukemmel-transpirasyonun-sirri</loc>
+    <loc>https://growizard.app/tr/yazilar/vpd-mukemmel-transpirasyonun-sirri</loc>
     <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -163,7 +163,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://growizard.app/tr/blog/egitim-teknikleri-lst-vs-hst</loc>
+    <loc>https://growizard.app/tr/yazilar/egitim-teknikleri-lst-vs-hst</loc>
     <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -175,7 +175,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://growizard.app/tr/blog/besin-temelleri-npk-aciklandi</loc>
+    <loc>https://growizard.app/tr/yazilar/besin-temelleri-npk-aciklandi</loc>
     <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -187,7 +187,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://growizard.app/tr/blog/hasat-mukemmel-an</loc>
+    <loc>https://growizard.app/tr/yazilar/hasat-mukemmel-an</loc>
     <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
