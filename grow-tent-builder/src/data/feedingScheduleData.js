@@ -1,6 +1,12 @@
 /**
  * BioBizz Feeding Schedule Data
  * Contains weekly dosage information for BioBizz products
+ * 
+ * Note: Schedule values can be:
+ * - Numeric (e.g., 1, 2, 3) - ml/L dosage
+ * - 'N/A' - Not applicable for this week
+ * - 'Optional' - Can be used if desired
+ * - 'As needed' - Use based on pH measurements
  */
 
 // Substrate types

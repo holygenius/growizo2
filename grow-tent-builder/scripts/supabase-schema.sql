@@ -112,8 +112,10 @@ CREATE TABLE feeding_schedule_products (
     dose_unit VARCHAR(20) DEFAULT 'ml/L',
     
     -- Weekly schedules for different substrate types
-    schedule_allmix JSONB DEFAULT '{}', -- {"WK 1": 1, "WK 2": 2, ...}
-    schedule_lightmix_coco JSONB DEFAULT '{}', -- {"WK 1": 1, "WK 2": 2, ...}
+    -- Format: {"WK 1": 1, "WK 2": 2, "WK 3": "N/A", "WK 4": "Optional", ...}
+    -- Values can be numeric (dosage), 'N/A' (not applicable), 'Optional', or 'As needed'
+    schedule_allmix JSONB DEFAULT '{}',
+    schedule_lightmix_coco JSONB DEFAULT '{}',
     
     icon VARCHAR(10),
     is_active BOOLEAN DEFAULT true,
