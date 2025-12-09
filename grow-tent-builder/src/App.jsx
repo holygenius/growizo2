@@ -22,6 +22,7 @@ import { Helmet } from 'react-helmet-async';
 
 import NotFound from './components/NotFound';
 import { useEffect } from 'react';
+import { BASE_URL } from './config/constants';
 
 // Component to handle language sync and validation
 const LanguageWrapper = ({ children }) => {
@@ -121,12 +122,12 @@ function App() {
                 <meta property="og:title" content="GroWizard - Grow Tent Setup Builder" />
                 <meta property="og:description" content="Plan and optimize your perfect grow tent setup with advanced PPFD lighting simulation" />
                 <meta property="og:type" content="website" />
-                <meta property="og:url" content="https://www.growizard.app" />
-                <meta property="og:image" content="https://www.growizard.app/icons/icon-512x512.png" />
+                <meta property="og:url" content={BASE_URL} />
+                <meta property="og:image" content={`${BASE_URL}/icons/icon-512x512.png`} />
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta name="twitter:title" content="GroWizard - Grow Tent Setup Builder" />
                 <meta name="twitter:description" content="Plan and optimize your perfect grow tent setup with advanced PPFD lighting simulation" />
-                <link rel="canonical" href="https://www.growizard.app" />
+                <link rel="canonical" href={BASE_URL} />
               </Helmet>
               <AppContent />
             </BuilderProvider>

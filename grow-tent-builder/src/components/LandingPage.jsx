@@ -19,6 +19,7 @@ import {
     BackgroundEffects
 } from './LandingPage/index';
 import './LandingPage.css';
+import { BASE_URL, LANGUAGES, LOCALES } from '../config/constants';
 
 export default function LandingPage() {
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -53,14 +54,14 @@ export default function LandingPage() {
             <Helmet>
                 <title>{t('landingTitle')} | GroWizard</title>
                 <meta name="description" content={t('landingSubtitle')} />
-                <link rel="canonical" href={`https://www.growizard.app/${language}`} />
-                <link rel="alternate" hreflang="en" href="https://www.growizard.app/en" />
-                <link rel="alternate" hreflang="tr" href="https://www.growizard.app/tr" />
-                <link rel="alternate" hreflang="x-default" href="https://www.growizard.app/en" />
-                <meta property="og:url" content={`https://www.growizard.app/${language}`} />
-                <meta property="og:locale" content={language === 'tr' ? 'tr_TR' : 'en_US'} />
-                {language === 'en' && <meta property="og:locale:alternate" content="tr_TR" />}
-                {language === 'tr' && <meta property="og:locale:alternate" content="en_US" />}
+                <link rel="canonical" href={`${BASE_URL}/${language}`} />
+                <link rel="alternate" hreflang={LANGUAGES.EN} href={`${BASE_URL}/${LANGUAGES.EN}`} />
+                <link rel="alternate" hreflang={LANGUAGES.TR} href={`${BASE_URL}/${LANGUAGES.TR}`} />
+                <link rel="alternate" hreflang="x-default" href={`${BASE_URL}/${LANGUAGES.EN}`} />
+                <meta property="og:url" content={`${BASE_URL}/${language}`} />
+                <meta property="og:locale" content={LOCALES[language]} />
+                {language === LANGUAGES.EN && <meta property="og:locale:alternate" content={LOCALES[LANGUAGES.TR]} />}
+                {language === LANGUAGES.TR && <meta property="og:locale:alternate" content={LOCALES[LANGUAGES.EN]} />}
             </Helmet>
             
             <BackgroundEffects mousePos={mousePos} />
