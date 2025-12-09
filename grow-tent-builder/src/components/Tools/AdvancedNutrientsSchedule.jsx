@@ -1,17 +1,166 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useSettings } from '../../context/SettingsContext';
-import {
-    ADVANCED_NUTRIENTS_DATA,
-    WEEK_LABELS,
-    PHASE_INFO,
-    BASE_NUTRIENT_OPTIONS,
-    PRODUCT_CATEGORIES
-} from '../../data/advancedNutrientsData';
+import { productService } from '../../services/productService';
+import { brandService } from '../../services/brandService';
 import Navbar from '../Navbar';
 import Footer from '../Footer';
-import styles from './FeedingSchedule.module.css'; // Reusing styles for consistency
+import styles from './FeedingSchedule.module.css';
 import { motion, AnimatePresence } from 'framer-motion';
+
+// --- Constants moved from data file ---
+
+export const WEEK_LABELS = [
+    'Grow W1', 'Grow W2', 'Grow W3', 'Grow W4',
+    'Bloom W1', 'Bloom W2', 'Bloom W3', 'Bloom W4',
+    'Bloom W5', 'Bloom W6', 'Bloom W7', 'Bloom W8'
+];
+
+export const PHASE_INFO = {
+    vegetative: { weeks: [1, 2, 3, 4], label_key: 'phaseLabelVeg', color: '#22C55E' },
+    flowering: { weeks: [5, 6, 7, 8, 9, 10, 11], label_key: 'phaseLabelFlower', color: '#EC4899' },
+    flush: { weeks: [12], label_key: 'phaseLabelFlush', color: '#6B7280' }
+};
+
+export const PRODUCT_CATEGORIES = {
+    base_nutrient: {
+        name_key: 'catBaseNutrient',
+        icon: '🌱',
+        name: 'Temel Besinler',
+        nameEn: 'BASE NUTRIENTS',
+        description: 'Bitkinin ana büyüme ve çiçeklenme aşamaları için gerekli olan temel besin çözeltileri.',
+        color: '#22C55E'
+    },
+    root_expanders: {
+        name_key: 'catRootExpanders',
+        icon: '🌳',
+        name: 'Kök Genişleticiler',
+        nameEn: 'ROOT EXPANDERS',
+        description: 'Kök sistemi gelişimini destekleyen ürünler.',
+        color: '#8B5CF6'
+    },
+    bigger_buds: {
+        name_key: 'catBiggerBuds',
+        icon: '🌺',
+        name: 'Büyük Tomurcuklar',
+        nameEn: 'BIGGER BUDS',
+        description: 'Tomurcuk boyutunu ve ağırlığını artırmayı hedefleyen destekleyiciler.',
+        color: '#EF4444'
+    },
+    bud_potency: {
+        name_key: 'catBudPotency',
+        icon: '💪',
+        name: 'Tomurcuk Potansiyeli & Gövde Güçlendirici',
+        nameEn: 'BUD POTENCY & STALK STRENGTHENER',
+        description: 'Bitki gücünü, gövde yapısını ve tomurcuk potansiyelini destekleyen ürünler.',
+        color: '#F59E0B'
+    },
+    grow_medium: {
+        name_key: 'catGrowMedium',
+        icon: '🍂',
+        name: 'Büyüme Ortamı Düzenleyici',
+        nameEn: 'GROW MEDIUM CONDITIONER',
+        description: 'Yetiştirme ortamının koşullarını iyileştirmeyi amaçlayan ürünler.',
+        color: '#34D399'
+    },
+    taste_terpene: {
+        name_key: 'catTasteTerpene',
+        icon: '🍬',
+        name: 'Tomurcuk Tadı & Terpen Geliştirici',
+        nameEn: 'BUD TASTE & TERPENE ENHANCEMENT',
+        description: 'Mahsulün tadını ve aroma profilini (terpen) geliştirmeyi hedefleyen ürünler.',
+        color: '#EC4899'
+    }
+};
+
+export const BASE_NUTRIENT_OPTIONS = [
+    {
+        id: 'gmb',
+        label: 'pH Perfect® Grow Micro Bloom',
+        shortLabel: 'Grow Micro Bloom',
+        products: ['gmb-grow', 'gmb-micro', 'gmb-bloom'],
+        schedule_key: 'schedule_hydro_master',
+        icon: '🧪',
+        color: '#7C3AED',
+        badge: '3-Part',
+        description: 'Esnek 3 parçalı temel sistem - Tüm dönemler',
+        image: '/images/advanced-nutrients/Advanced-Nutrients-pH-Perfect-Grow-Micro-Bloom-1L.jpg'
+    },
+    {
+        id: 'sensi',
+        label: 'pH Perfect® Sensi Grow & Bloom',
+        shortLabel: 'Sensi Grow & Bloom',
+        products: ['sensi-grow-a', 'sensi-grow-b', 'sensi-bloom-a', 'sensi-bloom-b'],
+        schedule_key: 'schedule_hydro_master',
+        icon: '💧',
+        color: '#2563EB',
+        badge: 'Professional',
+        description: 'pH Perfect teknolojisi ile profesyonel besin sistemi',
+        image: '/images/advanced-nutrients/Advanced-Nutrients-pH-Perfect-Sensi-Grow-Bloom-1L.png'
+    },
+    {
+        id: 'sensi-coco',
+        label: 'pH Perfect® Sensi Coco Grow & Bloom',
+        shortLabel: 'Sensi Coco Grow & Bloom',
+        products: ['sensi-coco-grow-a', 'sensi-coco-grow-b', 'sensi-coco-bloom-a', 'sensi-coco-bloom-b'],
+        schedule_key: 'schedule_coco_master',
+        icon: '🥥',
+        color: '#0891B2',
+        badge: 'Coco',
+        description: 'Coco coir ortamları için özel formül',
+        image: '/images/advanced-nutrients/Advanced-Nutrients-pH-Perfect-Sensi-Coco-Grow-Bloom-1L.png'
+    },
+    {
+        id: 'connoisseur',
+        label: 'pH Perfect® Connoisseur® Grow & Bloom',
+        shortLabel: 'Connoisseur Grow & Bloom',
+        products: ['conn-grow-a', 'conn-grow-b', 'conn-bloom-a', 'conn-bloom-b'],
+        schedule_key: 'schedule_hydro_master',
+        icon: '🏆',
+        color: '#DC2626',
+        badge: 'Premium',
+        description: 'Üst düzey profesyonel besin serisi',
+        image: '/images/advanced-nutrients/Advanced-Nutrients-pH-Perfect-Connoisseur-Grow-Bloom-1L-v2.png'
+    },
+    {
+        id: 'connoisseur-coco',
+        label: 'pH Perfect® Connoisseur® Coco Grow & Bloom',
+        shortLabel: 'Connoisseur Coco Grow & Bloom',
+        products: ['conn-coco-grow-a', 'conn-coco-grow-b', 'conn-coco-bloom-a', 'conn-coco-bloom-b'],
+        schedule_key: 'schedule_coco_master',
+        icon: '👑',
+        color: '#B91C1C',
+        badge: 'Premium Coco',
+        description: 'Premium Coco ortamları için en üst düzey formül',
+        image: '/images/advanced-nutrients/Advanced-Nutrients-pH-Perfect-Connoisseur-Coco-Grow-Bloom-1L.png'
+    },
+    {
+        id: 'iguana',
+        label: 'OG Organics™ Iguana Juice® Grow & Bloom',
+        shortLabel: 'Iguana Juice Grow & Bloom',
+        products: ['iguana-grow', 'iguana-bloom'],
+        schedule_key: 'schedule_hydro_master',
+        icon: '🦎',
+        color: '#16A34A',
+        badge: 'Organic',
+        description: '100% Organik sertifikalı besin serisi',
+        image: '/images/advanced-nutrients/OG-Organics-Iguana-Juice-Grow-Bloom-Advanced-Nutrients-1L-EU.jpg'
+    },
+    {
+        id: 'jungle',
+        label: 'Jungle Juice® Grow Micro Bloom',
+        shortLabel: 'Jungle Juice GMB',
+        products: ['jungle-grow', 'jungle-micro', 'jungle-bloom'],
+        schedule_key: 'schedule_hydro_master',
+        icon: '🌴',
+        color: '#059669',
+        badge: 'Budget',
+        description: 'Ekonomik 3 parçalı temel sistem',
+        image: '/images/advanced-nutrients/Advanced-Nutrients-Jungle-Juice-GMB-1L-300x243-v2.jpg'
+    },
+];
+
+// -------------------------------------
 
 // Info section data
 const NUTRIENT_SERIES = [
@@ -99,6 +248,8 @@ const SUPPLEMENT_CATEGORIES = [
 
 export default function AdvancedNutrientsSchedule() {
     const { t } = useSettings();
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [selectedBaseNutrientId, setSelectedBaseNutrientId] = useState(BASE_NUTRIENT_OPTIONS[0].id);
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [waterAmount, setWaterAmount] = useState(10); // Litre
@@ -110,6 +261,41 @@ export default function AdvancedNutrientsSchedule() {
         Object.keys(PRODUCT_CATEGORIES).reduce((acc, key) => ({ ...acc, [key]: true }), {})
     );
 
+    // Fetch products
+    useEffect(() => {
+        async function loadData() {
+            setLoading(true);
+            try {
+                // Get brand by slug
+                const brand = await brandService.getBrandBySlug('advanced-nutrients');
+                if (!brand) throw new Error('Brand not found');
+
+                // Get products
+                const data = await productService.getProducts(brand.id);
+
+                // Map data to match expected structure
+                const mappedProducts = data.map(p => ({
+                    ...p,
+                    id: p.sku, // Use SKU as ID to match local constants
+                    _uuid: p.id, // Keep real UUID if needed
+                    // Ensure category_key is available (from specs or inferred)
+                    category_key: p.specs?.category_key || 'base_nutrient',
+                    // Map other properties if needed
+                    function_key: p.function_detailed?.en || 'funcBaseNutrientVeg', // Fallback or need real mapping
+                    dose_unit: p.specs?.dose_unit || 'ml/L',
+                    color: p.color || '#22C55E'
+                }));
+
+                setProducts(mappedProducts);
+            } catch (err) {
+                console.error('Error loading Advanced Nutrients data:', err);
+            } finally {
+                setLoading(false);
+            }
+        }
+        loadData();
+    }, []);
+
     // Get current base nutrient option
     const currentBaseNutrient = useMemo(() => {
         return BASE_NUTRIENT_OPTIONS.find(opt => opt.id === selectedBaseNutrientId) || BASE_NUTRIENT_OPTIONS[0];
@@ -119,10 +305,10 @@ export default function AdvancedNutrientsSchedule() {
     const productsByCategory = useMemo(() => {
         const grouped = {};
         Object.keys(PRODUCT_CATEGORIES).forEach(catKey => {
-            grouped[catKey] = ADVANCED_NUTRIENTS_DATA.filter(p => p.category_key === catKey);
+            grouped[catKey] = products.filter(p => p.category_key === catKey);
         });
         return grouped;
-    }, []);
+    }, [products]);
 
     // Toggle category expansion
     const toggleCategory = (categoryKey) => {
@@ -147,15 +333,17 @@ export default function AdvancedNutrientsSchedule() {
 
     // Filter and translate selected products
     const activeProducts = useMemo(() => {
-        return ADVANCED_NUTRIENTS_DATA.filter(product =>
-            selectedProducts.includes(product.id)
+        return products.filter(product =>
+            selectedProducts.includes(product.id) || selectedProducts.includes(product.sku) // Handle ID vs SKU mismatch
         ).map(product => ({
             ...product,
+            id: product.id || product.sku, // Ensure ID is available
             category: t(product.category_key),
             dose_unit: product.dose_unit === 'ml/L' ? 'ml/L' : t(product.dose_unit),
-            function: t(product.function_key),
+            // function mapping might need adjustment
+            function: t(product.function_key || 'funcBaseNutrientVeg'),
         }));
-    }, [selectedProducts, t]);
+    }, [selectedProducts, products, t]);
 
     // Toggle product selection
     const toggleProduct = (productId) => {
@@ -171,9 +359,9 @@ export default function AdvancedNutrientsSchedule() {
 
     // Select all products (additives only, base is fixed)
     const selectAllAdditives = () => {
-        const additives = ADVANCED_NUTRIENTS_DATA
+        const additives = products
             .filter(p => p.category_key !== 'base_nutrient')
-            .map(p => p.id);
+            .map(p => p.id); // Assuming ID matches SKU
         setSelectedProducts([...currentBaseNutrient.products, ...additives]);
     };
 
@@ -186,18 +374,19 @@ export default function AdvancedNutrientsSchedule() {
 
     // Get schedule based on current selection
     const getSchedule = (product) => {
+        const specs = product.specs || {};
+
         // If it's a base nutrient, use its default schedule
         if (product.category_key === 'base_nutrient') {
-            return product.schedule_default || null;
+            return specs.schedule_default || null;
         }
 
         // If it's an additive, use the key from the selected base nutrient option
         // e.g., 'schedule_hydro_master'
         const scheduleKey = currentBaseNutrient.schedule_key;
 
-        // Fallback: try other keys if specific one missing (e.g. if hydro_master missing, try coco_master)
-        // But for now, let's stick to the mapped key.
-        return product[scheduleKey] || product.schedule_default || null;
+        // Fallback: try other keys if specific one missing
+        return specs[scheduleKey] || specs.schedule_default || null;
     };
 
     // Calculate dose for a specific week
@@ -261,8 +450,8 @@ export default function AdvancedNutrientsSchedule() {
     const selectedProductsSummary = useMemo(() => {
         const summary = {};
         Object.entries(PRODUCT_CATEGORIES).forEach(([catKey, category]) => {
-            const productsInCat = ADVANCED_NUTRIENTS_DATA.filter(
-                p => p.category_key === catKey && selectedProducts.includes(p.id)
+            const productsInCat = products.filter(
+                p => p.category_key === catKey && (selectedProducts.includes(p.id) || selectedProducts.includes(p.sku))
             );
             if (productsInCat.length > 0) {
                 summary[catKey] = {
@@ -273,7 +462,7 @@ export default function AdvancedNutrientsSchedule() {
             }
         });
         return summary;
-    }, [selectedProducts]);
+    }, [selectedProducts, products]);
 
     const content = (
         <motion.div
@@ -289,7 +478,7 @@ export default function AdvancedNutrientsSchedule() {
                     <div className={styles.heroPattern} />
                 </div>
                 <div className={styles.heroContent}>
-                    <motion.div 
+                    <motion.div
                         className={styles.heroBadge}
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -298,8 +487,8 @@ export default function AdvancedNutrientsSchedule() {
                         <span className={styles.heroBadgeIcon}>🧬</span>
                         <span>Advanced Nutrients</span>
                     </motion.div>
-                    
-                    <motion.h1 
+
+                    <motion.h1
                         className={styles.heroTitle}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -307,8 +496,8 @@ export default function AdvancedNutrientsSchedule() {
                     >
                         {t('anHeroTitle')}
                     </motion.h1>
-                    
-                    <motion.p 
+
+                    <motion.p
                         className={styles.heroSubtitle}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -317,7 +506,7 @@ export default function AdvancedNutrientsSchedule() {
                         {t('anHeroSubtitle')}
                     </motion.p>
 
-                    <motion.div 
+                    <motion.div
                         className={styles.heroStats}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -348,7 +537,7 @@ export default function AdvancedNutrientsSchedule() {
                         </div>
                     </motion.div>
 
-                    <motion.div 
+                    <motion.div
                         className={styles.heroFeatures}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -385,8 +574,8 @@ export default function AdvancedNutrientsSchedule() {
                     >
                         <div className={styles.baseNutrientSelected}>
                             {currentBaseNutrient.image ? (
-                                <img 
-                                    src={currentBaseNutrient.image} 
+                                <img
+                                    src={currentBaseNutrient.image}
                                     alt={currentBaseNutrient.label}
                                     className={styles.baseNutrientImage}
                                 />
@@ -401,7 +590,7 @@ export default function AdvancedNutrientsSchedule() {
                                 {currentBaseNutrient.badge}
                             </span>
                         </div>
-                        <motion.span 
+                        <motion.span
                             className={styles.baseNutrientArrow}
                             animate={{ rotate: showBaseNutrientSelector ? 180 : 0 }}
                             transition={{ duration: 0.2 }}
@@ -432,7 +621,7 @@ export default function AdvancedNutrientsSchedule() {
                             </div>
                             <span className={styles.productSelectorCount}>{selectedProducts.length}</span>
                         </div>
-                        <motion.span 
+                        <motion.span
                             className={styles.productSelectorArrow}
                             animate={{ rotate: showProductSelector ? 180 : 0 }}
                             transition={{ duration: 0.2 }}
@@ -475,22 +664,22 @@ export default function AdvancedNutrientsSchedule() {
                                 >
                                     <div className={styles.baseNutrientCardHeader}>
                                         {option.image ? (
-                                            <img 
-                                                src={option.image} 
+                                            <img
+                                                src={option.image}
                                                 alt={option.label}
                                                 className={styles.baseNutrientCardImage}
                                             />
                                         ) : (
                                             <span className={styles.baseNutrientCardIcon}>{option.icon}</span>
                                         )}
-                                        <span 
+                                        <span
                                             className={styles.baseNutrientCardBadge}
                                             style={{ backgroundColor: `${option.color}20`, color: option.color }}
                                         >
                                             {option.badge}
                                         </span>
                                         {selectedBaseNutrientId === option.id && (
-                                            <motion.span 
+                                            <motion.span
                                                 className={styles.baseNutrientCardCheck}
                                                 initial={{ scale: 0 }}
                                                 animate={{ scale: 1 }}
@@ -532,8 +721,8 @@ export default function AdvancedNutrientsSchedule() {
                                 <button onClick={() => setSelectedProducts(currentBaseNutrient.products)} className={styles.actionBtn}>
                                     {t('clearAll')}
                                 </button>
-                                <button 
-                                    onClick={() => setShowProductSelector(false)} 
+                                <button
+                                    onClick={() => setShowProductSelector(false)}
                                     className={`${styles.actionBtn} ${styles.actionBtnPrimary}`}
                                 >
                                     ✓ {t('anCompleteSelection')}
@@ -545,12 +734,12 @@ export default function AdvancedNutrientsSchedule() {
                         <div className={styles.categoryContainer}>
                             {Object.entries(PRODUCT_CATEGORIES).map(([catKey, category]) => {
                                 const productsInCategory = productsByCategory[catKey] || [];
-                                
+
                                 // Filter: Only show selected base nutrients in base nutrient category
-                                const visibleProducts = catKey === 'base_nutrient' 
+                                const visibleProducts = catKey === 'base_nutrient'
                                     ? productsInCategory.filter(p => currentBaseNutrient.products.includes(p.id))
                                     : productsInCategory;
-                                
+
                                 if (visibleProducts.length === 0) return null;
 
                                 const isExpanded = expandedCategories[catKey];
@@ -565,7 +754,7 @@ export default function AdvancedNutrientsSchedule() {
                                         transition={{ duration: 0.3 }}
                                     >
                                         {/* Category Header */}
-                                        <motion.div 
+                                        <motion.div
                                             className={styles.categoryHeader}
                                             onClick={() => toggleCategory(catKey)}
                                             style={{ '--category-color': category.color }}
@@ -583,7 +772,7 @@ export default function AdvancedNutrientsSchedule() {
                                                 <span className={styles.categoryCount}>
                                                     {selectedCount}/{visibleProducts.length}
                                                 </span>
-                                                <motion.span 
+                                                <motion.span
                                                     className={styles.categoryArrow}
                                                     animate={{ rotate: isExpanded ? 180 : 0 }}
                                                     transition={{ duration: 0.2 }}
@@ -629,8 +818,8 @@ export default function AdvancedNutrientsSchedule() {
                                                                 >
                                                                     {product.image && (
                                                                         <div className={styles.productImageContainer}>
-                                                                            <img 
-                                                                                src={product.image} 
+                                                                            <img
+                                                                                src={product.image}
                                                                                 alt={product.product_name}
                                                                                 className={styles.productImage}
                                                                                 loading="lazy"
@@ -644,7 +833,7 @@ export default function AdvancedNutrientsSchedule() {
                                                                         />
                                                                         <span className={styles.productName}>{product.product_name}</span>
                                                                         {isSelected && (
-                                                                            <motion.span 
+                                                                            <motion.span
                                                                                 className={styles.checkmark}
                                                                                 initial={{ scale: 0 }}
                                                                                 animate={{ scale: 1 }}
@@ -701,7 +890,7 @@ export default function AdvancedNutrientsSchedule() {
                                 <span>✏️</span> {t('anEdit')}
                             </motion.button>
                         </div>
-                        
+
                         <div className={styles.productSummaryGrid}>
                             {Object.entries(selectedProductsSummary).map(([catKey, data]) => (
                                 <motion.div
@@ -719,12 +908,12 @@ export default function AdvancedNutrientsSchedule() {
                                     </div>
                                     <div className={styles.productSummaryItems}>
                                         {data.products.slice(0, 3).map(product => (
-                                            <span 
-                                                key={product.id} 
+                                            <span
+                                                key={product.id}
                                                 className={styles.productSummaryItem}
                                                 style={{ borderColor: product.color }}
                                             >
-                                                <span 
+                                                <span
                                                     className={styles.productSummaryDot}
                                                     style={{ backgroundColor: product.color }}
                                                 />
@@ -845,8 +1034,8 @@ export default function AdvancedNutrientsSchedule() {
                                         <td className={styles.productCell}>
                                             <div className={styles.productInfo}>
                                                 {product.image ? (
-                                                    <img 
-                                                        src={product.image} 
+                                                    <img
+                                                        src={product.image}
                                                         alt={product.product_name}
                                                         className={styles.productCellImage}
                                                     />
@@ -916,7 +1105,7 @@ export default function AdvancedNutrientsSchedule() {
                ======================================== */}
 
             {/* Info Hero Section */}
-            <motion.div 
+            <motion.div
                 className={styles.infoHero}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -1021,7 +1210,7 @@ export default function AdvancedNutrientsSchedule() {
             </div>
 
             {/* Pro Tips Section */}
-            <motion.div 
+            <motion.div
                 className={styles.proTipsSection}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -1052,9 +1241,9 @@ export default function AdvancedNutrientsSchedule() {
             {/* Application Guidelines Accordion */}
             <div className={styles.accordion}>
                 <h3 className={styles.seriesSectionTitle}>{t('anApplicationGuide')}</h3>
-                
+
                 <motion.div className={styles.accordionItem} initial={false}>
-                    <div 
+                    <div
                         className={styles.accordionHeader}
                         onClick={() => setOpenAccordion(openAccordion === 'dosage' ? null : 'dosage')}
                     >
@@ -1062,7 +1251,7 @@ export default function AdvancedNutrientsSchedule() {
                             <span className={styles.accordionIcon}>📏</span>
                             <span className={styles.accordionTitle}>{t('anApplicationRates')}</span>
                         </div>
-                        <motion.span 
+                        <motion.span
                             className={styles.accordionArrow}
                             animate={{ rotate: openAccordion === 'dosage' ? 180 : 0 }}
                         >
@@ -1085,7 +1274,7 @@ export default function AdvancedNutrientsSchedule() {
                 </motion.div>
 
                 <motion.div className={styles.accordionItem} initial={false}>
-                    <div 
+                    <div
                         className={styles.accordionHeader}
                         onClick={() => setOpenAccordion(openAccordion === 'flush' ? null : 'flush')}
                     >
@@ -1093,7 +1282,7 @@ export default function AdvancedNutrientsSchedule() {
                             <span className={styles.accordionIcon}>🚿</span>
                             <span className={styles.accordionTitle}>{t('anPreHarvestFlush')}</span>
                         </div>
-                        <motion.span 
+                        <motion.span
                             className={styles.accordionArrow}
                             animate={{ rotate: openAccordion === 'flush' ? 180 : 0 }}
                         >
@@ -1116,7 +1305,7 @@ export default function AdvancedNutrientsSchedule() {
                 </motion.div>
 
                 <motion.div className={styles.accordionItem} initial={false}>
-                    <div 
+                    <div
                         className={styles.accordionHeader}
                         onClick={() => setOpenAccordion(openAccordion === 'coco' ? null : 'coco')}
                     >
@@ -1124,7 +1313,7 @@ export default function AdvancedNutrientsSchedule() {
                             <span className={styles.accordionIcon}>🥥</span>
                             <span className={styles.accordionTitle}>{t('anCocoNotes')}</span>
                         </div>
-                        <motion.span 
+                        <motion.span
                             className={styles.accordionArrow}
                             animate={{ rotate: openAccordion === 'coco' ? 180 : 0 }}
                         >
@@ -1147,7 +1336,7 @@ export default function AdvancedNutrientsSchedule() {
                 </motion.div>
 
                 <motion.div className={styles.accordionItem} initial={false}>
-                    <div 
+                    <div
                         className={styles.accordionHeader}
                         onClick={() => setOpenAccordion(openAccordion === 'customize' ? null : 'customize')}
                     >
@@ -1155,7 +1344,7 @@ export default function AdvancedNutrientsSchedule() {
                             <span className={styles.accordionIcon}>⚙️</span>
                             <span className={styles.accordionTitle}>{t('anCustomization')}</span>
                         </div>
-                        <motion.span 
+                        <motion.span
                             className={styles.accordionArrow}
                             animate={{ rotate: openAccordion === 'customize' ? 180 : 0 }}
                         >
@@ -1171,7 +1360,7 @@ export default function AdvancedNutrientsSchedule() {
                                 exit={{ height: 0, opacity: 0 }}
                                 transition={{ duration: 0.3 }}
                             >
-                                <p>{t('anCustomizationDesc')} <a href="https://www.advancednutrients.com/nutrient-calculator" target="_blank" rel="noopener noreferrer" style={{color: '#22c55e'}}>advancednutrients.com/nutrient-calculator</a></p>
+                                <p>{t('anCustomizationDesc')} <a href="https://www.advancednutrients.com/nutrient-calculator" target="_blank" rel="noopener noreferrer" style={{ color: '#22c55e' }}>advancednutrients.com/nutrient-calculator</a></p>
                             </motion.div>
                         )}
                     </AnimatePresence>
@@ -1179,7 +1368,7 @@ export default function AdvancedNutrientsSchedule() {
             </div>
 
             {/* Guarantee Banner */}
-            <motion.div 
+            <motion.div
                 className={styles.guaranteeBanner}
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}

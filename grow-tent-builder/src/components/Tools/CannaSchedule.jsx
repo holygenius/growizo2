@@ -2,23 +2,16 @@ import { useState, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useSettings } from '../../context/SettingsContext';
 import {
-    CANNA_PRODUCTS,
     CANNA_SYSTEMS,
     SYSTEM_INFO,
-    PLANT_SCHEDULES,
     PLANT_INFO,
     PRODUCT_CATEGORIES,
-    AQUA_SCHEDULES,
-    COCO_SCHEDULES,
-    COGR_SCHEDULES,
-    SUBSTRA_SCHEDULES,
-    TERRA_SCHEDULES,
     DEFAULT_SELECTED_PRODUCTS,
-    getProductsBySystem,
-    getScheduleBySystemAndPlant,
-    getAvailablePlantsForSystem,
     EC_NOTE
 } from '../../data/cannaData';
+import { productService } from '../../services/productService';
+import { brandService } from '../../services/brandService';
+import { supabase } from '../../services/supabase';
 import Navbar from '../Navbar';
 import Footer from '../Footer';
 import styles from './CannaSchedule.module.css'; // Dedicated CANNA styles
@@ -101,10 +94,11 @@ export default function CannaSchedule() {
     const { t, language } = useSettings();
 
     // State
+    // State
     const [selectedSystem, setSelectedSystem] = useState(CANNA_SYSTEMS.COCO);
     const [selectedPlant, setSelectedPlant] = useState('general');
     const [waterType, setWaterType] = useState('hard'); // For SUBSTRA system
-    const [selectedProducts, setSelectedProducts] = useState(DEFAULT_SELECTED_PRODUCTS.coco);
+    const [selectedProducts, setSelectedProducts] = useState(DEFAULT_SELECTED_PRODUCTS.coco || []);
     const [waterAmount, setWaterAmount] = useState(10);
     const [showProductSelector, setShowProductSelector] = useState(false);
     const [highlightedWeek, setHighlightedWeek] = useState(null);
@@ -112,22 +106,78 @@ export default function CannaSchedule() {
         Object.keys(PRODUCT_CATEGORIES).reduce((acc, key) => ({ ...acc, [key]: true }), {})
     );
 
+    const [products, setProducts] = useState([]);
+    const [schedules, setSchedules] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    // Fetch data
+    useEffect(() => {
+        async function loadData() {
+            setLoading(true);
+            try {
+                const brand = await brandService.getBrandBySlug('canna');
+                if (!brand) throw new Error('Brand not found');
+
+                // Products
+                const fetchedProducts = await productService.getProducts(brand.id);
+                // Map mapping 
+                const mappedProducts = fetchedProducts.map(p => ({
+                    ...p,
+                    id: p.sku, // Use SKU as ID to match legacy selection logic
+                    _uuid: p.id,
+                    system: p.specs?.system || 'all',
+                    category_key: p.specs?.category_key || 'base_nutrient',
+                    function_key: p.specs?.function_key || 'funcBaseNutrientVeg',
+                    dose_unit: p.specs?.dose_unit || 'ml/L',
+                    color: p.color || '#22C55E'
+                }));
+                setProducts(mappedProducts);
+
+                // Schedules
+                const { data: fetchedSchedules, error } = await supabase
+                    .from('feeding_schedules')
+                    .select('*')
+                    .eq('brand_id', brand.id);
+
+                if (error) throw error;
+                setSchedules(fetchedSchedules);
+
+            } catch (err) {
+                console.error('Error loading CANNA data:', err);
+            } finally {
+                setLoading(false);
+            }
+        }
+        loadData();
+    }, []);
+
     // currentSystemInfo removed - using SYSTEM_INFO directly
 
     // Get available plants for current system
     const availablePlants = useMemo(() => {
-        return getAvailablePlantsForSystem(selectedSystem);
-    }, [selectedSystem]);
+        if (!schedules.length) return ['general'];
+        const plants = schedules
+            .filter(s => s.substrate_type === selectedSystem)
+            .map(s => s.schedule_data?.plant_key)
+            .filter(Boolean);
+        return [...new Set(plants)]; // Unique plants
+    }, [selectedSystem, schedules]);
 
     // Get current schedule
     const currentSchedule = useMemo(() => {
-        return getScheduleBySystemAndPlant(selectedSystem, selectedPlant);
-    }, [selectedSystem, selectedPlant]);
+        const schedule = schedules.find(s =>
+            s.substrate_type === selectedSystem &&
+            s.schedule_data?.plant_key === selectedPlant
+        );
+        return schedule ? schedule.schedule_data : null;
+    }, [selectedSystem, selectedPlant, schedules]);
 
     // Get products for current system
     const systemProducts = useMemo(() => {
-        return getProductsBySystem(selectedSystem);
-    }, [selectedSystem]);
+        return products.filter(p =>
+            p.system === selectedSystem || p.system === 'all'
+        );
+    }, [selectedSystem, products]);
 
     // Group products by category
     const productsByCategory = useMemo(() => {

@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect, useCallback } from 'react';
 import { useBuilder } from '../context/BuilderContext';
 import { useSettings } from '../context/SettingsContext';
 import { fetchPresetSets } from '../services/api/presetSetsApi';
-import { 
+import {
     fetchTentProducts,
     fetchLEDProducts,
     fetchFanProducts,
@@ -93,7 +93,7 @@ const convertPresetToBuilderItems = (preset, productCatalog) => {
     // Ventilation (fan + filter + ducting OR set)
     if (preset.items.ventilation) {
         const { fan, filter, ducting, set: ventSetId } = preset.items.ventilation;
-        
+
         // Check if using a complete ventilation set
         if (ventSetId) {
             const ventSet = findProduct(ventSetId, ventilationSets);
@@ -205,7 +205,7 @@ const convertPresetToBuilderItems = (preset, productCatalog) => {
             let product = findProduct(accId, timerProducts);
             if (!product) product = findProduct(accId, hangerProducts);
             if (!product) product = findProduct(accId, ductingProducts);
-            
+
             if (product) {
                 items.accessories.push({
                     id: product.id,
@@ -253,7 +253,7 @@ const getTentDimensions = (preset, tentProducts) => {
             };
         }
     }
-    
+
     // Fallback: parse from tentSize string (e.g., "60x60x180" or "150x150x200")
     if (preset.tentSize && typeof preset.tentSize === 'string') {
         const parts = preset.tentSize.split('x').map(Number);
@@ -267,7 +267,7 @@ const getTentDimensions = (preset, tentProducts) => {
             };
         }
     }
-    
+
     // Default fallback for 60x60 tent
     return {
         width: 2,
@@ -280,7 +280,7 @@ const getTentDimensions = (preset, tentProducts) => {
 export default function PresetSetSelector() {
     const { dispatch } = useBuilder();
     const { language } = useSettings();
-    
+
     const [presetSets, setPresetSets] = useState([]);
     const [productCatalog, setProductCatalog] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -293,7 +293,7 @@ export default function PresetSetSelector() {
         async function loadData() {
             try {
                 setLoading(true);
-                
+
                 // Fetch all data in parallel
                 const [
                     presetData,
@@ -324,7 +324,7 @@ export default function PresetSetSelector() {
                     fetchVentilationSets(),
                     fetchNutrientProducts()
                 ]);
-                
+
                 setPresetSets(presetData);
                 setProductCatalog({
                     tentProducts,
@@ -368,10 +368,10 @@ export default function PresetSetSelector() {
 
     const handleSelectPreset = useCallback((preset) => {
         if (!productCatalog) return;
-        
+
         const items = convertPresetToBuilderItems(preset, productCatalog);
         const tentDims = getTentDimensions(preset, productCatalog.tentProducts);
-        
+
         dispatch({
             type: 'LOAD_PRESET',
             payload: {
@@ -390,7 +390,7 @@ export default function PresetSetSelector() {
     const tierLabels = {
         entry: { en: 'Starter', tr: 'Başlangıç' },
         standard: { en: 'Standard', tr: 'Standart' },
-        pro: { en: 'Professional', tr: 'Profesyonel' }
+        premium: { en: 'Professional', tr: 'Profesyonel' }
     };
 
     // Loading state
@@ -434,17 +434,17 @@ export default function PresetSetSelector() {
             <h2 style={{ marginBottom: '1rem', color: 'var(--color-primary)' }}>
                 {language === 'tr' ? 'Hazır Set Seçin veya Özelleştirin' : 'Choose a Ready Set or Customize'}
             </h2>
-            
+
             <p style={{ marginBottom: '1.5rem', color: 'var(--text-secondary)' }}>
-                {language === 'tr' 
+                {language === 'tr'
                     ? 'Aşağıdaki hazır setlerden birini seçerek hızlıca başlayabilir veya kendi setinizi oluşturmak için "Özel Set Oluştur" butonuna tıklayabilirsiniz.'
                     : 'You can quickly start by selecting one of the ready sets below, or click "Create Custom Set" to build your own.'}
             </p>
 
             {/* Filters */}
-            <div style={{ 
-                display: 'flex', 
-                gap: '1rem', 
+            <div style={{
+                display: 'flex',
+                gap: '1rem',
                 marginBottom: '2rem',
                 flexWrap: 'wrap'
             }}>
@@ -461,7 +461,7 @@ export default function PresetSetSelector() {
                         <option value="all">{language === 'tr' ? 'Tümü' : 'All'}</option>
                         <option value="entry">{tierLabels.entry[language]}</option>
                         <option value="standard">{tierLabels.standard[language]}</option>
-                        <option value="pro">{tierLabels.pro[language]}</option>
+                        <option value="premium">{tierLabels.premium[language]}</option>
                     </select>
                 </div>
 
@@ -484,9 +484,9 @@ export default function PresetSetSelector() {
             </div>
 
             {/* Preset Sets Grid */}
-            <div style={{ 
-                display: 'grid', 
-                gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', 
+            <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
                 gap: '1.5rem',
                 marginBottom: '2rem'
             }}>
@@ -504,37 +504,37 @@ export default function PresetSetSelector() {
                         onClick={() => handleSelectPreset(preset)}
                     >
                         {/* Header */}
-                        <div style={{ 
-                            display: 'flex', 
-                            justifyContent: 'space-between', 
+                        <div style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
                             alignItems: 'flex-start',
                             marginBottom: '1rem'
                         }}>
                             <div>
-                                <h3 style={{ 
-                                    fontSize: '1.1rem', 
+                                <h3 style={{
+                                    fontSize: '1.1rem',
                                     fontWeight: 'bold',
                                     color: 'var(--text-primary)',
                                     marginBottom: '0.25rem'
                                 }}>
-                                    {preset.name[language]}
+                                    {preset.name?.[language] || preset.name?.en || 'Preset'}
                                 </h3>
                                 <span style={{
                                     fontSize: '0.75rem',
                                     padding: '0.25rem 0.5rem',
-                                    background: preset.tier === 'pro' 
-                                        ? 'rgba(234, 179, 8, 0.2)' 
+                                    background: preset.tier === 'premium'
+                                        ? 'rgba(234, 179, 8, 0.2)'
                                         : preset.tier === 'standard'
                                             ? 'rgba(59, 130, 246, 0.2)'
                                             : 'rgba(16, 185, 129, 0.2)',
-                                    color: preset.tier === 'pro'
+                                    color: preset.tier === 'premium'
                                         ? '#EAB308'
                                         : preset.tier === 'standard'
                                             ? '#3B82F6'
                                             : 'var(--color-primary)',
                                     borderRadius: 'var(--radius-sm)'
                                 }}>
-                                    {tierLabels[preset.tier][language]}
+                                    {tierLabels[preset.tier]?.[language] || preset.tier}
                                 </span>
                             </div>
                             <div style={{
@@ -547,60 +547,60 @@ export default function PresetSetSelector() {
                         </div>
 
                         {/* Description */}
-                        <p style={{ 
-                            fontSize: '0.875rem', 
+                        <p style={{
+                            fontSize: '0.875rem',
                             color: 'var(--text-secondary)',
                             marginBottom: '1rem',
                             lineHeight: '1.5'
                         }}>
-                            {preset.description[language]}
+                            {preset.description?.[language] || preset.description?.en || ''}
                         </p>
 
                         {/* Specs */}
-                        <div style={{ 
-                            display: 'grid', 
-                            gridTemplateColumns: 'repeat(2, 1fr)', 
+                        <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(2, 1fr)',
                             gap: '0.5rem',
                             fontSize: '0.8rem'
                         }}>
-                            <div style={{ 
-                                display: 'flex', 
-                                alignItems: 'center', 
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
                                 gap: '0.5rem',
                                 color: 'var(--text-secondary)'
                             }}>
                                 <span>📐</span>
                                 <span>{preset.tentSize} cm</span>
                             </div>
-                            <div style={{ 
-                                display: 'flex', 
-                                alignItems: 'center', 
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
                                 gap: '0.5rem',
                                 color: 'var(--text-secondary)'
                             }}>
                                 <span>🌱</span>
                                 <span>{preset.plantCount} {language === 'tr' ? 'bitki' : 'plant(s)'}</span>
                             </div>
-                            <div style={{ 
-                                display: 'flex', 
-                                alignItems: 'center', 
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
                                 gap: '0.5rem',
                                 color: 'var(--text-secondary)'
                             }}>
                                 <span>🧪</span>
                                 <span>{preset.nutrientBrand}</span>
                             </div>
-                            <div style={{ 
-                                display: 'flex', 
-                                alignItems: 'center', 
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
                                 gap: '0.5rem',
                                 color: 'var(--text-secondary)'
                             }}>
                                 <span>🌿</span>
-                                <span>{preset.mediaType === 'soil' 
-                                    ? (language === 'tr' ? 'Toprak' : 'Soil') 
-                                    : preset.mediaType === 'coco' 
-                                        ? (language === 'tr' ? 'Cocos' : 'Coco') 
+                                <span>{preset.mediaType === 'soil'
+                                    ? (language === 'tr' ? 'Toprak' : 'Soil')
+                                    : preset.mediaType === 'coco'
+                                        ? (language === 'tr' ? 'Cocos' : 'Coco')
                                         : preset.mediaType}
                                 </span>
                             </div>
@@ -629,20 +629,20 @@ export default function PresetSetSelector() {
 
             {/* No results */}
             {filteredPresets.length === 0 && (
-                <div style={{ 
-                    textAlign: 'center', 
+                <div style={{
+                    textAlign: 'center',
                     padding: '2rem',
                     color: 'var(--text-secondary)'
                 }}>
-                    {language === 'tr' 
+                    {language === 'tr'
                         ? 'Seçilen filtrelerle eşleşen set bulunamadı.'
                         : 'No sets found matching the selected filters.'}
                 </div>
             )}
 
             {/* Custom Set Button */}
-            <div style={{ 
-                display: 'flex', 
+            <div style={{
+                display: 'flex',
                 justifyContent: 'center',
                 marginTop: '2rem',
                 paddingTop: '2rem',

@@ -73,17 +73,24 @@ export default function SummaryView() {
         { key: 'accessories', label: language === 'tr' ? 'Aksesuarlar' : 'Accessories' },
     ];
 
+    const getLocalStr = (val) => {
+        if (!val) return '';
+        if (typeof val === 'string') return val;
+        if (typeof val === 'object') return val[language] || val.en || '';
+        return '';
+    };
+
     return (
         <div>
             <h2 style={{ marginBottom: '1rem', color: 'var(--color-primary)' }}>{t('yourSetup')}</h2>
 
             {/* Preset Banner */}
             {presetInfo && (
-                <div style={{ 
-                    marginBottom: '2rem', 
-                    padding: '1.5rem', 
+                <div style={{
+                    marginBottom: '2rem',
+                    padding: '1.5rem',
                     background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.1))',
-                    border: '1px solid rgba(16, 185, 129, 0.3)', 
+                    border: '1px solid rgba(16, 185, 129, 0.3)',
                     borderRadius: 'var(--radius-md)',
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -92,28 +99,28 @@ export default function SummaryView() {
                     gap: '1rem'
                 }}>
                     <div>
-                        <div style={{ 
-                            fontSize: '0.75rem', 
-                            color: 'var(--color-primary)', 
+                        <div style={{
+                            fontSize: '0.75rem',
+                            color: 'var(--color-primary)',
                             textTransform: 'uppercase',
                             letterSpacing: '0.05em',
                             marginBottom: '0.25rem'
                         }}>
                             {language === 'tr' ? 'Seçilen Hazır Set' : 'Selected Preset'}
                         </div>
-                        <div style={{ 
-                            fontSize: '1.25rem', 
+                        <div style={{
+                            fontSize: '1.25rem',
                             fontWeight: 'bold',
                             color: 'var(--text-primary)'
                         }}>
-                            {presetInfo.name[language]}
+                            {getLocalStr(presetInfo.name)}
                         </div>
-                        <div style={{ 
-                            fontSize: '0.875rem', 
+                        <div style={{
+                            fontSize: '0.875rem',
                             color: 'var(--text-secondary)',
                             marginTop: '0.25rem'
                         }}>
-                            {presetInfo.description[language]}
+                            {getLocalStr(presetInfo.description)}
                         </div>
                     </div>
                     <button
@@ -182,7 +189,7 @@ export default function SummaryView() {
                                         const quantity = item.quantity || 1;
                                         const totalPrice = (item.price || 0) * quantity;
                                         // Support both name and product_name for nutrients
-                                        const displayName = item.name || item.product_name || 'Unknown';
+                                        const displayName = getLocalStr(item.name) || getLocalStr(item.product_name) || 'Unknown';
 
                                         return (
                                             <div key={idx} style={{

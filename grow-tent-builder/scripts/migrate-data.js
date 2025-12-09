@@ -17,10 +17,10 @@ import dotenv from 'dotenv';
 import { BIOBIZZ_PRODUCTS } from '../src/data/biobizzProducts.js';
 import { CANNA_PRODUCTS } from '../src/data/cannaData.js';
 import { ADVANCED_NUTRIENTS_DATA } from '../src/data/advancedNutrientsData.js';
-import { 
-    TENT_PRODUCTS, 
-    LED_PRODUCTS, 
-    FAN_PRODUCTS, 
+import {
+    TENT_PRODUCTS,
+    LED_PRODUCTS,
+    FAN_PRODUCTS,
     CARBON_FILTER_PRODUCTS,
     DUCTING_PRODUCTS,
     SUBSTRATE_PRODUCTS,
@@ -80,25 +80,25 @@ const CATEGORY_KEYS = {
 async function getBrandId(brandName) {
     const slug = BRAND_SLUGS[brandName];
     if (!slug) return null;
-    
+
     const { data } = await supabase
         .from('brands')
         .select('id')
         .eq('slug', slug)
         .single();
-    
+
     return data?.id || null;
 }
 
 async function getCategoryId(categoryKey) {
     const key = CATEGORY_KEYS[categoryKey] || categoryKey;
-    
+
     const { data } = await supabase
         .from('categories')
         .select('id')
         .eq('key', key)
         .single();
-    
+
     return data?.id || null;
 }
 
@@ -115,7 +115,7 @@ async function insertBrand(name, slug, icon, color) {
         }, { onConflict: 'slug' })
         .select()
         .single();
-    
+
     if (error) console.error(`Brand insert error (${name}):`, error.message);
     return data?.id;
 }
@@ -125,18 +125,18 @@ async function insertBrand(name, slug, icon, color) {
 // ============================================
 async function migrateBioBizz() {
     console.log('\n🌿 BioBizz ürünleri migrate ediliyor...');
-    
+
     const brandId = await getBrandId('BioBizz');
     if (!brandId) {
         console.error('❌ BioBizz brand not found');
         return;
     }
-    
+
     let success = 0, failed = 0;
-    
+
     for (const product of BIOBIZZ_PRODUCTS) {
         const categoryId = await getCategoryId(product.category_key);
-        
+
         const { error } = await supabase.from('products').upsert({
             sku: product.id,
             brand_id: brandId,
@@ -144,8 +144,8 @@ async function migrateBioBizz() {
             name: { en: product.product_name, tr: product.product_name },
             description: { en: product.key_properties, tr: product.key_properties },
             function_detailed: { en: product.function_detailed, tr: product.function_detailed },
-            key_properties: { 
-                en: product.key_properties, 
+            key_properties: {
+                en: product.key_properties,
                 tr: product.key_properties,
                 application_type: product.application_type,
                 application_phases: product.application_phases,
@@ -158,7 +158,7 @@ async function migrateBioBizz() {
             product_type: product.category_key === 'substrate' ? 'substrate' : 'nutrient',
             is_active: true
         }, { onConflict: 'sku' });
-        
+
         if (error) {
             console.error(`  ❌ ${product.product_name}: ${error.message}`);
             failed++;
@@ -166,7 +166,7 @@ async function migrateBioBizz() {
             success++;
         }
     }
-    
+
     console.log(`  ✅ ${success} başarılı, ❌ ${failed} hatalı`);
 }
 
@@ -175,31 +175,31 @@ async function migrateBioBizz() {
 // ============================================
 async function migrateCanna() {
     console.log('\n🌱 CANNA ürünleri migrate ediliyor...');
-    
+
     const brandId = await getBrandId('CANNA');
     if (!brandId) {
         console.error('❌ CANNA brand not found');
         return;
     }
-    
+
     let success = 0, failed = 0;
-    
+
     // CANNA_PRODUCTS is a flat array
     for (const product of CANNA_PRODUCTS) {
         const categoryId = await getCategoryId(product.category_key || 'base_nutrients');
-        
+
         const { error } = await supabase.from('products').upsert({
             sku: product.id,
             brand_id: brandId,
             category_id: categoryId,
             name: { en: product.product_name, tr: product.product_name },
-            description: { 
-                en: product.key_properties || '', 
-                tr: product.key_properties || '' 
+            description: {
+                en: product.key_properties || '',
+                tr: product.key_properties || ''
             },
-            function_detailed: { 
-                en: product.function_detailed || '', 
-                tr: product.function_detailed || '' 
+            function_detailed: {
+                en: product.function_detailed || '',
+                tr: product.function_detailed || ''
             },
             key_properties: {
                 en: product.key_properties || '',
@@ -216,12 +216,14 @@ async function migrateCanna() {
                 system: product.system,
                 dose_unit: product.dose_unit,
                 color: product.color,
-                tags: product.tags
+                tags: product.tags,
+                category_key: product.category_key,
+                function_key: product.function_key
             },
             images: product.image ? [product.image] : [],
             is_active: true
         }, { onConflict: 'sku' });
-        
+
         if (error) {
             console.error(`  ❌ ${product.product_name}: ${error.message}`);
             failed++;
@@ -229,7 +231,7 @@ async function migrateCanna() {
             success++;
         }
     }
-    
+
     console.log(`  ✅ ${success} başarılı, ❌ ${failed} hatalı`);
 }
 
@@ -238,31 +240,31 @@ async function migrateCanna() {
 // ============================================
 async function migrateAdvancedNutrients() {
     console.log('\n🧪 Advanced Nutrients ürünleri migrate ediliyor...');
-    
+
     const brandId = await getBrandId('Advanced Nutrients');
     if (!brandId) {
         console.error('❌ Advanced Nutrients brand not found');
         return;
     }
-    
+
     let success = 0, failed = 0;
-    
+
     // ADVANCED_NUTRIENTS_DATA is a flat array
     for (const product of ADVANCED_NUTRIENTS_DATA) {
         const categoryId = await getCategoryId(product.category_key || 'base_nutrients');
-        
+
         const { error } = await supabase.from('products').upsert({
             sku: product.id,
             brand_id: brandId,
             category_id: categoryId,
             name: { en: product.product_name, tr: product.product_name },
-            description: { 
-                en: product.key_properties || '', 
-                tr: product.key_properties || '' 
+            description: {
+                en: product.key_properties || '',
+                tr: product.key_properties || ''
             },
-            function_detailed: { 
-                en: product.function_detailed || '', 
-                tr: product.function_detailed || '' 
+            function_detailed: {
+                en: product.function_detailed || '',
+                tr: product.function_detailed || ''
             },
             key_properties: {
                 en: product.key_properties || '',
@@ -277,12 +279,16 @@ async function migrateAdvancedNutrients() {
                 dose_unit: product.dose_unit,
                 color: product.color,
                 schedule_default: product.schedule_default,
-                ph_perfect: true
+                schedule_coco_topshelf: product.schedule_coco_topshelf,
+                schedule_coco_master: product.schedule_coco_master,
+                schedule_hydro_master: product.schedule_hydro_master,
+                ph_perfect: true,
+                category_key: product.category_key
             },
             images: product.image ? [product.image] : [],
             is_active: true
         }, { onConflict: 'sku' });
-        
+
         if (error) {
             console.error(`  ❌ ${product.product_name}: ${error.message}`);
             failed++;
@@ -290,7 +296,7 @@ async function migrateAdvancedNutrients() {
             success++;
         }
     }
-    
+
     console.log(`  ✅ ${success} başarılı, ❌ ${failed} hatalı`);
 }
 
@@ -299,21 +305,21 @@ async function migrateAdvancedNutrients() {
 // ============================================
 async function migrateTents() {
     console.log('\n🏕️ Çadırlar migrate ediliyor...');
-    
+
     let success = 0, failed = 0;
-    
+
     for (const tent of TENT_PRODUCTS) {
         const brandId = await getBrandId(tent.brand);
         const categoryId = await getCategoryId('tents');
-        
+
         const { error } = await supabase.from('products').upsert({
             sku: tent.id,
             brand_id: brandId,
             category_id: categoryId,
             name: { en: tent.fullName || tent.name, tr: tent.fullName || tent.name },
-            description: { 
-                en: tent.features?.join('. ') || '', 
-                tr: tent.features?.join('. ') || '' 
+            description: {
+                en: tent.features?.join('. ') || '',
+                tr: tent.features?.join('. ') || ''
             },
             price: tent.price || 0,
             icon: '🏕️',
@@ -335,7 +341,7 @@ async function migrateTents() {
             images: tent.image ? [tent.image] : [],
             is_active: true
         }, { onConflict: 'sku' });
-        
+
         if (error) {
             console.error(`  ❌ ${tent.name}: ${error.message}`);
             failed++;
@@ -343,7 +349,7 @@ async function migrateTents() {
             success++;
         }
     }
-    
+
     console.log(`  ✅ ${success} başarılı, ❌ ${failed} hatalı`);
 }
 
@@ -352,21 +358,21 @@ async function migrateTents() {
 // ============================================
 async function migrateLighting() {
     console.log('\n💡 Işıklar migrate ediliyor...');
-    
+
     let success = 0, failed = 0;
-    
+
     for (const light of LED_PRODUCTS) {
         const brandId = await getBrandId(light.brand);
         const categoryId = await getCategoryId('lighting');
-        
+
         const { error } = await supabase.from('products').upsert({
             sku: light.id,
             brand_id: brandId,
             category_id: categoryId,
             name: { en: light.fullName || light.name, tr: light.fullName || light.name },
-            description: { 
-                en: light.features?.join('. ') || '', 
-                tr: light.features?.join('. ') || '' 
+            description: {
+                en: light.features?.join('. ') || '',
+                tr: light.features?.join('. ') || ''
             },
             price: light.price || 0,
             icon: '💡',
@@ -387,7 +393,7 @@ async function migrateLighting() {
             images: light.image ? [light.image] : [],
             is_active: true
         }, { onConflict: 'sku' });
-        
+
         if (error) {
             console.error(`  ❌ ${light.name}: ${error.message}`);
             failed++;
@@ -395,7 +401,7 @@ async function migrateLighting() {
             success++;
         }
     }
-    
+
     console.log(`  ✅ ${success} başarılı, ❌ ${failed} hatalı`);
 }
 
@@ -404,22 +410,22 @@ async function migrateLighting() {
 // ============================================
 async function migrateVentilation() {
     console.log('\n🌬️ Havalandırma ekipmanları migrate ediliyor...');
-    
+
     let success = 0, failed = 0;
     const allVentilation = [...FAN_PRODUCTS, ...CARBON_FILTER_PRODUCTS, ...DUCTING_PRODUCTS];
-    
+
     for (const item of allVentilation) {
         const brandId = await getBrandId(item.brand);
         const categoryId = await getCategoryId('ventilation');
-        
+
         const { error } = await supabase.from('products').upsert({
             sku: item.id,
             brand_id: brandId,
             category_id: categoryId,
             name: { en: item.fullName || item.name, tr: item.fullName || item.name },
-            description: { 
-                en: item.features?.join('. ') || '', 
-                tr: item.features?.join('. ') || '' 
+            description: {
+                en: item.features?.join('. ') || '',
+                tr: item.features?.join('. ') || ''
             },
             price: Math.round(item.price) || 0,
             icon: '🌬️',
@@ -436,7 +442,7 @@ async function migrateVentilation() {
             },
             is_active: true
         }, { onConflict: 'sku' });
-        
+
         if (error) {
             console.error(`  ❌ ${item.name}: ${error.message}`);
             failed++;
@@ -444,7 +450,7 @@ async function migrateVentilation() {
             success++;
         }
     }
-    
+
     console.log(`  ✅ ${success} başarılı, ❌ ${failed} hatalı`);
 }
 
@@ -453,30 +459,30 @@ async function migrateVentilation() {
 // ============================================
 async function migrateAccessories() {
     console.log('\n🔧 İzleme ve aksesuarlar migrate ediliyor...');
-    
+
     let success = 0, failed = 0;
     const allItems = [
-        ...MONITORING_PRODUCTS, 
+        ...MONITORING_PRODUCTS,
         ...TIMER_PRODUCTS,
         ...POT_PRODUCTS,
         ...HANGER_PRODUCTS,
         ...CO2_ODOR_PRODUCTS,
         ...SUBSTRATE_PRODUCTS
     ];
-    
+
     for (const item of allItems) {
         const brandId = await getBrandId(item.brand);
         const categoryKey = item.type === 'pot' || item.type === 'hanger' ? 'accessories' : 'monitoring';
         const categoryId = await getCategoryId(categoryKey);
-        
+
         const { error } = await supabase.from('products').upsert({
             sku: item.id,
             brand_id: brandId,
             category_id: categoryId,
             name: { en: item.fullName || item.name, tr: item.fullName || item.name },
-            description: { 
-                en: item.features?.join('. ') || '', 
-                tr: item.features?.join('. ') || '' 
+            description: {
+                en: item.features?.join('. ') || '',
+                tr: item.features?.join('. ') || ''
             },
             price: item.price || 0,
             icon: item.type === 'pot' ? '🪴' : item.type === 'hanger' ? '🔗' : '📊',
@@ -489,7 +495,7 @@ async function migrateAccessories() {
             },
             is_active: true
         }, { onConflict: 'sku' });
-        
+
         if (error) {
             console.error(`  ❌ ${item.name}: ${error.message}`);
             failed++;
@@ -497,7 +503,7 @@ async function migrateAccessories() {
             success++;
         }
     }
-    
+
     console.log(`  ✅ ${success} başarılı, ❌ ${failed} hatalı`);
 }
 
@@ -518,12 +524,12 @@ async function main() {
     console.log('╔════════════════════════════════════════════╗');
     console.log('║     SUPABASE DATA MIGRATION BAŞLIYOR       ║');
     console.log('╚════════════════════════════════════════════╝');
-    
+
     try {
         // Check existing brands
         const { data: brands } = await supabase.from('brands').select('*');
         console.log(`\n📋 Mevcut markalar: ${brands?.length || 0}`);
-        
+
         // Add missing brands
         console.log('\n🏷️ Eksik markalar ekleniyor...');
         await insertBrand('Sonoff', 'sonoff', '🔌', '#FF6B35');
@@ -531,7 +537,7 @@ async function main() {
         await insertBrand('Xiaomi', 'xiaomi', '📱', '#FF6B00');
         await insertBrand('Inkbird', 'inkbird', '🌡️', '#2E86AB');
         await insertBrand('Generic', 'generic', '📦', '#6B7280');
-        
+
         // Run migrations
         await migrateBioBizz();
         await migrateCanna();
@@ -541,17 +547,17 @@ async function main() {
         await migrateVentilation();
         await migrateAccessories();
         await migrateBlogPosts();
-        
+
         // Final count
         const { count } = await supabase.from('products').select('*', { count: 'exact', head: true });
         const { count: blogCount } = await supabase.from('blog_posts').select('*', { count: 'exact', head: true });
-        
+
         console.log('\n╔════════════════════════════════════════════╗');
         console.log('║          MIGRATION TAMAMLANDI!             ║');
         console.log('╚════════════════════════════════════════════╝');
         console.log(`\n📊 Toplam ürün sayısı: ${count}`);
         console.log(`📝 Toplam blog yazısı: ${blogCount}`);
-        
+
     } catch (error) {
         console.error('\n❌ Migration hatası:', error.message);
     }
