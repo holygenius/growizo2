@@ -23,7 +23,7 @@ import './LandingPage.css';
 export default function LandingPage() {
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
     const [showScrollTop, setShowScrollTop] = useState(false);
-    const { getBuilderUrl, t } = useSettings();
+    const { getBuilderUrl, t, language } = useSettings();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -53,6 +53,14 @@ export default function LandingPage() {
             <Helmet>
                 <title>{t('landingTitle')} | GroWizard</title>
                 <meta name="description" content={t('landingSubtitle')} />
+                <link rel="canonical" href={`https://www.growizard.app/${language}`} />
+                <link rel="alternate" hreflang="en" href="https://www.growizard.app/en" />
+                <link rel="alternate" hreflang="tr" href="https://www.growizard.app/tr" />
+                <link rel="alternate" hreflang="x-default" href="https://www.growizard.app/en" />
+                <meta property="og:url" content={`https://www.growizard.app/${language}`} />
+                <meta property="og:locale" content={language === 'tr' ? 'tr_TR' : 'en_US'} />
+                {language === 'en' && <meta property="og:locale:alternate" content="tr_TR" />}
+                {language === 'tr' && <meta property="og:locale:alternate" content="en_US" />}
             </Helmet>
             
             <BackgroundEffects mousePos={mousePos} />

@@ -118,6 +118,15 @@ function App() {
               <Helmet>
                 <title>GroWizard</title>
                 <meta name="description" content="Plan and optimize your perfect grow tent setup with advanced PPFD lighting simulation" />
+                <meta property="og:title" content="GroWizard - Grow Tent Setup Builder" />
+                <meta property="og:description" content="Plan and optimize your perfect grow tent setup with advanced PPFD lighting simulation" />
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content="https://www.growizard.app" />
+                <meta property="og:image" content="https://www.growizard.app/icons/icon-512x512.png" />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content="GroWizard - Grow Tent Setup Builder" />
+                <meta name="twitter:description" content="Plan and optimize your perfect grow tent setup with advanced PPFD lighting simulation" />
+                <link rel="canonical" href="https://www.growizard.app" />
               </Helmet>
               <AppContent />
             </BuilderProvider>
