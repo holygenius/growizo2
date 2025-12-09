@@ -100,6 +100,40 @@ async function migrateFeedingSchedules() {
     console.log(`  📊 ${success} başarılı, ${failed} hatalı`);
 }
 
+// ============================================
+// MIGRATE FEEDING SCHEDULE PRODUCTS
+// ============================================
+async function migrateFeedingScheduleProducts() {
+    console.log('\n📋 Besleme programı ürünleri migrate ediliyor...');
+    
+    let success = 0, failed = 0;
+    
+    for (const product of FEEDING_SCHEDULE_DATA) {
+        const { error } = await supabase
+            .from('feeding_schedule_products')
+            .upsert({
+                id: product.id,
+                product_name: product.product_name,
+                category: product.category,
+                dose_unit: product.dose_unit || 'ml/L',
+                schedule_allmix: product.schedule_allmix || {},
+                schedule_lightmix_coco: product.schedule_lightmix_coco || {},
+                icon: product.icon || '🌱',
+                is_active: true
+            }, { onConflict: 'id' });
+        
+        if (error) {
+            console.error(`  ❌ ${product.product_name}: ${error.message}`);
+            failed++;
+        } else {
+            console.log(`  ✅ ${product.product_name}`);
+            success++;
+        }
+    }
+    
+    console.log(`  📊 ${success} başarılı, ${failed} hatalı`);
+}
+
 // Build weekly schedule matrix
 function buildScheduleMatrix(type) {
     const weeks = ['WK 1', 'WK 2', 'WK 3', 'WK 4', 'WK 5', 'WK 6', 'WK 7', 'WK 8', 'WK 9', 'WK 10', 'WK 11', 'WK 12'];
@@ -244,10 +278,15 @@ async function main() {
     console.log('╚════════════════════════════════════════════════════╝');
     
     try {
+        await migrateFeedingScheduleProducts();
         await migrateFeedingSchedules();
         await migratePresetSets();
         
         // Final counts
+        const { count: feedingProductsCount } = await supabase
+            .from('feeding_schedule_products')
+            .select('*', { count: 'exact', head: true });
+        
         const { count: feedingCount } = await supabase
             .from('feeding_schedules')
             .select('*', { count: 'exact', head: true });
@@ -259,7 +298,8 @@ async function main() {
         console.log('\n╔════════════════════════════════════════════════════╗');
         console.log('║              MIGRATION TAMAMLANDI!                 ║');
         console.log('╚════════════════════════════════════════════════════╝');
-        console.log(`\n📊 Toplam besleme programı: ${feedingCount}`);
+        console.log(`\n📊 Toplam besleme ürünleri: ${feedingProductsCount}`);
+        console.log(`📊 Toplam besleme programı: ${feedingCount}`);
         console.log(`📊 Toplam hazır set: ${presetCount}`);
         
     } catch (error) {
