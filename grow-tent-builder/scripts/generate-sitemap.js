@@ -15,7 +15,7 @@ const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
 const hasSupabaseCredentials = supabaseUrl && supabaseKey;
 const supabase = hasSupabaseCredentials ? createClient(supabaseUrl, supabaseKey) : null;
 
-const BASE_URL = 'https://growizard.app';
+const BASE_URL = 'https://www.growizard.app';
 const LANGUAGES = ['en', 'tr'];
 
 // Route translations for different languages
