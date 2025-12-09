@@ -103,6 +103,27 @@ CREATE TABLE feeding_schedules (
 );
 
 -- ============================================
+-- 4b. FEEDING SCHEDULE PRODUCTS (Besleme Programı Ürünleri)
+-- ============================================
+CREATE TABLE feeding_schedule_products (
+    id VARCHAR(100) PRIMARY KEY, -- product SKU/ID like 'bio-grow', 'root-juice'
+    product_name VARCHAR(100) NOT NULL,
+    category VARCHAR(50) NOT NULL, -- base_nutrient, stimulator_root, bloom_booster, etc.
+    dose_unit VARCHAR(20) DEFAULT 'ml/L',
+    
+    -- Weekly schedules for different substrate types
+    -- Format: {"WK 1": 1, "WK 2": 2, "WK 3": "N/A", "WK 4": "Optional", ...}
+    -- Values can be numeric (dosage), 'N/A' (not applicable), 'Optional', or 'As needed'
+    schedule_allmix JSONB DEFAULT '{}',
+    schedule_lightmix_coco JSONB DEFAULT '{}',
+    
+    icon VARCHAR(10),
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ============================================
 -- 5. PRESET SETS (Hazır Setler)
 -- ============================================
 CREATE TABLE preset_sets (
@@ -111,8 +132,17 @@ CREATE TABLE preset_sets (
     description JSONB DEFAULT '{}',
     tier VARCHAR(20) DEFAULT 'standard', -- entry, standard, premium
     
-    -- Products in this preset
-    -- Format: [{ "product_id": "uuid", "quantity": 1 }, ...]
+    -- Tent configuration
+    tent_size JSONB DEFAULT '{}', -- {width: 120, depth: 120, height: 200, unit: 'cm'}
+    media_type VARCHAR(50), -- all-mix, light-mix, coco-mix
+    nutrient_brand VARCHAR(50), -- BioBizz, CANNA, Advanced Nutrients
+    plant_count INTEGER DEFAULT 1,
+    
+    -- Products in this preset (original items structure)
+    items JSONB DEFAULT '{}', -- Original structure with tent, lighting, ventilation, etc.
+    
+    -- Products in this preset (normalized array)
+    -- Format: [{ "sku": "product-id", "quantity": 1, "type": "tent" }, ...]
     products JSONB NOT NULL DEFAULT '[]',
     
     -- Calculated totals (updated via trigger)
@@ -213,6 +243,9 @@ CREATE INDEX idx_blog_posts_category ON blog_posts(category);
 CREATE INDEX idx_feeding_schedules_brand ON feeding_schedules(brand_id);
 CREATE INDEX idx_feeding_schedules_substrate ON feeding_schedules(substrate_type);
 
+CREATE INDEX idx_feeding_schedule_products_category ON feeding_schedule_products(category);
+CREATE INDEX idx_feeding_schedule_products_active ON feeding_schedule_products(is_active);
+
 -- ============================================
 -- UPDATED_AT TRIGGER
 -- ============================================
@@ -232,6 +265,9 @@ CREATE TRIGGER update_products_updated_at BEFORE UPDATE ON products
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_feeding_schedules_updated_at BEFORE UPDATE ON feeding_schedules
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_feeding_schedule_products_updated_at BEFORE UPDATE ON feeding_schedule_products
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_preset_sets_updated_at BEFORE UPDATE ON preset_sets
@@ -254,6 +290,7 @@ ALTER TABLE brands ENABLE ROW LEVEL SECURITY;
 ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE feeding_schedules ENABLE ROW LEVEL SECURITY;
+ALTER TABLE feeding_schedule_products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE preset_sets ENABLE ROW LEVEL SECURITY;
 ALTER TABLE blog_posts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_builds ENABLE ROW LEVEL SECURITY;
@@ -264,6 +301,7 @@ CREATE POLICY "Public read brands" ON brands FOR SELECT USING (is_active = true)
 CREATE POLICY "Public read categories" ON categories FOR SELECT USING (is_active = true);
 CREATE POLICY "Public read products" ON products FOR SELECT USING (is_active = true);
 CREATE POLICY "Public read feeding_schedules" ON feeding_schedules FOR SELECT USING (is_active = true);
+CREATE POLICY "Public read feeding_schedule_products" ON feeding_schedule_products FOR SELECT USING (is_active = true);
 CREATE POLICY "Public read preset_sets" ON preset_sets FOR SELECT USING (is_active = true);
 CREATE POLICY "Public read published blog_posts" ON blog_posts FOR SELECT USING (is_published = true);
 
@@ -289,6 +327,7 @@ CREATE POLICY "Admin full access brands" ON brands FOR ALL USING (is_admin());
 CREATE POLICY "Admin full access categories" ON categories FOR ALL USING (is_admin());
 CREATE POLICY "Admin full access products" ON products FOR ALL USING (is_admin());
 CREATE POLICY "Admin full access feeding_schedules" ON feeding_schedules FOR ALL USING (is_admin());
+CREATE POLICY "Admin full access feeding_schedule_products" ON feeding_schedule_products FOR ALL USING (is_admin());
 CREATE POLICY "Admin full access preset_sets" ON preset_sets FOR ALL USING (is_admin());
 CREATE POLICY "Admin full access blog_posts" ON blog_posts FOR ALL USING (is_admin());
 CREATE POLICY "Admin read admin_users" ON admin_users FOR SELECT USING (is_admin());
