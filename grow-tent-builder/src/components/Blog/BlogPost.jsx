@@ -189,7 +189,7 @@ const BlogPost = () => {
     if (language !== currentSlugLanguage) {
       const targetSlug = post.slug[language];
       if (targetSlug && targetSlug !== slug) {
-        navigate(`/blog/${targetSlug}`);
+        navigate(getLocalizedPath(`/blog/${targetSlug}`));
       }
     }
   }, [language]); // Only depend on language to trigger navigation on user change

@@ -100,13 +100,13 @@ export function SettingsProvider({ children }) {
     const formatPrice = (priceTRY) => {
         const { symbol, rate } = CURRENCIES[currency];
         const convertedPrice = priceTRY * rate;
-        
+
         // Format with thousand separators
         const formatted = convertedPrice.toLocaleString(language === 'tr' ? 'tr-TR' : 'en-US', {
             minimumFractionDigits: currency === 'TRY' ? 0 : 2,
             maximumFractionDigits: currency === 'TRY' ? 0 : 2
         });
-        
+
         return `${symbol}${formatted}`;
     };
 
@@ -153,8 +153,22 @@ export function SettingsProvider({ children }) {
         const cleanPath = path.startsWith('/') ? path : `/${path}`;
 
         // If Turkish, use localized paths
-        if (language === 'tr' && pathMappings[cleanPath]) {
-            return `/${language}${pathMappings[cleanPath]}`;
+        if (language === 'tr') {
+            // Check for exact matches first
+            if (pathMappings[cleanPath]) {
+                return `/${language}${pathMappings[cleanPath]}`;
+            }
+
+            // Check for prefix matches (e.g. /blog/my-slug -> /yazilar/my-slug)
+            // Sort keys by length desc to match longest prefix first
+            const sortedPrefixes = Object.keys(pathMappings).sort((a, b) => b.length - a.length);
+
+            for (const prefix of sortedPrefixes) {
+                if (cleanPath.startsWith(`${prefix}/`)) {
+                    const suffix = cleanPath.slice(prefix.length);
+                    return `/${language}${pathMappings[prefix]}${suffix}`;
+                }
+            }
         }
 
         return `/${language}${cleanPath}`;

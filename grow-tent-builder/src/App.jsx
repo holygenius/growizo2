@@ -101,6 +101,8 @@ function AppContent() {
             <Route path="beslenme/biobizz" element={<FeedingSchedule />} />
             <Route path="beslenme/advanced-nutrients" element={<AdvancedNutrientsSchedule />} />
             <Route path="beslenme/canna" element={<CannaSchedule />} />
+            {/* Fallback for old/indexed /tr/blog/slug URLs */}
+            <Route path="blog/:slug" element={<BlogPost />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </LanguageWrapper>
