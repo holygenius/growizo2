@@ -1,0 +1,156 @@
+.container {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.toolbarGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+}
+
+.toolbarBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background: transparent;
+  border: none;
+  border-radius: 0.25rem;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.toolbarBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.toolbarBtn.active {
+  background: rgba(59, 130, 246, 0.3);
+  color: #3b82f6;
+}
+
+.btnText {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.divider {
+  width: 1px;
+  height: 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0 0.5rem;
+}
+
+.editor {
+  padding: 1rem;
+  color: #e2e8f0;
+  font-size: 1rem;
+  line-height: 1.7;
+  outline: none;
+  overflow-y: auto;
+}
+
+.editor:empty:before {
+  content: attr(data-placeholder);
+  color: #64748b;
+  pointer-events: none;
+}
+
+/* Editor content styling */
+.editor h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 1.5rem 0 1rem;
+  color: #fff;
+}
+
+.editor h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.75rem;
+  color: #fff;
+}
+
+.editor h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 1rem 0 0.5rem;
+  color: #fff;
+}
+
+.editor p {
+  margin: 0.75rem 0;
+}
+
+.editor ul,
+.editor ol {
+  margin: 0.75rem 0;
+  padding-left: 1.5rem;
+}
+
+.editor li {
+  margin: 0.25rem 0;
+}
+
+.editor blockquote {
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border-left: 3px solid #3b82f6;
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 0 0.25rem 0.25rem 0;
+}
+
+.editor pre {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  font-family: 'Fira Code', 'Monaco', monospace;
+  font-size: 0.875rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.editor a {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+
+.editor img {
+  max-width: 100%;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+/* Raw HTML textarea */
+.rawEditor {
+  width: 100%;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
+  color: #e2e8f0;
+  font-family: 'Fira Code', 'Monaco', monospace;
+  font-size: 0.875rem;
+  resize: vertical;
+  outline: none;
+  line-height: 1.6;
+}
+
+.rawEditor::placeholder {
+  color: #64748b;
+}

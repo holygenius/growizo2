@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { adminService } from '../../../services/adminService';
-import { Trash2, Edit2, Plus, X, Save, RefreshCw, FileText, CheckCircle, AlertCircle } from 'lucide-react';
+import { Trash2, Edit2, Plus, X, Save, RefreshCw, CheckCircle, AlertCircle, Eye } from 'lucide-react';
 import styles from '../Admin.module.css';
-import JsonEditor from '../components/JsonEditor';
 import ImageUploader from '../components/ImageUploader';
+import LocalizedContentEditor from '../components/LocalizedContentEditor';
+import BlogPreviewModal from '../components/BlogPreviewModal';
 import { useAdmin } from '../../../context/AdminContext';
 
-const BlogPostForm = ({ initialData, onClose, onSuccess }) => {
+const BlogPostForm = ({ initialData, onClose, onSuccess, onPreview }) => {
     const { t } = useAdmin();
     const [formData, setFormData] = useState({
         title: { en: '', tr: '' },
@@ -42,106 +43,159 @@ const BlogPostForm = ({ initialData, onClose, onSuccess }) => {
             onClose();
         } catch (error) {
             console.error('Error saving blog post:', error);
-            alert('Error saving blog post');
+            alert(t('blogPage.errorSaving') || 'Error saving blog post');
         } finally {
             setLoading(false);
         }
     };
 
+    const inputStyle = {
+        width: '100%',
+        padding: '0.75rem',
+        background: 'rgba(255,255,255,0.05)',
+        border: '1px solid rgba(255,255,255,0.1)',
+        color: '#fff',
+        borderRadius: '0.5rem'
+    };
+
+    const labelStyle = {
+        display: 'block',
+        color: '#94a3b8',
+        marginBottom: '0.5rem',
+        fontSize: '0.875rem'
+    };
+
     return (
         <div className={styles.panel} style={{ marginBottom: '2rem' }}>
             <div className={styles.panelHeader}>
-                <h3 className={styles.panelTitle}>{initialData ? t('editBlogPost') : t('newBlogPost')}</h3>
-                <button onClick={onClose} className={styles.iconBtn}><X size={20} /></button>
+                <h3 className={styles.panelTitle}>
+                    {initialData ? t('blogPage.editPost') || t('editBlogPost') : t('blogPage.newPost') || t('newBlogPost')}
+                </h3>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button 
+                        type="button"
+                        onClick={() => onPreview(formData)} 
+                        className={styles.iconBtn}
+                        title={t('blogPage.preview') || 'Preview'}
+                        style={{ color: '#3b82f6' }}
+                    >
+                        <Eye size={20} />
+                    </button>
+                    <button onClick={onClose} className={styles.iconBtn}><X size={20} /></button>
+                </div>
             </div>
 
             <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1.5rem', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
+                {/* Title EN */}
                 <div className={styles.inputGroup}>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>{t('titleEn')}</label>
+                    <label style={labelStyle}>{t('blogPage.titleEn') || t('titleEn')}</label>
                     <input
                         type="text"
                         value={formData.title?.en || ''}
                         onChange={e => setFormData({ ...formData, title: { ...formData.title, en: e.target.value } })}
-                        style={{ width: '100%', padding: '0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '0.5rem' }}
+                        style={inputStyle}
+                        placeholder="Enter English title..."
                         required
                     />
                 </div>
 
+                {/* Title TR */}
                 <div className={styles.inputGroup}>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>{t('titleTr')}</label>
+                    <label style={labelStyle}>{t('blogPage.titleTr') || t('titleTr')}</label>
                     <input
                         type="text"
                         value={formData.title?.tr || ''}
                         onChange={e => setFormData({ ...formData, title: { ...formData.title, tr: e.target.value } })}
-                        style={{ width: '100%', padding: '0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '0.5rem' }}
+                        style={inputStyle}
+                        placeholder="Türkçe başlık girin..."
                         required
                     />
                 </div>
 
+                {/* Slug EN */}
                 <div className={styles.inputGroup}>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>{t('slugEn')}</label>
+                    <label style={labelStyle}>{t('blogPage.slugEn') || t('slugEn')}</label>
                     <input
                         type="text"
                         value={formData.slug?.en || ''}
                         onChange={e => setFormData({ ...formData, slug: { ...formData.slug, en: e.target.value } })}
-                        style={{ width: '100%', padding: '0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '0.5rem' }}
+                        style={inputStyle}
+                        placeholder="url-friendly-slug"
                         required
                     />
                 </div>
 
+                {/* Slug TR */}
                 <div className={styles.inputGroup}>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>{t('slugTr')}</label>
+                    <label style={labelStyle}>{t('blogPage.slugTr') || t('slugTr')}</label>
                     <input
                         type="text"
                         value={formData.slug?.tr || ''}
                         onChange={e => setFormData({ ...formData, slug: { ...formData.slug, tr: e.target.value } })}
-                        style={{ width: '100%', padding: '0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '0.5rem' }}
+                        style={inputStyle}
+                        placeholder="url-dostu-slug"
                         required
                     />
                 </div>
 
+                {/* Category */}
                 <div className={styles.inputGroup}>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>{t('category')}</label>
+                    <label style={labelStyle}>{t('category')}</label>
                     <input
                         type="text"
                         value={formData.category || ''}
                         onChange={e => setFormData({ ...formData, category: e.target.value })}
-                        style={{ width: '100%', padding: '0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '0.5rem' }}
+                        style={inputStyle}
+                        placeholder="Growing Tips, Nutrients, etc."
                     />
                 </div>
 
+                {/* Author */}
                 <div className={styles.inputGroup}>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>{t('author')}</label>
+                    <label style={labelStyle}>{t('author')}</label>
                     <input
                         type="text"
                         value={formData.author || ''}
                         onChange={e => setFormData({ ...formData, author: e.target.value })}
-                        style={{ width: '100%', padding: '0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '0.5rem' }}
+                        style={inputStyle}
+                        placeholder="Author name"
                     />
                 </div>
 
+                {/* Cover Image */}
                 <ImageUploader
                     label={t('coverImage')}
                     value={formData.image_url}
                     onChange={url => setFormData({ ...formData, image_url: url })}
                 />
 
-                <JsonEditor
-                    label={t('excerptLocalized')}
+                {/* Excerpt - Localized Rich Text */}
+                <LocalizedContentEditor
+                    label={t('blogPage.excerptLocalized') || t('excerptLocalized')}
                     value={formData.excerpt}
                     onChange={val => setFormData({ ...formData, excerpt: val })}
-                    height="100px"
-                    helpText={t('formatHint')}
+                    minHeight="120px"
+                    placeholder={{
+                        en: 'Write a brief summary in English...',
+                        tr: 'Kısa bir özet yazın...'
+                    }}
+                    helpText={t('blogPage.excerptHint') || 'Brief summary shown in blog list'}
                 />
 
-                <JsonEditor
-                    label={t('contentLocalized')}
+                {/* Content - Localized Rich Text */}
+                <LocalizedContentEditor
+                    label={t('blogPage.contentLocalized') || t('contentLocalized')}
                     value={formData.content}
                     onChange={val => setFormData({ ...formData, content: val })}
-                    height="300px"
-                    helpText='Format: { "en": "# Hello...", "tr": "# Merhaba..." }'
+                    minHeight="400px"
+                    placeholder={{
+                        en: 'Write your article content in English...',
+                        tr: 'Makale içeriğinizi Türkçe yazın...'
+                    }}
+                    helpText={t('blogPage.contentHint') || 'Use headings, lists, and formatting to structure your content'}
                 />
 
+                {/* Publish Status */}
                 <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '2rem', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '1rem', borderRadius: '0.5rem' }}>
                     <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#fff', cursor: 'pointer' }}>
                         <input
@@ -152,16 +206,34 @@ const BlogPostForm = ({ initialData, onClose, onSuccess }) => {
                         />
                         {t('published')}
                     </label>
+                    <span style={{ color: '#64748b', fontSize: '0.875rem' }}>
+                        {formData.is_published 
+                            ? (t('blogPage.willBeVisible') || 'Post will be visible to all users')
+                            : (t('blogPage.savedAsDraft') || 'Post will be saved as draft')
+                        }
+                    </span>
                 </div>
 
-                <div style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
-                    <button type="button" onClick={onClose} className={styles.actionBtn} style={{ flexDirection: 'row', padding: '0.75rem 1.5rem', height: 'auto' }}>
-                        {t('cancel')}
+                {/* Action Buttons */}
+                <div style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'space-between', gap: '1rem', marginTop: '1rem' }}>
+                    <button 
+                        type="button" 
+                        onClick={() => onPreview(formData)} 
+                        className={styles.actionBtn} 
+                        style={{ flexDirection: 'row', padding: '0.75rem 1.5rem', height: 'auto', background: 'rgba(59, 130, 246, 0.2)', color: '#3b82f6', border: '1px solid rgba(59, 130, 246, 0.3)' }}
+                    >
+                        <Eye size={18} />
+                        {t('blogPage.preview') || 'Preview'}
                     </button>
-                    <button type="submit" disabled={loading} className={styles.actionBtn} style={{ flexDirection: 'row', padding: '0.75rem 1.5rem', height: 'auto', background: '#10b981', color: '#fff', border: 'none' }}>
-                        {loading ? <RefreshCw className="animate-spin" size={20} /> : <Save size={20} />}
-                        {t('save')}
-                    </button>
+                    <div style={{ display: 'flex', gap: '1rem' }}>
+                        <button type="button" onClick={onClose} className={styles.actionBtn} style={{ flexDirection: 'row', padding: '0.75rem 1.5rem', height: 'auto' }}>
+                            {t('cancel')}
+                        </button>
+                        <button type="submit" disabled={loading} className={styles.actionBtn} style={{ flexDirection: 'row', padding: '0.75rem 1.5rem', height: 'auto', background: '#10b981', color: '#fff', border: 'none' }}>
+                            {loading ? <RefreshCw className="animate-spin" size={20} /> : <Save size={20} />}
+                            {t('save')}
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -174,6 +246,7 @@ export default function BlogPostsManager() {
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
     const [selectedPost, setSelectedPost] = useState(null);
+    const [previewPost, setPreviewPost] = useState(null);
 
     const loadData = async () => {
         setLoading(true);
@@ -193,7 +266,7 @@ export default function BlogPostsManager() {
 
     const handleDelete = async (id) => {
         const confirmed = await showConfirm(
-            t('confirmDeletePost'),
+            t('blogPage.confirmDeleteMessage') || t('confirmDeletePost'),
             t('confirmDelete')
         );
         if (confirmed) {
@@ -206,6 +279,10 @@ export default function BlogPostsManager() {
                 addToast(t('errorDeleting'), 'error');
             }
         }
+    };
+
+    const handlePreview = (post) => {
+        setPreviewPost(post);
     };
 
     return (
@@ -226,6 +303,7 @@ export default function BlogPostsManager() {
                     initialData={selectedPost}
                     onClose={() => setIsEditing(false)}
                     onSuccess={loadData}
+                    onPreview={handlePreview}
                 />
             )}
 
@@ -265,6 +343,14 @@ export default function BlogPostsManager() {
                                     <td>
                                         <div style={{ display: 'flex', gap: '0.5rem' }}>
                                             <button
+                                                onClick={() => handlePreview(post)}
+                                                className={styles.iconBtn}
+                                                style={{ width: '2rem', height: '2rem', color: '#3b82f6' }}
+                                                title={t('blogPage.preview') || 'Preview'}
+                                            >
+                                                <Eye size={14} />
+                                            </button>
+                                            <button
                                                 onClick={() => { setSelectedPost(post); setIsEditing(true); }}
                                                 className={styles.iconBtn}
                                                 style={{ width: '2rem', height: '2rem' }}
@@ -288,6 +374,14 @@ export default function BlogPostsManager() {
                     </table>
                 </div>
             </div>
+
+            {/* Preview Modal */}
+            {previewPost && (
+                <BlogPreviewModal 
+                    post={previewPost} 
+                    onClose={() => setPreviewPost(null)} 
+                />
+            )}
         </div>
     );
 }
