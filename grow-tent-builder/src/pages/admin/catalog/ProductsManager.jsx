@@ -1,10 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { adminService } from '../../../services/adminService';
 import { Trash2, Edit2, Plus, X, Save, RefreshCw, Search } from 'lucide-react';
 import styles from '../Admin.module.css';
-import JsonEditor from '../components/JsonEditor';
 import ImageUploader from '../components/ImageUploader';
+import TableFilter from '../components/TableFilter';
+import KeyValueEditor from '../components/KeyValueEditor';
 import { useAdmin } from '../../../context/AdminContext';
+
+// Suggested keys for product specs based on product type
+const SPEC_SUGGESTIONS = {
+    general: ['weight', 'dimensions', 'material', 'warranty', 'color'],
+    tent: ['width', 'length', 'height', 'material', 'weight', 'waterproof', 'reflective_material'],
+    light: ['watts', 'ppfd', 'coverage', 'spectrum', 'efficiency', 'lifespan', 'dimming', 'voltage'],
+    fan: ['cfm', 'noise_level', 'speed_settings', 'diameter', 'power', 'voltage'],
+    nutrient: ['npk_ratio', 'volume', 'ph_stable', 'organic', 'suitable_for'],
+    substrate: ['volume', 'ph_range', 'composition', 'drainage', 'water_retention']
+};
 
 const ProductForm = ({ initialData, brands, categories, onClose, onSuccess }) => {
     const { t } = useAdmin();
@@ -21,12 +32,10 @@ const ProductForm = ({ initialData, brands, categories, onClose, onSuccess }) =>
         is_featured: false
     });
     const [loading, setLoading] = useState(false);
-    const [specsJson, setSpecsJson] = useState('{}');
 
     useEffect(() => {
         if (initialData) {
             setFormData(initialData);
-            setSpecsJson(JSON.stringify(initialData.specs || {}, null, 2));
         }
     }, [initialData]);
 
@@ -34,20 +43,10 @@ const ProductForm = ({ initialData, brands, categories, onClose, onSuccess }) =>
         e.preventDefault();
         setLoading(true);
         try {
-            // Parse specs JSON
-            let updatedFormData = { ...formData };
-            try {
-                updatedFormData.specs = JSON.parse(specsJson);
-            } catch (err) {
-                alert('Invalid JSON in Specs field');
-                setLoading(false);
-                return;
-            }
-
             if (initialData?.id) {
-                await adminService.update('products', initialData.id, updatedFormData);
+                await adminService.update('products', initialData.id, formData);
             } else {
-                await adminService.create('products', updatedFormData);
+                await adminService.create('products', formData);
             }
             onSuccess();
             onClose();
@@ -58,6 +57,8 @@ const ProductForm = ({ initialData, brands, categories, onClose, onSuccess }) =>
             setLoading(false);
         }
     };
+
+    const currentSuggestions = SPEC_SUGGESTIONS[formData.product_type] || SPEC_SUGGESTIONS.general;
 
     return (
         <div className={styles.panel} style={{ marginBottom: '2rem' }}>
@@ -156,16 +157,17 @@ const ProductForm = ({ initialData, brands, categories, onClose, onSuccess }) =>
                     />
                 </div>
 
-                {/* Specs JSON */}
+                {/* Specs Key-Value Editor */}
                 <div className={styles.inputGroup} style={{ gridColumn: '1 / -1' }}>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>Specs (JSON)</label>
-                    <textarea
-                        value={specsJson}
-                        onChange={e => setSpecsJson(e.target.value)}
-                        rows={5}
-                        style={{ width: '100%', padding: '0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#9CA3AF', fontFamily: 'monospace', borderRadius: '0.5rem' }}
+                    <KeyValueEditor
+                        key={initialData?.id || 'new'}
+                        label="Product Specifications"
+                        value={formData.specs || {}}
+                        onChange={specs => setFormData({ ...formData, specs })}
+                        keyPlaceholder="Spec name (e.g., watts)"
+                        valuePlaceholder="Value (e.g., 600W)"
+                        suggestedKeys={currentSuggestions}
                     />
-                    <small style={{ color: '#64748b' }}>Enter valid JSON for specs (e.g. watts, coverage, dimensions)</small>
                 </div>
 
                 <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '2rem', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '1rem', borderRadius: '0.5rem' }}>
@@ -212,6 +214,25 @@ export default function ProductsManager() {
     const [isEditing, setIsEditing] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
+    const [brandFilter, setBrandFilter] = useState('all');
+    const [categoryFilter, setCategoryFilter] = useState('all');
+    const [typeFilter, setTypeFilter] = useState('all');
+    const [statusFilter, setStatusFilter] = useState('all');
+
+    const filteredProducts = useMemo(() => {
+        return products.filter(p => {
+            const matchesSearch = !searchTerm ||
+                p.name?.en?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                p.sku?.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesBrand = brandFilter === 'all' || p.brand_id === brandFilter;
+            const matchesCategory = categoryFilter === 'all' || p.category_id === categoryFilter;
+            const matchesType = typeFilter === 'all' || p.product_type === typeFilter;
+            const matchesStatus = statusFilter === 'all' || 
+                (statusFilter === 'active' && p.is_active) ||
+                (statusFilter === 'inactive' && !p.is_active);
+            return matchesSearch && matchesBrand && matchesCategory && matchesType && matchesStatus;
+        });
+    }, [products, searchTerm, brandFilter, categoryFilter, typeFilter, statusFilter]);
 
     const loadData = async () => {
         setLoading(true);
@@ -259,42 +280,84 @@ export default function ProductsManager() {
         return c ? (c.name?.en || c.key) : '-';
     };
 
-    const filteredProducts = products.filter(p =>
-        p.name?.en?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.sku.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const productTypeOptions = [
+        { value: 'general', label: 'General' },
+        { value: 'tent', label: 'Tent' },
+        { value: 'light', label: 'Light' },
+        { value: 'fan', label: 'Fan' },
+        { value: 'nutrient', label: 'Nutrient' },
+        { value: 'substrate', label: 'Substrate' }
+    ];
+
+    const handleFilterChange = (key, value) => {
+        switch (key) {
+            case 'brand': setBrandFilter(value); break;
+            case 'category': setCategoryFilter(value); break;
+            case 'type': setTypeFilter(value); break;
+            case 'status': setStatusFilter(value); break;
+        }
+    };
 
     return (
         <div>
-            <div className={styles.topBar} style={{ marginBottom: '2rem' }}>
+            <div className={styles.topBar} style={{ marginBottom: '1rem' }}>
                 <h2 style={{ fontSize: '1.5rem', margin: 0 }}>{t('products')}</h2>
-                <div style={{ display: 'flex', gap: '1rem' }}>
-                    <div style={{ position: 'relative' }}>
-                        <input
-                            type="text"
-                            placeholder={t('filter') + ' ' + t('products').toLowerCase() + '...'}
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            style={{
-                                background: 'rgba(255,255,255,0.05)',
-                                border: '1px solid rgba(255,255,255,0.1)',
-                                borderRadius: '0.5rem',
-                                padding: '0.75rem 0.75rem 0.75rem 2.25rem',
-                                color: '#fff',
-                                outline: 'none'
-                            }}
-                        />
-                        <Search size={16} style={{ position: 'absolute', left: '10px', top: '12px', color: '#64748b' }} />
-                    </div>
-                    <button
-                        onClick={() => { setSelectedProduct(null); setIsEditing(true); }}
-                        className={styles.actionBtn}
-                        style={{ flexDirection: 'row', padding: '0.75rem 1.5rem', height: 'auto', background: '#3b82f6', color: '#fff', border: 'none' }}
-                    >
-                        <Plus size={20} /> {t('addProduct')}
-                    </button>
-                </div>
+                <button
+                    onClick={() => { setSelectedProduct(null); setIsEditing(true); }}
+                    className={styles.actionBtn}
+                    style={{ flexDirection: 'row', padding: '0.75rem 1.5rem', height: 'auto', background: '#3b82f6', color: '#fff', border: 'none' }}
+                >
+                    <Plus size={20} /> {t('addProduct')}
+                </button>
             </div>
+
+            <TableFilter
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+                placeholder={t('filter') + ' ' + t('products').toLowerCase() + '...'}
+                filters={[
+                    {
+                        key: 'brand',
+                        label: t('brand'),
+                        value: brandFilter,
+                        options: [
+                            { value: 'all', label: t('allBrands') || 'All Brands' },
+                            ...brands.map(b => ({ value: b.id, label: b.name }))
+                        ]
+                    },
+                    {
+                        key: 'category',
+                        label: t('category'),
+                        value: categoryFilter,
+                        options: [
+                            { value: 'all', label: t('allCategories') || 'All Categories' },
+                            ...categories.map(c => ({ value: c.id, label: c.name?.en || c.key }))
+                        ]
+                    },
+                    {
+                        key: 'type',
+                        label: t('productType') || 'Product Type',
+                        value: typeFilter,
+                        options: [
+                            { value: 'all', label: t('allTypes') || 'All Types' },
+                            ...productTypeOptions
+                        ]
+                    },
+                    {
+                        key: 'status',
+                        label: t('status'),
+                        value: statusFilter,
+                        options: [
+                            { value: 'all', label: t('allStatus') || 'All Status' },
+                            { value: 'active', label: t('active') || 'Active' },
+                            { value: 'inactive', label: t('inactive') || 'Inactive' }
+                        ]
+                    }
+                ]}
+                onFilterChange={handleFilterChange}
+                resultCount={filteredProducts.length}
+                totalCount={products.length}
+            />
 
             {isEditing && (
                 <ProductForm

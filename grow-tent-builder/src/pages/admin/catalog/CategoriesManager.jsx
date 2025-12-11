@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { adminService } from '../../../services/adminService';
 import { Trash2, Edit2, Plus, X, Save, RefreshCw, Folder } from 'lucide-react';
 import styles from '../Admin.module.css';
+import TableFilter from '../components/TableFilter';
 import { useAdmin } from '../../../context/AdminContext';
 
 const CategoryForm = ({ initialData, categories, onClose, onSuccess }) => {
@@ -151,6 +152,21 @@ export default function CategoriesManager() {
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [statusFilter, setStatusFilter] = useState('all');
+
+    const filteredCategories = useMemo(() => {
+        return categories.filter(cat => {
+            const matchesSearch = !searchTerm || 
+                cat.name?.en?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                cat.name?.tr?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                cat.key?.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesStatus = statusFilter === 'all' || 
+                (statusFilter === 'active' && cat.is_active) ||
+                (statusFilter === 'inactive' && !cat.is_active);
+            return matchesSearch && matchesStatus;
+        });
+    }, [categories, searchTerm, statusFilter]);
 
     const loadCategories = async () => {
         setLoading(true);
@@ -213,6 +229,26 @@ export default function CategoriesManager() {
                 />
             )}
 
+            <TableFilter
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+                placeholder={t('filter') + ' ' + t('categories').toLowerCase() + '...'}
+                filters={[
+                    {
+                        key: 'status',
+                        label: t('status'),
+                        value: statusFilter,
+                        options: [
+                            { value: 'active', label: t('active') },
+                            { value: 'inactive', label: t('hidden') }
+                        ]
+                    }
+                ]}
+                onFilterChange={(key, value) => setStatusFilter(value)}
+                resultCount={filteredCategories.length}
+                totalCount={categories.length}
+            />
+
             <div className={styles.panel}>
                 <div className={styles.tableContainer}>
                     <table className={styles.table}>
@@ -231,7 +267,9 @@ export default function CategoriesManager() {
                         <tbody>
                             {loading ? (
                                 <tr><td colSpan="8" style={{ textAlign: 'center', padding: '2rem' }}>{t('loading')}</td></tr>
-                            ) : categories.map(category => (
+                            ) : filteredCategories.length === 0 ? (
+                                <tr><td colSpan="8" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>{t('noBuildsFound')}</td></tr>
+                            ) : filteredCategories.map(category => (
                                 <tr key={category.id}>
                                     <td>{category.display_order}</td>
                                     <td><span style={{ fontSize: '1.5rem' }}>{category.icon}</span></td>

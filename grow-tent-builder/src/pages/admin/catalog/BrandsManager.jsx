@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { adminService } from '../../../services/adminService';
 import { Trash2, Edit2, Plus, X, Save, RefreshCw } from 'lucide-react';
 import styles from '../Admin.module.css';
 import ImageUploader from '../components/ImageUploader';
+import TableFilter from '../components/TableFilter';
 import { useAdmin } from '../../../context/AdminContext';
 
 const BrandForm = ({ initialData, onClose, onSuccess }) => {
@@ -187,6 +188,20 @@ export default function BrandsManager() {
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
     const [selectedBrand, setSelectedBrand] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [statusFilter, setStatusFilter] = useState('all');
+
+    const filteredBrands = useMemo(() => {
+        return brands.filter(brand => {
+            const matchesSearch = !searchTerm || 
+                brand.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                brand.slug?.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesStatus = statusFilter === 'all' || 
+                (statusFilter === 'active' && brand.is_active) ||
+                (statusFilter === 'inactive' && !brand.is_active);
+            return matchesSearch && matchesStatus;
+        });
+    }, [brands, searchTerm, statusFilter]);
 
     const loadBrands = async () => {
         setLoading(true);
@@ -240,6 +255,26 @@ export default function BrandsManager() {
                 />
             )}
 
+            <TableFilter
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+                placeholder={t('filter') + ' ' + t('brands').toLowerCase() + '...'}
+                filters={[
+                    {
+                        key: 'status',
+                        label: t('status'),
+                        value: statusFilter,
+                        options: [
+                            { value: 'active', label: t('active') },
+                            { value: 'inactive', label: t('hidden') }
+                        ]
+                    }
+                ]}
+                onFilterChange={(key, value) => setStatusFilter(value)}
+                resultCount={filteredBrands.length}
+                totalCount={brands.length}
+            />
+
             <div className={styles.panel}>
                 <div className={styles.tableContainer}>
                     <table className={styles.table}>
@@ -257,7 +292,9 @@ export default function BrandsManager() {
                         <tbody>
                             {loading ? (
                                 <tr><td colSpan="7" style={{ textAlign: 'center', padding: '2rem' }}>{t('loading')}</td></tr>
-                            ) : brands.map(brand => (
+                            ) : filteredBrands.length === 0 ? (
+                                <tr><td colSpan="7" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>{t('noBuildsFound')}</td></tr>
+                            ) : filteredBrands.map(brand => (
                                 <tr key={brand.id}>
                                     <td>{brand.display_order}</td>
                                     <td><span style={{ fontSize: '1.5rem' }}>{brand.icon}</span></td>

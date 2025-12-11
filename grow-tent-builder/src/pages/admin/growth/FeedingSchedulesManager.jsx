@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { adminService } from '../../../services/adminService';
 import { Trash2, Edit2, Plus, X, Save, RefreshCw } from 'lucide-react';
 import styles from '../Admin.module.css';
 import JsonEditor from '../components/JsonEditor';
+import TableFilter from '../components/TableFilter';
 import { useAdmin } from '../../../context/AdminContext';
 
 const ScheduleForm = ({ initialData, brands, onClose, onSuccess }) => {
@@ -150,6 +151,20 @@ export default function FeedingSchedulesManager() {
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
     const [selectedSchedule, setSelectedSchedule] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [brandFilter, setBrandFilter] = useState('all');
+    const [substrateFilter, setSubstrateFilter] = useState('all');
+
+    const filteredSchedules = useMemo(() => {
+        return schedules.filter(schedule => {
+            const matchesSearch = !searchTerm || 
+                schedule.name?.en?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                schedule.name?.tr?.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesBrand = brandFilter === 'all' || schedule.brand_id === brandFilter;
+            const matchesSubstrate = substrateFilter === 'all' || schedule.substrate_type === substrateFilter;
+            return matchesSearch && matchesBrand && matchesSubstrate;
+        });
+    }, [schedules, searchTerm, brandFilter, substrateFilter]);
 
     const loadData = async () => {
         setLoading(true);
@@ -215,6 +230,38 @@ export default function FeedingSchedulesManager() {
                 />
             )}
 
+            <TableFilter
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+                placeholder={t('filter') + ' ' + t('feedingSchedules').toLowerCase() + '...'}
+                filters={[
+                    {
+                        key: 'brand',
+                        label: t('brand'),
+                        value: brandFilter,
+                        options: brands.map(b => ({ value: b.id, label: b.name }))
+                    },
+                    {
+                        key: 'substrate',
+                        label: t('substrateType'),
+                        value: substrateFilter,
+                        options: [
+                            { value: 'soil', label: t('soil') },
+                            { value: 'coco', label: t('coco') },
+                            { value: 'hydro', label: t('hydro') },
+                            { value: 'all-mix', label: t('allMix') },
+                            { value: 'light-mix', label: t('lightMix') }
+                        ]
+                    }
+                ]}
+                onFilterChange={(key, value) => {
+                    if (key === 'brand') setBrandFilter(value);
+                    if (key === 'substrate') setSubstrateFilter(value);
+                }}
+                resultCount={filteredSchedules.length}
+                totalCount={schedules.length}
+            />
+
             <div className={styles.panel}>
                 <div className={styles.tableContainer}>
                     <table className={styles.table}>
@@ -230,9 +277,9 @@ export default function FeedingSchedulesManager() {
                         <tbody>
                             {loading ? (
                                 <tr><td colSpan="5" style={{ textAlign: 'center', padding: '2rem' }}>{t('loading')}</td></tr>
-                            ) : schedules.length === 0 ? (
+                            ) : filteredSchedules.length === 0 ? (
                                 <tr><td colSpan="5" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>{t('noSchedulesFound')}</td></tr>
-                            ) : schedules.map(schedule => (
+                            ) : filteredSchedules.map(schedule => (
                                 <tr key={schedule.id}>
                                     <td style={{ fontWeight: 600 }}>{schedule.name?.en || 'No Name'}</td>
                                     <td>{getBrandName(schedule.brand_id)}</td>

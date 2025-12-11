@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { adminService } from '../../../services/adminService';
 import { Trash2, Edit2, Plus, X, Save, RefreshCw, Shield, Users, UserCheck } from 'lucide-react';
 import styles from '../Admin.module.css';
+import TableFilter from '../components/TableFilter';
 import { useAdmin } from '../../../context/AdminContext';
 
 // Form for assigning/editing admin role
@@ -157,6 +158,37 @@ export default function UsersManager() {
     const [isEditing, setIsEditing] = useState(false);
     const [selectedAdmin, setSelectedAdmin] = useState(null);
     const [activeTab, setActiveTab] = useState('all'); // 'all' or 'admins'
+    const [searchTerm, setSearchTerm] = useState('');
+    const [roleFilter, setRoleFilter] = useState('all');
+    const [providerFilter, setProviderFilter] = useState('all');
+
+    // Get unique providers
+    const providers = useMemo(() => {
+        const provs = [...new Set(allUsers.map(u => u.provider || 'email').filter(Boolean))];
+        return provs.map(p => ({ value: p, label: p.charAt(0).toUpperCase() + p.slice(1) }));
+    }, [allUsers]);
+
+    // Filter all users
+    const filteredAllUsers = useMemo(() => {
+        return allUsers.filter(user => {
+            const matchesSearch = !searchTerm || 
+                user.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                user.email?.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesProvider = providerFilter === 'all' || (user.provider || 'email') === providerFilter;
+            return matchesSearch && matchesProvider;
+        });
+    }, [allUsers, searchTerm, providerFilter]);
+
+    // Filter admin users
+    const filteredAdminUsers = useMemo(() => {
+        return adminUsers.filter(admin => {
+            const matchesSearch = !searchTerm || 
+                admin.display_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                admin.email?.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesRole = roleFilter === 'all' || admin.role === roleFilter;
+            return matchesSearch && matchesRole;
+        });
+    }, [adminUsers, searchTerm, roleFilter]);
 
     const loadData = async () => {
         setLoading(true);
@@ -277,6 +309,23 @@ export default function UsersManager() {
 
             {/* All Users Tab */}
             {activeTab === 'all' && (
+                <>
+                <TableFilter
+                    searchTerm={searchTerm}
+                    onSearchChange={setSearchTerm}
+                    placeholder={t('filter') + ' ' + t('users').toLowerCase() + '...'}
+                    filters={[
+                        {
+                            key: 'provider',
+                            label: t('usersPage.provider'),
+                            value: providerFilter,
+                            options: providers
+                        }
+                    ]}
+                    onFilterChange={(key, value) => setProviderFilter(value)}
+                    resultCount={filteredAllUsers.length}
+                    totalCount={allUsers.length}
+                />
                 <div className={styles.panel}>
                     <div className={styles.tableContainer}>
                         <table className={styles.table}>
@@ -292,9 +341,9 @@ export default function UsersManager() {
                             <tbody>
                                 {loading ? (
                                     <tr><td colSpan="5" style={{ textAlign: 'center', padding: '2rem' }}>{t('common.loading')}</td></tr>
-                                ) : allUsers.length === 0 ? (
+                                ) : filteredAllUsers.length === 0 ? (
                                     <tr><td colSpan="5" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>{t('usersPage.noUsers')}</td></tr>
-                                ) : allUsers.map(user => (
+                                ) : filteredAllUsers.map(user => (
                                     <tr key={user.id}>
                                         <td style={{ fontWeight: 600 }}>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -342,10 +391,31 @@ export default function UsersManager() {
                         </table>
                     </div>
                 </div>
+                </>
             )}
 
             {/* Admin Users Tab */}
             {activeTab === 'admins' && (
+                <>
+                <TableFilter
+                    searchTerm={searchTerm}
+                    onSearchChange={setSearchTerm}
+                    placeholder={t('filter') + ' ' + t('usersPage.adminUsers').toLowerCase() + '...'}
+                    filters={[
+                        {
+                            key: 'role',
+                            label: t('usersPage.role'),
+                            value: roleFilter,
+                            options: [
+                                { value: 'admin', label: t('usersPage.roleAdmin') },
+                                { value: 'editor', label: t('usersPage.roleEditor') }
+                            ]
+                        }
+                    ]}
+                    onFilterChange={(key, value) => setRoleFilter(value)}
+                    resultCount={filteredAdminUsers.length}
+                    totalCount={adminUsers.length}
+                />
                 <div className={styles.panel}>
                     <div className={styles.tableContainer}>
                         <table className={styles.table}>
@@ -361,9 +431,9 @@ export default function UsersManager() {
                             <tbody>
                                 {loading ? (
                                     <tr><td colSpan="5" style={{ textAlign: 'center', padding: '2rem' }}>{t('common.loading')}</td></tr>
-                                ) : adminUsers.length === 0 ? (
+                                ) : filteredAdminUsers.length === 0 ? (
                                     <tr><td colSpan="5" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>{t('usersPage.noAdmins')}</td></tr>
-                                ) : adminUsers.map(admin => (
+                                ) : filteredAdminUsers.map(admin => (
                                     <tr key={admin.id}>
                                         <td style={{ fontWeight: 600 }}>{admin.display_name || '-'}</td>
                                         <td style={{ color: '#94a3b8' }}>{admin.email}</td>
@@ -404,6 +474,7 @@ export default function UsersManager() {
                         </table>
                     </div>
                 </div>
+                </>
             )}
         </div>
     );

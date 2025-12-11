@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { adminService } from '../../../services/adminService';
 import { Trash2, Edit2, Plus, X, Save, RefreshCw, CheckCircle, AlertCircle, Eye } from 'lucide-react';
 import styles from '../Admin.module.css';
 import ImageUploader from '../components/ImageUploader';
 import LocalizedContentEditor from '../components/LocalizedContentEditor';
 import BlogPreviewModal from '../components/BlogPreviewModal';
+import TableFilter from '../components/TableFilter';
 import { useAdmin } from '../../../context/AdminContext';
 
 const BlogPostForm = ({ initialData, onClose, onSuccess, onPreview }) => {
@@ -247,6 +248,29 @@ export default function BlogPostsManager() {
     const [isEditing, setIsEditing] = useState(false);
     const [selectedPost, setSelectedPost] = useState(null);
     const [previewPost, setPreviewPost] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [statusFilter, setStatusFilter] = useState('all');
+    const [categoryFilter, setCategoryFilter] = useState('all');
+
+    // Get unique categories from posts
+    const categories = useMemo(() => {
+        const cats = [...new Set(posts.map(p => p.category).filter(Boolean))];
+        return cats.map(c => ({ value: c, label: c }));
+    }, [posts]);
+
+    const filteredPosts = useMemo(() => {
+        return posts.filter(post => {
+            const matchesSearch = !searchTerm || 
+                post.title?.en?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                post.title?.tr?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                post.author?.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesStatus = statusFilter === 'all' || 
+                (statusFilter === 'published' && post.is_published) ||
+                (statusFilter === 'draft' && !post.is_published);
+            const matchesCategory = categoryFilter === 'all' || post.category === categoryFilter;
+            return matchesSearch && matchesStatus && matchesCategory;
+        });
+    }, [posts, searchTerm, statusFilter, categoryFilter]);
 
     const loadData = async () => {
         setLoading(true);
@@ -307,6 +331,35 @@ export default function BlogPostsManager() {
                 />
             )}
 
+            <TableFilter
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+                placeholder={t('filter') + ' ' + t('blogPosts').toLowerCase() + '...'}
+                filters={[
+                    {
+                        key: 'status',
+                        label: t('status'),
+                        value: statusFilter,
+                        options: [
+                            { value: 'published', label: t('published') },
+                            { value: 'draft', label: t('draft') }
+                        ]
+                    },
+                    {
+                        key: 'category',
+                        label: t('category'),
+                        value: categoryFilter,
+                        options: categories
+                    }
+                ]}
+                onFilterChange={(key, value) => {
+                    if (key === 'status') setStatusFilter(value);
+                    if (key === 'category') setCategoryFilter(value);
+                }}
+                resultCount={filteredPosts.length}
+                totalCount={posts.length}
+            />
+
             <div className={styles.panel}>
                 <div className={styles.tableContainer}>
                     <table className={styles.table}>
@@ -323,9 +376,9 @@ export default function BlogPostsManager() {
                         <tbody>
                             {loading ? (
                                 <tr><td colSpan="6" style={{ textAlign: 'center', padding: '2rem' }}>{t('loading')}</td></tr>
-                            ) : posts.length === 0 ? (
+                            ) : filteredPosts.length === 0 ? (
                                 <tr><td colSpan="6" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>{t('noBlogsFound')}</td></tr>
-                            ) : posts.map(post => (
+                            ) : filteredPosts.map(post => (
                                 <tr key={post.id}>
                                     <td style={{ fontWeight: 600 }}>{post.title?.en || 'No Title'}</td>
                                     <td style={{ color: '#94a3b8' }}>

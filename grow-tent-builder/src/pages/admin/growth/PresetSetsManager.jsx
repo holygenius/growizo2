@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { adminService } from '../../../services/adminService';
 import { Trash2, Edit2, Plus, X, Save, RefreshCw } from 'lucide-react';
 import styles from '../Admin.module.css';
 import JsonEditor from '../components/JsonEditor';
 import ImageUploader from '../components/ImageUploader';
+import TableFilter from '../components/TableFilter';
 import { useAdmin } from '../../../context/AdminContext';
 
 const PresetForm = ({ initialData, onClose, onSuccess }) => {
@@ -154,6 +155,22 @@ export default function PresetSetsManager() {
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
     const [selectedPreset, setSelectedPreset] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [tierFilter, setTierFilter] = useState('all');
+    const [statusFilter, setStatusFilter] = useState('all');
+
+    const filteredPresets = useMemo(() => {
+        return presets.filter(preset => {
+            const matchesSearch = !searchTerm || 
+                preset.name?.en?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                preset.name?.tr?.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesTier = tierFilter === 'all' || preset.tier === tierFilter;
+            const matchesStatus = statusFilter === 'all' || 
+                (statusFilter === 'active' && preset.is_active) ||
+                (statusFilter === 'inactive' && !preset.is_active);
+            return matchesSearch && matchesTier && matchesStatus;
+        });
+    }, [presets, searchTerm, tierFilter, statusFilter]);
 
     const loadData = async () => {
         setLoading(true);
@@ -209,6 +226,39 @@ export default function PresetSetsManager() {
                 />
             )}
 
+            <TableFilter
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+                placeholder={t('filter') + ' ' + t('presetSets').toLowerCase() + '...'}
+                filters={[
+                    {
+                        key: 'tier',
+                        label: t('tier'),
+                        value: tierFilter,
+                        options: [
+                            { value: 'entry', label: t('tierEntry') },
+                            { value: 'standard', label: t('tierStandard') },
+                            { value: 'premium', label: t('tierPremium') }
+                        ]
+                    },
+                    {
+                        key: 'status',
+                        label: t('status'),
+                        value: statusFilter,
+                        options: [
+                            { value: 'active', label: t('active') },
+                            { value: 'inactive', label: t('hidden') }
+                        ]
+                    }
+                ]}
+                onFilterChange={(key, value) => {
+                    if (key === 'tier') setTierFilter(value);
+                    if (key === 'status') setStatusFilter(value);
+                }}
+                resultCount={filteredPresets.length}
+                totalCount={presets.length}
+            />
+
             <div className={styles.panel}>
                 <div className={styles.tableContainer}>
                     <table className={styles.table}>
@@ -225,9 +275,9 @@ export default function PresetSetsManager() {
                         <tbody>
                             {loading ? (
                                 <tr><td colSpan="6" style={{ textAlign: 'center', padding: '2rem' }}>{t('loading')}</td></tr>
-                            ) : presets.length === 0 ? (
+                            ) : filteredPresets.length === 0 ? (
                                 <tr><td colSpan="6" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>{t('noPresetsFound')}</td></tr>
-                            ) : presets.map(preset => (
+                            ) : filteredPresets.map(preset => (
                                 <tr key={preset.id}>
                                     <td style={{ fontWeight: 600 }}>{preset.name?.en || 'No Name'}</td>
                                     <td style={{ textTransform: 'capitalize' }}>{preset.tier}</td>
