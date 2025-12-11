@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { NavLink, Outlet, useLocation, Navigate } from 'react-router-dom';
+import React from 'react';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import {
     LayoutDashboard,
     Package,
@@ -15,16 +15,20 @@ import {
     Search
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useAdmin, AdminProvider } from '../../context/AdminContext';
 import styles from './Admin.module.css';
+import LanguageSwitcher from './components/LanguageSwitcher';
+import { ToastContainer, ConfirmDialog } from './components/Toast';
 
-const AdminLayout = () => {
-    const { user, signInWithGoogle, signOut, isAdmin, loading } = useAuth();
+const AdminLayoutContent = () => {
+    const { user, signInWithGoogle, signOut, isAdmin, loading: authLoading } = useAuth();
+    const { t } = useAdmin();
     const location = useLocation();
 
-    if (loading) {
+    if (authLoading) {
         return (
             <div className={styles.adminContainer} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <div style={{ color: '#fff' }}>Loading...</div>
+                <div style={{ color: '#fff' }}>{t('loading')}</div>
             </div>
         );
     }
@@ -35,20 +39,21 @@ const AdminLayout = () => {
             <div className={styles.adminContainer} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <div className={styles.panel} style={{ maxWidth: '400px', width: '100%', textAlign: 'center', padding: '3rem' }}>
                     <div className={styles.logoIcon} style={{ fontSize: '3rem', marginBottom: '1rem', display: 'inline-block' }}>🌿</div>
-                    <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Admin Portal</h2>
-                    <p style={{ color: '#94a3b8', marginBottom: '2rem' }}>Please sign in to access the dashboard.</p>
+                    <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{t('adminPortal')}</h2>
+                    <p style={{ color: '#94a3b8', marginBottom: '2rem' }}>{t('pleaseSignIn')}</p>
 
                     <button
                         onClick={signInWithGoogle}
                         className={styles.actionBtn}
                         style={{ width: '100%', justifyContent: 'center', padding: '1rem', background: '#3b82f6' }}
                     >
-                        Sign in with Google
+                        {t('signInWithGoogle')}
                     </button>
-                    <div style={{ marginTop: '1.5rem' }}>
+                    <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <NavLink to="/" style={{ color: '#64748b', textDecoration: 'none', fontSize: '0.875rem' }}>
-                            &larr; Return to Website
+                            &larr; {t('returnToWebsite')}
                         </NavLink>
+                        <LanguageSwitcher />
                     </div>
                 </div>
             </div>
@@ -63,12 +68,12 @@ const AdminLayout = () => {
                     <div style={{ color: '#f87171', marginBottom: '1rem' }}>
                         <LogOut size={48} />
                     </div>
-                    <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: '#f87171' }}>Access Denied</h2>
+                    <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: '#f87171' }}>{t('accessDenied')}</h2>
                     <p style={{ color: '#94a3b8', marginBottom: '1rem' }}>
-                        User <strong>{user.email}</strong> does not have admin permissions.
+                        <strong>{user.email}</strong> {t('noAdminPermissions')}
                     </p>
                     <p style={{ color: '#64748b', fontSize: '0.875rem', marginBottom: '2rem' }}>
-                        If you believe this is an error, please contact the system administrator to add your UUID to the admin list.
+                        {t('contactAdmin')}
                     </p>
 
                     <div style={{ background: 'rgba(0,0,0,0.3)', padding: '0.5rem', borderRadius: '0.25rem', marginBottom: '2rem', fontFamily: 'monospace', fontSize: '0.75rem', color: '#64748b' }}>
@@ -80,12 +85,13 @@ const AdminLayout = () => {
                         className={styles.actionBtn}
                         style={{ width: '100%', justifyContent: 'center', padding: '1rem', background: 'rgba(255,255,255,0.1)' }}
                     >
-                        Sign Out
+                        {t('signOut')}
                     </button>
-                    <div style={{ marginTop: '1.5rem' }}>
+                    <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <NavLink to="/" style={{ color: '#64748b', textDecoration: 'none', fontSize: '0.875rem' }}>
-                            &larr; Return to Website
+                            &larr; {t('returnToWebsite')}
                         </NavLink>
+                        <LanguageSwitcher />
                     </div>
                 </div>
             </div>
@@ -94,45 +100,56 @@ const AdminLayout = () => {
 
     const navigation = [
         {
-            section: 'Overview', items: [
-                { name: 'Dashboard', icon: LayoutDashboard, path: '/admin' }
+            section: t('overview'), items: [
+                { name: t('dashboard'), icon: LayoutDashboard, path: '/admin' }
             ]
         },
         {
-            section: 'Catalog', items: [
-                { name: 'Products', icon: Package, path: '/admin/products' },
-                { name: 'Brands', icon: Store, path: '/admin/brands' },
-                { name: 'Categories', icon: Tags, path: '/admin/categories' }
+            section: t('catalog'), items: [
+                { name: t('products'), icon: Package, path: '/admin/products' },
+                { name: t('brands'), icon: Store, path: '/admin/brands' },
+                { name: t('categories'), icon: Tags, path: '/admin/categories' }
             ]
         },
         {
-            section: 'Growth Systems', items: [
-                { name: 'Feeding Schedules', icon: Calendar, path: '/admin/schedules' },
-                { name: 'Schedule Products', icon: Tags, path: '/admin/schedule-products' },
-                { name: 'Preset Sets', icon: Box, path: '/admin/presets' }
+            section: t('growthSystems'), items: [
+                { name: t('feedingSchedules'), icon: Calendar, path: '/admin/schedules' },
+                { name: t('scheduleProducts'), icon: Tags, path: '/admin/schedule-products' },
+                { name: t('presetSets'), icon: Box, path: '/admin/presets' }
             ]
         },
         {
-            section: 'Content & Users', items: [
-                { name: 'Blog Posts', icon: FileText, path: '/admin/blog' },
-                { name: 'Users', icon: Users, path: '/admin/users' }
+            section: t('contentUsers'), items: [
+                { name: t('blogPosts'), icon: FileText, path: '/admin/blog' },
+                { name: t('users'), icon: Users, path: '/admin/users' }
+            ]
+        },
+        {
+            section: t('settings'), items: [
+                { name: t('settings'), icon: Settings, path: '/admin/settings' }
             ]
         }
     ];
 
     const getPageTitle = () => {
         const currentPath = location.pathname;
-        if (currentPath === '/admin') return 'Dashboard';
+        if (currentPath === '/admin') return t('dashboard');
 
         for (const group of navigation) {
             const item = group.items.find(i => i.path === currentPath);
             if (item) return item.name;
         }
-        return 'Admin Portal';
+        return t('adminPortal');
     };
 
     return (
         <div className={styles.adminContainer}>
+            {/* Toast Notifications */}
+            <ToastContainer />
+            
+            {/* Confirm Dialog */}
+            <ConfirmDialog />
+
             {/* Sidebar Navigation */}
             <aside className={styles.sidebar}>
                 <div className={styles.sidebarHeader}>
@@ -169,12 +186,12 @@ const AdminLayout = () => {
                         <div style={{ fontSize: '0.875rem', fontWeight: '600', color: '#fff', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
                             {user ? user.email.split('@')[0] : 'Admin'}
                         </div>
-                        <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Super Admin</div>
+                        <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{t('superAdmin')}</div>
                     </div>
                     <button
                         onClick={signOut}
                         style={{ background: 'none', border: 'none', color: '#f87171', cursor: 'pointer', padding: '0.5rem' }}
-                        title="Sign Out"
+                        title={t('signOut')}
                     >
                         <LogOut size={18} />
                     </button>
@@ -187,14 +204,14 @@ const AdminLayout = () => {
                 <header className={styles.topBar}>
                     <div className={styles.pageTitle}>
                         <h1>{getPageTitle()}</h1>
-                        <p>Manage your grow empire efficiently.</p>
+                        <p>{t('manageEmpire')}</p>
                     </div>
 
                     <div className={styles.actions}>
                         <div style={{ position: 'relative' }}>
                             <input
                                 type="text"
-                                placeholder="Search anything..."
+                                placeholder={t('searchAnything')}
                                 style={{
                                     background: 'rgba(255,255,255,0.05)',
                                     border: '1px solid rgba(255,255,255,0.1)',
@@ -207,10 +224,11 @@ const AdminLayout = () => {
                             />
                             <Search size={18} style={{ position: 'absolute', left: '12px', top: '12px', color: '#64748b' }} />
                         </div>
+                        <LanguageSwitcher compact />
                         <button className={styles.iconBtn}>
                             <Bell size={20} />
                         </button>
-                        <button className={styles.iconBtn}>
+                        <button className={styles.iconBtn} onClick={() => window.location.href = '/admin/settings'}>
                             <Settings size={20} />
                         </button>
                     </div>
@@ -222,6 +240,15 @@ const AdminLayout = () => {
                 </div>
             </main>
         </div>
+    );
+};
+
+// Wrap with AdminProvider
+const AdminLayout = () => {
+    return (
+        <AdminProvider>
+            <AdminLayoutContent />
+        </AdminProvider>
     );
 };
 

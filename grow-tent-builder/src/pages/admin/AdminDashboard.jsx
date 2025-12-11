@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import styles from './Admin.module.css';
 import { adminService } from '../../services/adminService';
+import { useAdmin } from '../../context/AdminContext';
 
 const StatCard = ({ title, value, icon: Icon, color, loading }) => (
     <div className={styles.statCard}>
@@ -27,6 +28,7 @@ const StatCard = ({ title, value, icon: Icon, color, loading }) => (
 );
 
 const AdminDashboard = () => {
+    const { t } = useAdmin();
     const [stats, setStats] = useState({
         products: 0,
         brands: 0,
@@ -84,28 +86,28 @@ const AdminDashboard = () => {
             {/* Status Widgets */}
             <div className={styles.dashboardGrid} style={{ marginBottom: '2rem' }}>
                 <StatCard
-                    title="Total Products"
+                    title={t('totalProducts')}
                     value={stats.products}
                     icon={Package}
                     color="#3b82f6"
                     loading={loading}
                 />
                 <StatCard
-                    title="Active Schedules"
+                    title={t('activeSchedules')}
                     value={stats.schedules}
                     icon={Calendar}
                     color="#10b981"
                     loading={loading}
                 />
                 <StatCard
-                    title="Preset Kits"
+                    title={t('presetKits')}
                     value={stats.presets}
                     icon={Box}
                     color="#f59e0b"
                     loading={loading}
                 />
                 <StatCard
-                    title="User Builds"
+                    title={t('userBuilds')}
                     value={stats.totalBuilds}
                     icon={ShoppingCart}
                     color="#8b5cf6"
@@ -117,27 +119,27 @@ const AdminDashboard = () => {
                 {/* Recent Builds Table */}
                 <div className={styles.panel}>
                     <div className={styles.panelHeader}>
-                        <h3 className={styles.panelTitle}>Recent User Builds</h3>
+                        <h3 className={styles.panelTitle}>{t('recentUserBuilds')}</h3>
                         <button className={styles.actionBtn} style={{ fontSize: '0.75rem', padding: '0.25rem 0.75rem' }}>
-                            View All
+                            {t('viewAll')}
                         </button>
                     </div>
                     <div className={styles.tableContainer}>
                         <table className={styles.table}>
                             <thead>
                                 <tr>
-                                    <th>Date</th>
-                                    <th>User</th>
-                                    <th>Tent Size</th>
-                                    <th>Cost</th>
-                                    <th>Status</th>
+                                    <th>{t('date')}</th>
+                                    <th>{t('user')}</th>
+                                    <th>{t('tentSize')}</th>
+                                    <th>{t('cost')}</th>
+                                    <th>{t('status')}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {loading ? (
-                                    <tr><td colSpan="5" style={{ textAlign: 'center', padding: '2rem' }}>Loading recent activity...</td></tr>
+                                    <tr><td colSpan="5" style={{ textAlign: 'center', padding: '2rem' }}>{t('loadingActivity')}</td></tr>
                                 ) : recentBuilds.length === 0 ? (
-                                    <tr><td colSpan="5" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>No builds found yet.</td></tr>
+                                    <tr><td colSpan="5" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>{t('noBuildsFound')}</td></tr>
                                 ) : (
                                     recentBuilds.map(build => (
                                         <tr key={build.id}>
@@ -145,7 +147,7 @@ const AdminDashboard = () => {
                                                 {new Date(build.created_at).toLocaleDateString()}
                                             </td>
                                             <td style={{ fontWeight: 500 }}>
-                                                {build.session_id ? 'Guest User' : 'Registered User'} <br />
+                                                {build.session_id ? t('guestUser') : t('registeredUser')} <br />
                                                 <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
                                                     {build.session_id || build.user_id?.substring(0, 8)}...
                                                 </span>
@@ -158,7 +160,7 @@ const AdminDashboard = () => {
                                             </td>
                                             <td>
                                                 <span className={`${styles.badge} ${build.is_completed ? styles.badgeSuccess : styles.badgeWarning}`}>
-                                                    {build.is_completed ? 'Completed' : 'Draft'}
+                                                    {build.is_completed ? t('completed') : t('draft')}
                                                 </span>
                                             </td>
                                         </tr>
@@ -172,7 +174,7 @@ const AdminDashboard = () => {
                 {/* Quick Actions */}
                 <div className={styles.panel}>
                     <div className={styles.panelHeader}>
-                        <h3 className={styles.panelTitle}>System Shortcuts</h3>
+                        <h3 className={styles.panelTitle}>{t('systemShortcuts')}</h3>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                         <button
@@ -181,7 +183,7 @@ const AdminDashboard = () => {
                             onClick={() => window.location.href = '/admin/products'}
                         >
                             <Package size={28} color="#60a5fa" />
-                            <span>Add Product</span>
+                            <span>{t('addProduct')}</span>
                         </button>
                         <button
                             className={styles.actionBtn}
@@ -189,7 +191,7 @@ const AdminDashboard = () => {
                             onClick={() => window.location.href = '/admin/schedules'}
                         >
                             <Calendar size={28} color="#34d399" />
-                            <span>Update Schedule</span>
+                            <span>{t('updateSchedule')}</span>
                         </button>
                         <button
                             className={styles.actionBtn}
@@ -197,7 +199,7 @@ const AdminDashboard = () => {
                             onClick={() => window.location.href = '/admin/blog'}
                         >
                             <FileText size={28} color="#fbbf24" />
-                            <span>Write Blog Post</span>
+                            <span>{t('writeBlogPost')}</span>
                         </button>
                         <button
                             className={styles.actionBtn}
@@ -205,7 +207,7 @@ const AdminDashboard = () => {
                             onClick={() => window.location.href = '/admin/users'}
                         >
                             <Users size={28} color="#a78bfa" />
-                            <span>Manage Users</span>
+                            <span>{t('manageUsers')}</span>
                         </button>
                     </div>
                 </div>

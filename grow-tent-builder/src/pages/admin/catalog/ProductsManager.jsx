@@ -4,8 +4,10 @@ import { Trash2, Edit2, Plus, X, Save, RefreshCw, Search } from 'lucide-react';
 import styles from '../Admin.module.css';
 import JsonEditor from '../components/JsonEditor';
 import ImageUploader from '../components/ImageUploader';
+import { useAdmin } from '../../../context/AdminContext';
 
 const ProductForm = ({ initialData, brands, categories, onClose, onSuccess }) => {
+    const { t } = useAdmin();
     const [formData, setFormData] = useState({
         sku: '',
         brand_id: '',
@@ -202,6 +204,7 @@ const ProductForm = ({ initialData, brands, categories, onClose, onSuccess }) =>
 };
 
 export default function ProductsManager() {
+    const { t, showConfirm, addToast } = useAdmin();
     const [products, setProducts] = useState([]);
     const [brands, setBrands] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -233,13 +236,15 @@ export default function ProductsManager() {
     }, []);
 
     const handleDelete = async (id) => {
-        if (window.confirm('Are you sure you want to delete this product?')) {
+        const confirmed = await showConfirm(t('confirmDeleteProduct'));
+        if (confirmed) {
             try {
                 await adminService.delete('products', id);
+                addToast(t('deletedSuccessfully'), 'success');
                 loadData();
             } catch (error) {
                 console.error('Error deleting product:', error);
-                alert('Could not delete product.');
+                addToast(t('couldNotDelete'), 'error');
             }
         }
     };
@@ -262,12 +267,12 @@ export default function ProductsManager() {
     return (
         <div>
             <div className={styles.topBar} style={{ marginBottom: '2rem' }}>
-                <h2 style={{ fontSize: '1.5rem', margin: 0 }}>Products</h2>
+                <h2 style={{ fontSize: '1.5rem', margin: 0 }}>{t('products')}</h2>
                 <div style={{ display: 'flex', gap: '1rem' }}>
                     <div style={{ position: 'relative' }}>
                         <input
                             type="text"
-                            placeholder="Filter products..."
+                            placeholder={t('filter') + ' ' + t('products').toLowerCase() + '...'}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             style={{
@@ -286,7 +291,7 @@ export default function ProductsManager() {
                         className={styles.actionBtn}
                         style={{ flexDirection: 'row', padding: '0.75rem 1.5rem', height: 'auto', background: '#3b82f6', color: '#fff', border: 'none' }}
                     >
-                        <Plus size={20} /> Add Product
+                        <Plus size={20} /> {t('addProduct')}
                     </button>
                 </div>
             </div>
@@ -306,21 +311,21 @@ export default function ProductsManager() {
                     <table className={styles.table}>
                         <thead>
                             <tr>
-                                <th>SKU</th>
-                                <th>Name</th>
-                                <th>Brand</th>
-                                <th>Category</th>
-                                <th>Price</th>
-                                <th>Type</th>
-                                <th>Status</th>
-                                <th>Actions</th>
+                                <th>{t('sku')}</th>
+                                <th>{t('name')}</th>
+                                <th>{t('brand')}</th>
+                                <th>{t('category')}</th>
+                                <th>{t('price')}</th>
+                                <th>{t('type')}</th>
+                                <th>{t('status')}</th>
+                                <th>{t('actions')}</th>
                             </tr>
                         </thead>
                         <tbody>
                             {loading ? (
-                                <tr><td colSpan="8" style={{ textAlign: 'center', padding: '2rem' }}>Loading...</td></tr>
+                                <tr><td colSpan="8" style={{ textAlign: 'center', padding: '2rem' }}>{t('loading')}</td></tr>
                             ) : filteredProducts.length === 0 ? (
-                                <tr><td colSpan="8" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>No products found</td></tr>
+                                <tr><td colSpan="8" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>{t('noBuildsFound')}</td></tr>
                             ) : filteredProducts.map(product => (
                                 <tr key={product.id}>
                                     <td style={{ fontFamily: 'monospace', color: '#94a3b8' }}>{product.sku}</td>

@@ -4,8 +4,10 @@ import { Trash2, Edit2, Plus, X, Save, RefreshCw, FileText, CheckCircle, AlertCi
 import styles from '../Admin.module.css';
 import JsonEditor from '../components/JsonEditor';
 import ImageUploader from '../components/ImageUploader';
+import { useAdmin } from '../../../context/AdminContext';
 
 const BlogPostForm = ({ initialData, onClose, onSuccess }) => {
+    const { t } = useAdmin();
     const [formData, setFormData] = useState({
         title: { en: '', tr: '' },
         slug: { en: '', tr: '' },
@@ -49,13 +51,13 @@ const BlogPostForm = ({ initialData, onClose, onSuccess }) => {
     return (
         <div className={styles.panel} style={{ marginBottom: '2rem' }}>
             <div className={styles.panelHeader}>
-                <h3 className={styles.panelTitle}>{initialData ? 'Edit Blog Post' : 'New Blog Post'}</h3>
+                <h3 className={styles.panelTitle}>{initialData ? t('editBlogPost') : t('newBlogPost')}</h3>
                 <button onClick={onClose} className={styles.iconBtn}><X size={20} /></button>
             </div>
 
             <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1.5rem', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
                 <div className={styles.inputGroup}>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>Title (English)</label>
+                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>{t('titleEn')}</label>
                     <input
                         type="text"
                         value={formData.title?.en || ''}
@@ -66,7 +68,7 @@ const BlogPostForm = ({ initialData, onClose, onSuccess }) => {
                 </div>
 
                 <div className={styles.inputGroup}>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>Title (Turkish)</label>
+                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>{t('titleTr')}</label>
                     <input
                         type="text"
                         value={formData.title?.tr || ''}
@@ -77,7 +79,7 @@ const BlogPostForm = ({ initialData, onClose, onSuccess }) => {
                 </div>
 
                 <div className={styles.inputGroup}>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>Slug (English)</label>
+                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>{t('slugEn')}</label>
                     <input
                         type="text"
                         value={formData.slug?.en || ''}
@@ -88,7 +90,7 @@ const BlogPostForm = ({ initialData, onClose, onSuccess }) => {
                 </div>
 
                 <div className={styles.inputGroup}>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>Slug (Turkish)</label>
+                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>{t('slugTr')}</label>
                     <input
                         type="text"
                         value={formData.slug?.tr || ''}
@@ -99,7 +101,7 @@ const BlogPostForm = ({ initialData, onClose, onSuccess }) => {
                 </div>
 
                 <div className={styles.inputGroup}>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>Category</label>
+                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>{t('category')}</label>
                     <input
                         type="text"
                         value={formData.category || ''}
@@ -109,7 +111,7 @@ const BlogPostForm = ({ initialData, onClose, onSuccess }) => {
                 </div>
 
                 <div className={styles.inputGroup}>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>Author</label>
+                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>{t('author')}</label>
                     <input
                         type="text"
                         value={formData.author || ''}
@@ -119,21 +121,21 @@ const BlogPostForm = ({ initialData, onClose, onSuccess }) => {
                 </div>
 
                 <ImageUploader
-                    label="Cover Image"
+                    label={t('coverImage')}
                     value={formData.image_url}
                     onChange={url => setFormData({ ...formData, image_url: url })}
                 />
 
                 <JsonEditor
-                    label="Excerpt (Localised)"
+                    label={t('excerptLocalized')}
                     value={formData.excerpt}
                     onChange={val => setFormData({ ...formData, excerpt: val })}
                     height="100px"
-                    helpText='Format: { "en": "Short text...", "tr": "Kısa metin..." }'
+                    helpText={t('formatHint')}
                 />
 
                 <JsonEditor
-                    label="Content (Localised Markdown/HTML)"
+                    label={t('contentLocalized')}
                     value={formData.content}
                     onChange={val => setFormData({ ...formData, content: val })}
                     height="300px"
@@ -148,17 +150,17 @@ const BlogPostForm = ({ initialData, onClose, onSuccess }) => {
                             onChange={e => setFormData({ ...formData, is_published: e.target.checked })}
                             style={{ width: '1.25rem', height: '1.25rem' }}
                         />
-                        Published
+                        {t('published')}
                     </label>
                 </div>
 
                 <div style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
                     <button type="button" onClick={onClose} className={styles.actionBtn} style={{ flexDirection: 'row', padding: '0.75rem 1.5rem', height: 'auto' }}>
-                        Cancel
+                        {t('cancel')}
                     </button>
                     <button type="submit" disabled={loading} className={styles.actionBtn} style={{ flexDirection: 'row', padding: '0.75rem 1.5rem', height: 'auto', background: '#10b981', color: '#fff', border: 'none' }}>
                         {loading ? <RefreshCw className="animate-spin" size={20} /> : <Save size={20} />}
-                        Save Post
+                        {t('save')}
                     </button>
                 </div>
             </form>
@@ -167,6 +169,7 @@ const BlogPostForm = ({ initialData, onClose, onSuccess }) => {
 };
 
 export default function BlogPostsManager() {
+    const { t, showConfirm, addToast } = useAdmin();
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
@@ -189,12 +192,18 @@ export default function BlogPostsManager() {
     }, []);
 
     const handleDelete = async (id) => {
-        if (window.confirm('Are you sure you want to delete this blog post?')) {
+        const confirmed = await showConfirm(
+            t('confirmDeletePost'),
+            t('confirmDelete')
+        );
+        if (confirmed) {
             try {
                 await adminService.delete('blog_posts', id);
+                addToast(t('deletedSuccessfully'), 'success');
                 loadData();
             } catch (error) {
                 console.error('Error deleting post:', error);
+                addToast(t('errorDeleting'), 'error');
             }
         }
     };
@@ -202,13 +211,13 @@ export default function BlogPostsManager() {
     return (
         <div>
             <div className={styles.topBar} style={{ marginBottom: '2rem' }}>
-                <h2 style={{ fontSize: '1.5rem', margin: 0 }}>Blog Posts</h2>
+                <h2 style={{ fontSize: '1.5rem', margin: 0 }}>{t('blogPosts')}</h2>
                 <button
                     onClick={() => { setSelectedPost(null); setIsEditing(true); }}
                     className={styles.actionBtn}
                     style={{ flexDirection: 'row', padding: '0.75rem 1.5rem', height: 'auto', background: '#3b82f6', color: '#fff', border: 'none' }}
                 >
-                    <Plus size={20} /> Write Post
+                    <Plus size={20} /> {t('writePost')}
                 </button>
             </div>
 
@@ -225,19 +234,19 @@ export default function BlogPostsManager() {
                     <table className={styles.table}>
                         <thead>
                             <tr>
-                                <th>Title</th>
-                                <th>Slugs</th>
-                                <th>Category</th>
-                                <th>Author</th>
-                                <th>Status</th>
-                                <th>Actions</th>
+                                <th>{t('title')}</th>
+                                <th>{t('slug')}</th>
+                                <th>{t('category')}</th>
+                                <th>{t('author')}</th>
+                                <th>{t('status')}</th>
+                                <th>{t('actions')}</th>
                             </tr>
                         </thead>
                         <tbody>
                             {loading ? (
-                                <tr><td colSpan="6" style={{ textAlign: 'center', padding: '2rem' }}>Loading...</td></tr>
+                                <tr><td colSpan="6" style={{ textAlign: 'center', padding: '2rem' }}>{t('loading')}</td></tr>
                             ) : posts.length === 0 ? (
-                                <tr><td colSpan="6" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>No posts found</td></tr>
+                                <tr><td colSpan="6" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>{t('noBlogsFound')}</td></tr>
                             ) : posts.map(post => (
                                 <tr key={post.id}>
                                     <td style={{ fontWeight: 600 }}>{post.title?.en || 'No Title'}</td>
@@ -250,7 +259,7 @@ export default function BlogPostsManager() {
                                     <td>
                                         <span className={`${styles.badge} ${post.is_published ? styles.badgeSuccess : styles.badgeInfo}`}>
                                             {post.is_published ? <CheckCircle size={12} /> : <AlertCircle size={12} />}
-                                            {post.is_published ? 'Published' : 'Draft'}
+                                            {post.is_published ? t('published') : t('draft')}
                                         </span>
                                     </td>
                                     <td>

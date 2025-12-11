@@ -4,8 +4,10 @@ import { Trash2, Edit2, Plus, X, Save, RefreshCw } from 'lucide-react';
 import styles from '../Admin.module.css';
 import JsonEditor from '../components/JsonEditor';
 import ImageUploader from '../components/ImageUploader';
+import { useAdmin } from '../../../context/AdminContext';
 
 const PresetForm = ({ initialData, onClose, onSuccess }) => {
+    const { t } = useAdmin();
     const [formData, setFormData] = useState({
         name: { en: '', tr: '' },
         description: { en: '', tr: '' },
@@ -48,13 +50,13 @@ const PresetForm = ({ initialData, onClose, onSuccess }) => {
     return (
         <div className={styles.panel} style={{ marginBottom: '2rem' }}>
             <div className={styles.panelHeader}>
-                <h3 className={styles.panelTitle}>{initialData ? 'Edit Preset Set' : 'New Preset Set'}</h3>
+                <h3 className={styles.panelTitle}>{initialData ? t('edit') : t('add')} {t('presetSets')}</h3>
                 <button onClick={onClose} className={styles.iconBtn}><X size={20} /></button>
             </div>
 
             <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1.5rem', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
                 <div className={styles.inputGroup}>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>Name (English)</label>
+                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>{t('nameEn')}</label>
                     <input
                         type="text"
                         value={formData.name?.en || ''}
@@ -65,7 +67,7 @@ const PresetForm = ({ initialData, onClose, onSuccess }) => {
                 </div>
 
                 <div className={styles.inputGroup}>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>Name (Turkish)</label>
+                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>{t('nameTr')}</label>
                     <input
                         type="text"
                         value={formData.name?.tr || ''}
@@ -76,20 +78,20 @@ const PresetForm = ({ initialData, onClose, onSuccess }) => {
                 </div>
 
                 <div className={styles.inputGroup}>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>Tier</label>
+                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>{t('tier')}</label>
                     <select
                         value={formData.tier}
                         onChange={e => setFormData({ ...formData, tier: e.target.value })}
                         style={{ width: '100%', padding: '0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '0.5rem' }}
                     >
-                        <option value="entry">Entry Level</option>
-                        <option value="standard">Standard</option>
-                        <option value="premium">Premium</option>
+                        <option value="entry">{t('tierEntry')}</option>
+                        <option value="standard">{t('tierStandard')}</option>
+                        <option value="premium">{t('tierPremium')}</option>
                     </select>
                 </div>
 
                 <div className={styles.inputGroup}>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>Total Price (Override)</label>
+                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>{t('totalPrice')}</label>
                     <input
                         type="number"
                         value={formData.total_price}
@@ -99,13 +101,13 @@ const PresetForm = ({ initialData, onClose, onSuccess }) => {
                 </div>
 
                 <ImageUploader
-                    label="Main Image"
+                    label={t('mainImage')}
                     value={formData.image_url}
                     onChange={url => setFormData({ ...formData, image_url: url })}
                 />
 
                 <JsonEditor
-                    label="Tent Size Configuration"
+                    label={t('tentSizeConfig')}
                     value={formData.tent_size}
                     onChange={val => setFormData({ ...formData, tent_size: val })}
                     height="120px"
@@ -113,7 +115,7 @@ const PresetForm = ({ initialData, onClose, onSuccess }) => {
                 />
 
                 <JsonEditor
-                    label="Included Products List"
+                    label={t('includedProducts')}
                     value={formData.products}
                     onChange={val => setFormData({ ...formData, products: val })}
                     height="200px"
@@ -128,17 +130,17 @@ const PresetForm = ({ initialData, onClose, onSuccess }) => {
                             onChange={e => setFormData({ ...formData, is_active: e.target.checked })}
                             style={{ width: '1.25rem', height: '1.25rem' }}
                         />
-                        Active
+                        {t('active')}
                     </label>
                 </div>
 
                 <div style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
                     <button type="button" onClick={onClose} className={styles.actionBtn} style={{ flexDirection: 'row', padding: '0.75rem 1.5rem', height: 'auto' }}>
-                        Cancel
+                        {t('cancel')}
                     </button>
                     <button type="submit" disabled={loading} className={styles.actionBtn} style={{ flexDirection: 'row', padding: '0.75rem 1.5rem', height: 'auto', background: '#10b981', color: '#fff', border: 'none' }}>
                         {loading ? <RefreshCw className="animate-spin" size={20} /> : <Save size={20} />}
-                        Save Set
+                        {t('save')}
                     </button>
                 </div>
             </form>
@@ -147,6 +149,7 @@ const PresetForm = ({ initialData, onClose, onSuccess }) => {
 };
 
 export default function PresetSetsManager() {
+    const { t, showConfirm, addToast } = useAdmin();
     const [presets, setPresets] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
@@ -169,12 +172,18 @@ export default function PresetSetsManager() {
     }, []);
 
     const handleDelete = async (id) => {
-        if (window.confirm('Are you sure you want to delete this preset set?')) {
+        const confirmed = await showConfirm(
+            t('confirmDeletePreset'),
+            t('confirmDelete')
+        );
+        if (confirmed) {
             try {
                 await adminService.delete('preset_sets', id);
+                addToast(t('deletedSuccessfully'), 'success');
                 loadData();
             } catch (error) {
                 console.error('Error deleting preset:', error);
+                addToast(t('errorDeleting'), 'error');
             }
         }
     };
@@ -182,13 +191,13 @@ export default function PresetSetsManager() {
     return (
         <div>
             <div className={styles.topBar} style={{ marginBottom: '2rem' }}>
-                <h2 style={{ fontSize: '1.5rem', margin: 0 }}>Preset Sets</h2>
+                <h2 style={{ fontSize: '1.5rem', margin: 0 }}>{t('presetSets')}</h2>
                 <button
                     onClick={() => { setSelectedPreset(null); setIsEditing(true); }}
                     className={styles.actionBtn}
                     style={{ flexDirection: 'row', padding: '0.75rem 1.5rem', height: 'auto', background: '#3b82f6', color: '#fff', border: 'none' }}
                 >
-                    <Plus size={20} /> Add Set
+                    <Plus size={20} /> {t('add')}
                 </button>
             </div>
 
@@ -205,19 +214,19 @@ export default function PresetSetsManager() {
                     <table className={styles.table}>
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Tier</th>
-                                <th>Dimensions</th>
-                                <th>Price</th>
-                                <th>Status</th>
-                                <th>Actions</th>
+                                <th>{t('name')}</th>
+                                <th>{t('tier')}</th>
+                                <th>{t('dimensions')}</th>
+                                <th>{t('price')}</th>
+                                <th>{t('status')}</th>
+                                <th>{t('actions')}</th>
                             </tr>
                         </thead>
                         <tbody>
                             {loading ? (
-                                <tr><td colSpan="6" style={{ textAlign: 'center', padding: '2rem' }}>Loading...</td></tr>
+                                <tr><td colSpan="6" style={{ textAlign: 'center', padding: '2rem' }}>{t('loading')}</td></tr>
                             ) : presets.length === 0 ? (
-                                <tr><td colSpan="6" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>No presets found</td></tr>
+                                <tr><td colSpan="6" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>{t('noPresetsFound')}</td></tr>
                             ) : presets.map(preset => (
                                 <tr key={preset.id}>
                                     <td style={{ fontWeight: 600 }}>{preset.name?.en || 'No Name'}</td>
@@ -226,7 +235,7 @@ export default function PresetSetsManager() {
                                     <td>₺{preset.total_price}</td>
                                     <td>
                                         <span className={`${styles.badge} ${preset.is_active ? styles.badgeSuccess : styles.badgeWarning}`}>
-                                            {preset.is_active ? 'Active' : 'Hidden'}
+                                            {preset.is_active ? t('active') : t('hidden')}
                                         </span>
                                     </td>
                                     <td>

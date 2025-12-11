@@ -24,6 +24,7 @@ import FeedingScheduleProductsManager from './pages/admin/growth/FeedingSchedule
 import PresetSetsManager from './pages/admin/growth/PresetSetsManager';
 import BlogPostsManager from './pages/admin/content/BlogPostsManager';
 import UsersManager from './pages/admin/users/UsersManager';
+import SettingsManager from './pages/admin/settings/SettingsManager';
 import FeedingSchedule from './components/Tools/FeedingSchedule';
 import AdvancedNutrientsSchedule from './components/Tools/AdvancedNutrientsSchedule';
 import CannaSchedule from './components/Tools/CannaSchedule';
@@ -89,6 +90,7 @@ function AppContent() {
         <Route path="presets" element={<PresetSetsManager />} />
         <Route path="blog" element={<BlogPostsManager />} />
         <Route path="users" element={<UsersManager />} />
+        <Route path="settings" element={<SettingsManager />} />
         {/* Placeholder routes for other sections to prevent 404 in sidebar nav */}
         <Route path="*" element={<AdminDashboard />} />
       </Route>

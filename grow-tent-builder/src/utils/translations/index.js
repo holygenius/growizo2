@@ -6,6 +6,7 @@ import { navigationTranslations } from './navigation.js';
 import { landingTranslations } from './landing.js';
 import { onboardingTranslations } from './onboarding.js';
 import { errorTranslations } from './errors.js';
+import { adminTranslations } from './admin.js';
 
 /**
  * Merges translation objects for a given language.
@@ -21,6 +22,7 @@ const mergeTranslations = (lang) => ({
   ...landingTranslations[lang],
   ...onboardingTranslations[lang],
   ...errorTranslations[lang],
+  ...adminTranslations[lang],
 });
 
 export const translations = {
@@ -38,4 +40,5 @@ export {
   landingTranslations,
   onboardingTranslations,
   errorTranslations,
+  adminTranslations,
 };

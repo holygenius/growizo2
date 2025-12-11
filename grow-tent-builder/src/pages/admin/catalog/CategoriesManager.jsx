@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { adminService } from '../../../services/adminService';
 import { Trash2, Edit2, Plus, X, Save, RefreshCw, Folder } from 'lucide-react';
 import styles from '../Admin.module.css';
+import { useAdmin } from '../../../context/AdminContext';
 
 const CategoryForm = ({ initialData, categories, onClose, onSuccess }) => {
+    const { t } = useAdmin();
     const [formData, setFormData] = useState({
         key: '',
         name: { en: '', tr: '' },
@@ -42,13 +44,13 @@ const CategoryForm = ({ initialData, categories, onClose, onSuccess }) => {
     return (
         <div className={styles.panel} style={{ marginBottom: '2rem' }}>
             <div className={styles.panelHeader}>
-                <h3 className={styles.panelTitle}>{initialData ? 'Edit Category' : 'New Category'}</h3>
+                <h3 className={styles.panelTitle}>{initialData ? t('edit') : t('add')} {t('categories')}</h3>
                 <button onClick={onClose} className={styles.iconBtn}><X size={20} /></button>
             </div>
 
             <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1.5rem', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
                 <div className={styles.inputGroup}>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>Key (Unique ID)</label>
+                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>{t('keyUniqueId')}</label>
                     <input
                         type="text"
                         value={formData.key}
@@ -59,7 +61,7 @@ const CategoryForm = ({ initialData, categories, onClose, onSuccess }) => {
                 </div>
 
                 <div className={styles.inputGroup}>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>Icon (Emoji)</label>
+                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>{t('icon')} (Emoji)</label>
                     <input
                         type="text"
                         value={formData.icon || ''}
@@ -70,13 +72,13 @@ const CategoryForm = ({ initialData, categories, onClose, onSuccess }) => {
                 </div>
 
                 <div className={styles.inputGroup}>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>Parent Category</label>
+                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>{t('parentCategory')}</label>
                     <select
                         value={formData.parent_category_id || ''}
                         onChange={e => setFormData({ ...formData, parent_category_id: e.target.value || null })}
                         style={{ width: '100%', padding: '0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '0.5rem' }}
                     >
-                        <option value="">None (Top Level)</option>
+                        <option value="">{t('noneTopLevel')}</option>
                         {categories.filter(c => c.id !== initialData?.id).map(c => (
                             <option key={c.id} value={c.id}>
                                 {c.icon} {c.name.en || c.key}
@@ -86,7 +88,7 @@ const CategoryForm = ({ initialData, categories, onClose, onSuccess }) => {
                 </div>
 
                 <div className={styles.inputGroup}>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>Name (English)</label>
+                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>{t('nameEn')}</label>
                     <input
                         type="text"
                         value={formData.name?.en || ''}
@@ -97,7 +99,7 @@ const CategoryForm = ({ initialData, categories, onClose, onSuccess }) => {
                 </div>
 
                 <div className={styles.inputGroup}>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>Name (Turkish)</label>
+                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>{t('nameTr')}</label>
                     <input
                         type="text"
                         value={formData.name?.tr || ''}
@@ -115,11 +117,11 @@ const CategoryForm = ({ initialData, categories, onClose, onSuccess }) => {
                             onChange={e => setFormData({ ...formData, is_active: e.target.checked })}
                             style={{ width: '1.25rem', height: '1.25rem' }}
                         />
-                        Active
+                        {t('active')}
                     </label>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <label style={{ color: '#94a3b8' }}>Order:</label>
+                        <label style={{ color: '#94a3b8' }}>{t('order')}:</label>
                         <input
                             type="number"
                             value={formData.display_order}
@@ -131,11 +133,11 @@ const CategoryForm = ({ initialData, categories, onClose, onSuccess }) => {
 
                 <div style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
                     <button type="button" onClick={onClose} className={styles.actionBtn} style={{ flexDirection: 'row', padding: '0.75rem 1.5rem', height: 'auto' }}>
-                        Cancel
+                        {t('cancel')}
                     </button>
                     <button type="submit" disabled={loading} className={styles.actionBtn} style={{ flexDirection: 'row', padding: '0.75rem 1.5rem', height: 'auto', background: '#10b981', color: '#fff', border: 'none' }}>
                         {loading ? <RefreshCw className="animate-spin" size={20} /> : <Save size={20} />}
-                        Save Category
+                        {t('save')}
                     </button>
                 </div>
             </form>
@@ -144,6 +146,7 @@ const CategoryForm = ({ initialData, categories, onClose, onSuccess }) => {
 };
 
 export default function CategoriesManager() {
+    const { t, showConfirm, addToast } = useAdmin();
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
@@ -166,13 +169,18 @@ export default function CategoriesManager() {
     }, []);
 
     const handleDelete = async (id) => {
-        if (window.confirm('Are you sure you want to delete this category?')) {
+        const confirmed = await showConfirm(
+            t('confirmDeleteCategory'),
+            t('confirmDelete')
+        );
+        if (confirmed) {
             try {
                 await adminService.delete('categories', id);
+                addToast(t('deletedSuccessfully'), 'success');
                 loadCategories();
             } catch (error) {
                 console.error('Error deleting category:', error);
-                alert('Could not delete category. It might contain sub-categories or products.');
+                addToast(t('couldNotDelete'), 'error');
             }
         }
     };
@@ -186,13 +194,13 @@ export default function CategoriesManager() {
     return (
         <div>
             <div className={styles.topBar} style={{ marginBottom: '2rem' }}>
-                <h2 style={{ fontSize: '1.5rem', margin: 0 }}>Categories</h2>
+                <h2 style={{ fontSize: '1.5rem', margin: 0 }}>{t('categories')}</h2>
                 <button
                     onClick={() => { setSelectedCategory(null); setIsEditing(true); }}
                     className={styles.actionBtn}
                     style={{ flexDirection: 'row', padding: '0.75rem 1.5rem', height: 'auto', background: '#3b82f6', color: '#fff', border: 'none' }}
                 >
-                    <Plus size={20} /> Add Category
+                    <Plus size={20} /> {t('add')} {t('categories')}
                 </button>
             </div>
 
@@ -210,19 +218,19 @@ export default function CategoriesManager() {
                     <table className={styles.table}>
                         <thead>
                             <tr>
-                                <th>Order</th>
-                                <th>Icon</th>
-                                <th>Key</th>
-                                <th>Name (EN)</th>
-                                <th>Name (TR)</th>
-                                <th>Parent</th>
-                                <th>Active</th>
-                                <th>Actions</th>
+                                <th>{t('order')}</th>
+                                <th>{t('icon')}</th>
+                                <th>{t('slug')}</th>
+                                <th>{t('nameEn')}</th>
+                                <th>{t('nameTr')}</th>
+                                <th>{t('parentCategory')}</th>
+                                <th>{t('status')}</th>
+                                <th>{t('actions')}</th>
                             </tr>
                         </thead>
                         <tbody>
                             {loading ? (
-                                <tr><td colSpan="8" style={{ textAlign: 'center', padding: '2rem' }}>Loading...</td></tr>
+                                <tr><td colSpan="8" style={{ textAlign: 'center', padding: '2rem' }}>{t('loading')}</td></tr>
                             ) : categories.map(category => (
                                 <tr key={category.id}>
                                     <td>{category.display_order}</td>
@@ -233,7 +241,7 @@ export default function CategoriesManager() {
                                     <td style={{ color: '#94a3b8', fontStyle: 'italic' }}>{getParentName(category.parent_category_id)}</td>
                                     <td>
                                         <span className={`${styles.badge} ${category.is_active ? styles.badgeSuccess : styles.badgeWarning}`}>
-                                            {category.is_active ? 'Active' : 'Hidden'}
+                                            {category.is_active ? t('active') : t('hidden')}
                                         </span>
                                     </td>
                                     <td>

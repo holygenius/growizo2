@@ -3,8 +3,10 @@ import { adminService } from '../../../services/adminService';
 import { Trash2, Edit2, Plus, X, Save, RefreshCw } from 'lucide-react';
 import styles from '../Admin.module.css';
 import ImageUploader from '../components/ImageUploader';
+import { useAdmin } from '../../../context/AdminContext';
 
 const BrandForm = ({ initialData, onClose, onSuccess }) => {
+    const { t, showConfirm, addToast } = useAdmin();
     const [formData, setFormData] = useState({
         name: '',
         slug: '',
@@ -45,7 +47,7 @@ const BrandForm = ({ initialData, onClose, onSuccess }) => {
     return (
         <div className={styles.panel} style={{ marginBottom: '2rem' }}>
             <div className={styles.panelHeader}>
-                <h3 className={styles.panelTitle}>{initialData ? 'Edit Brand' : 'New Brand'}</h3>
+                <h3 className={styles.panelTitle}>{initialData ? t('edit') + ' ' + t('brand') : t('add') + ' ' + t('brand')}</h3>
                 <button onClick={onClose} className={styles.iconBtn}><X size={20} /></button>
             </div>
 
@@ -180,6 +182,7 @@ const BrandForm = ({ initialData, onClose, onSuccess }) => {
 };
 
 export default function BrandsManager() {
+    const { t, showConfirm, addToast } = useAdmin();
     const [brands, setBrands] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
@@ -192,6 +195,7 @@ export default function BrandsManager() {
             setBrands(data);
         } catch (error) {
             console.error('Error loading brands:', error);
+            addToast(t('errorLoading'), 'error');
         } finally {
             setLoading(false);
         }
@@ -202,13 +206,15 @@ export default function BrandsManager() {
     }, []);
 
     const handleDelete = async (id) => {
-        if (window.confirm('Are you sure you want to delete this brand?')) {
+        const confirmed = await showConfirm(t('confirmDeleteBrand'));
+        if (confirmed) {
             try {
                 await adminService.delete('brands', id);
+                addToast(t('deletedSuccessfully'), 'success');
                 loadBrands();
             } catch (error) {
                 console.error('Error deleting brand:', error);
-                alert('Could not delete brand. It might be referenced by products.');
+                addToast(t('couldNotDelete'), 'error');
             }
         }
     };
@@ -216,13 +222,13 @@ export default function BrandsManager() {
     return (
         <div>
             <div className={styles.topBar} style={{ marginBottom: '2rem' }}>
-                <h2 style={{ fontSize: '1.5rem', margin: 0 }}>Brands</h2>
+                <h2 style={{ fontSize: '1.5rem', margin: 0 }}>{t('brands')}</h2>
                 <button
                     onClick={() => { setSelectedBrand(null); setIsEditing(true); }}
                     className={styles.actionBtn}
                     style={{ flexDirection: 'row', padding: '0.75rem 1.5rem', height: 'auto', background: '#3b82f6', color: '#fff', border: 'none' }}
                 >
-                    <Plus size={20} /> Add Brand
+                    <Plus size={20} /> {t('add')} {t('brand')}
                 </button>
             </div>
 
@@ -239,18 +245,18 @@ export default function BrandsManager() {
                     <table className={styles.table}>
                         <thead>
                             <tr>
-                                <th>Order</th>
-                                <th>Icon</th>
-                                <th>Name</th>
-                                <th>Slug</th>
-                                <th>Color</th>
-                                <th>Active</th>
-                                <th>Actions</th>
+                                <th>{t('order')}</th>
+                                <th>{t('icon')}</th>
+                                <th>{t('name')}</th>
+                                <th>{t('slug')}</th>
+                                <th>{t('color')}</th>
+                                <th>{t('status')}</th>
+                                <th>{t('actions')}</th>
                             </tr>
                         </thead>
                         <tbody>
                             {loading ? (
-                                <tr><td colSpan="7" style={{ textAlign: 'center', padding: '2rem' }}>Loading...</td></tr>
+                                <tr><td colSpan="7" style={{ textAlign: 'center', padding: '2rem' }}>{t('loading')}</td></tr>
                             ) : brands.map(brand => (
                                 <tr key={brand.id}>
                                     <td>{brand.display_order}</td>
@@ -265,7 +271,7 @@ export default function BrandsManager() {
                                     </td>
                                     <td>
                                         <span className={`${styles.badge} ${brand.is_active ? styles.badgeSuccess : styles.badgeWarning}`}>
-                                            {brand.is_active ? 'Active' : 'Hidden'}
+                                            {brand.is_active ? t('active') : t('hidden')}
                                         </span>
                                     </td>
                                     <td>
@@ -274,7 +280,7 @@ export default function BrandsManager() {
                                                 onClick={() => { setSelectedBrand(brand); setIsEditing(true); }}
                                                 className={styles.iconBtn}
                                                 style={{ width: '2rem', height: '2rem' }}
-                                                title="Edit"
+                                                title={t('edit')}
                                             >
                                                 <Edit2 size={14} />
                                             </button>
