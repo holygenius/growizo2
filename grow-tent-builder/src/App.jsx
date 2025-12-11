@@ -14,6 +14,16 @@ import CostCalculator from './components/Tools/CostCalculator';
 import UnitConverter from './components/Tools/UnitConverter';
 import CO2Calculator from './components/Tools/CO2Calculator';
 import PPFDHeatMapTool from './components/Tools/PPFDHeatMapTool';
+import AdminLayout from './pages/admin/AdminLayout';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import BrandsManager from './pages/admin/catalog/BrandsManager';
+import CategoriesManager from './pages/admin/catalog/CategoriesManager';
+import ProductsManager from './pages/admin/catalog/ProductsManager';
+import FeedingSchedulesManager from './pages/admin/growth/FeedingSchedulesManager';
+import FeedingScheduleProductsManager from './pages/admin/growth/FeedingScheduleProductsManager';
+import PresetSetsManager from './pages/admin/growth/PresetSetsManager';
+import BlogPostsManager from './pages/admin/content/BlogPostsManager';
+import UsersManager from './pages/admin/users/UsersManager';
 import FeedingSchedule from './components/Tools/FeedingSchedule';
 import AdvancedNutrientsSchedule from './components/Tools/AdvancedNutrientsSchedule';
 import CannaSchedule from './components/Tools/CannaSchedule';
@@ -67,6 +77,21 @@ function AppContent() {
     <Routes>
       <Route path="/" element={<RootRedirect />} />
       <Route path="/auth/callback" element={<AuthCallback />} />
+
+      {/* Admin Routes */}
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="brands" element={<BrandsManager />} />
+        <Route path="categories" element={<CategoriesManager />} />
+        <Route path="products" element={<ProductsManager />} />
+        <Route path="schedules" element={<FeedingSchedulesManager />} />
+        <Route path="schedule-products" element={<FeedingScheduleProductsManager />} />
+        <Route path="presets" element={<PresetSetsManager />} />
+        <Route path="blog" element={<BlogPostsManager />} />
+        <Route path="users" element={<UsersManager />} />
+        {/* Placeholder routes for other sections to prevent 404 in sidebar nav */}
+        <Route path="*" element={<AdminDashboard />} />
+      </Route>
 
       <Route path="/:lang/*" element={
         <LanguageWrapper>

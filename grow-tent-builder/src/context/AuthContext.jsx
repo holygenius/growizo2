@@ -21,11 +21,11 @@ export function AuthProvider({ children }) {
         }
 
         // Get initial session
-        supabase.auth.getSession().then(({ data: { session } }) => {
+        supabase.auth.getSession().then(async ({ data: { session } }) => {
             setSession(session);
             setUser(session?.user ?? null);
             if (session?.user) {
-                checkAdminStatus(session.user.id);
+                await checkAdminStatus(session.user.id);
             }
             setLoading(false);
         });

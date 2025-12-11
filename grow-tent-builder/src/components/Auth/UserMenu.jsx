@@ -94,6 +94,13 @@ export default function UserMenu() {
 
                     <div className={styles.divider}></div>
 
+                    {isAdmin && (
+                        <button className={styles.menuItem} onClick={() => { setIsOpen(false); window.location.href = '/admin'; }}>
+                            <span>⚡</span>
+                            {language === 'tr' ? 'Yönetim Paneli' : 'Admin Dashboard'}
+                        </button>
+                    )}
+
                     <button className={styles.menuItem} onClick={() => { setIsOpen(false); window.location.href = `/${language}/profile`; }}>
                         <span>👤</span>
                         {language === 'tr' ? 'Profil' : 'Profile'}
