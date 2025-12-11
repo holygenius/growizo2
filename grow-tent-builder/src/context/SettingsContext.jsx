@@ -132,13 +132,13 @@ export function SettingsProvider({ children }) {
 
     const getBuilderUrl = () => {
         // Return localized URL
-        return language === 'tr' ? `/${language}/olusturucu` : `/${language}/builder`;
+        return language === 'tr' ? `/${language}/bitki-yetistirme-kabini-olusturucu` : `/${language}/grow-tent-builder`;
     };
 
     // URL path mappings for TR
     const pathMappings = {
         '/onboarding': '/baslangic',
-        '/builder': '/olusturucu',
+        '/grow-tent-builder': '/bitki-yetistirme-kabini-olusturucu',
         '/blog': '/yazilar',
         '/tools': '/araclar',
         '/tools/electricity-cost-calculator': '/araclar/elektrik-maliyet-hesaplayici',

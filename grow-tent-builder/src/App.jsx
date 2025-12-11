@@ -8,6 +8,7 @@ import Onboarding from './components/Onboarding';
 import BuilderApp from './components/BuilderApp';
 import BlogList from './components/Blog/BlogList';
 import BlogPost from './components/Blog/BlogPost';
+import ProfilePage from './pages/ProfilePage';
 import ToolsPage from './components/Tools/ToolsPage';
 import CostCalculator from './components/Tools/CostCalculator';
 import UnitConverter from './components/Tools/UnitConverter';
@@ -73,8 +74,9 @@ function AppContent() {
             <Route path="" element={<LandingPage />} />
             {/* EN Routes */}
             <Route path="onboarding" element={<Onboarding />} />
-            <Route path="builder" element={<BuilderApp />} />
-            <Route path="grow-tent-setup-builder" element={<Navigate to="../builder" replace />} />
+            <Route path="grow-tent-builder" element={<BuilderApp />} />
+            <Route path="builder" element={<Navigate to="../grow-tent-builder" replace />} />
+            <Route path="grow-tent-setup-builder" element={<Navigate to="../grow-tent-builder" replace />} />
             <Route path="blog" element={<BlogList />} />
             <Route path="blog/:slug" element={<BlogPost />} />
             <Route path="tools" element={<ToolsPage />} />
@@ -89,8 +91,9 @@ function AppContent() {
             <Route path="feeding/canna" element={<CannaSchedule />} />
             {/* TR Routes - Türkçe URL'ler */}
             <Route path="baslangic" element={<Onboarding />} />
-            <Route path="olusturucu" element={<BuilderApp />} />
-            <Route path="buyume-cadiri-kurulum-olusturucu" element={<Navigate to="../olusturucu" replace />} />
+            <Route path="bitki-yetistirme-kabini-olusturucu" element={<BuilderApp />} />
+            <Route path="olusturucu" element={<Navigate to="../bitki-yetistirme-kabini-olusturucu" replace />} />
+            <Route path="buyume-cadiri-kurulum-olusturucu" element={<Navigate to="../bitki-yetistirme-kabini-olusturucu" replace />} />
             <Route path="yazilar" element={<BlogList />} />
             <Route path="yazilar/:slug" element={<BlogPost />} />
             <Route path="araclar" element={<ToolsPage />} />
@@ -103,6 +106,7 @@ function AppContent() {
             <Route path="beslenme/canna" element={<CannaSchedule />} />
             {/* Fallback for old/indexed /tr/blog/slug URLs */}
             <Route path="blog/:slug" element={<BlogPost />} />
+            <Route path="profile" element={<ProfilePage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </LanguageWrapper>

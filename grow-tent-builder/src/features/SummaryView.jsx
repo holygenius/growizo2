@@ -1,16 +1,23 @@
 import { useState, useEffect } from 'react';
 import { useBuilder } from '../context/BuilderContext';
 import { useSettings } from '../context/SettingsContext';
+import { useAuth } from '../context/AuthContext';
 import { fetchPresetSetById } from '../services/api/presetSetsApi';
+import { userService } from '../services/userService';
 import ElectricCostEstimator from '../components/ElectricCostEstimator';
+import { Save } from 'lucide-react';
 import styles from './SummaryView.module.css';
 
 export default function SummaryView() {
     const { state, dispatch } = useBuilder();
     const { t, language, formatPrice, formatUnit, getUnitLabel } = useSettings();
+    const { user, isAuthenticated, signInWithGoogle } = useAuth();
     const { tentSize, selectedItems, totals, selectedPreset, mediaType } = state;
 
     const [presetInfo, setPresetInfo] = useState(null);
+    const [showSaveModal, setShowSaveModal] = useState(false);
+    const [saveName, setSaveName] = useState('');
+    const [isSaving, setIsSaving] = useState(false);
 
     // Fetch preset info if a preset was selected
     useEffect(() => {
@@ -43,6 +50,33 @@ export default function SummaryView() {
     const handleEditSet = () => {
         dispatch({ type: 'CLEAR_PRESET' });
         dispatch({ type: 'SET_STEP', payload: 1 });
+    };
+
+    const handleSaveClick = () => {
+        if (!isAuthenticated) {
+            if (window.confirm(language === 'tr' ? 'Kaydetmek için giriş yapmalısınız. Giriş yapılsın mı?' : 'You must be logged in to save. Sign in now?')) {
+                signInWithGoogle();
+            }
+            return;
+        }
+        setShowSaveModal(true);
+    };
+
+    const handleSaveConfirm = async () => {
+        if (!saveName.trim()) return;
+
+        setIsSaving(true);
+        const { error } = await userService.saveBuild(user.id, saveName, state);
+        setIsSaving(false);
+
+        if (error) {
+            alert(language === 'tr' ? 'Hata oluştu' : 'Error saving build');
+            console.error(error);
+        } else {
+            alert(language === 'tr' ? 'Set başarıyla kaydedildi!' : 'Set saved successfully!');
+            setShowSaveModal(false);
+            setSaveName('');
+        }
     };
 
     const area = tentSize.width * tentSize.depth;
@@ -248,8 +282,34 @@ export default function SummaryView() {
                             style={{
                                 width: '100%',
                                 padding: '1rem',
-                                background: 'var(--color-primary)',
-                                color: '#000',
+                                background: 'linear-gradient(to right, #10B981, #059669)',
+                                color: '#fff',
+                                fontWeight: 'bold',
+                                borderRadius: 'var(--radius-md)',
+                                marginBottom: '1rem',
+                                fontSize: '1.1rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '0.5rem',
+                                cursor: 'pointer',
+                                border: 'none',
+                                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                            }}
+                            onClick={handleSaveClick}
+                        >
+                            <Save size={20} />
+                            {language === 'tr' ? 'Profili Kaydet' : 'Save to Profile'}
+                        </button>
+
+                        <button
+                            className="no-print"
+                            style={{
+                                width: '100%',
+                                padding: '1rem',
+                                background: 'transparent', // Changed from primary to distinguish
+                                border: '1px solid var(--border-color)', // Added border
+                                color: 'var(--text-primary)', // Changed text color
                                 fontWeight: 'bold',
                                 borderRadius: 'var(--radius-md)',
                                 marginBottom: '1rem',
@@ -259,6 +319,56 @@ export default function SummaryView() {
                         >
                             {t('printPdf')}
                         </button>
+
+                        {/* Save Modal */}
+                        {showSaveModal && (
+                            <div className={styles.modalOverlay}>
+                                <div className={styles.modalContent}>
+                                    <div className={styles.modalHeader}>
+                                        <h3 className={styles.modalTitle}>
+                                            {language === 'tr' ? 'Seti Kaydet' : 'Save Set'}
+                                        </h3>
+                                    </div>
+                                    <div className={styles.inputGroup}>
+                                        <label className={styles.label}>
+                                            {language === 'tr' ? 'Set Adı' : 'Set Name'}
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={saveName}
+                                            onChange={(e) => setSaveName(e.target.value)}
+                                            className={styles.input}
+                                            placeholder={language === 'tr' ? 'Örn: Yaz Bahçesi 2024' : 'Ex: Summer Run 2024'}
+                                            autoFocus
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') handleSaveConfirm();
+                                                if (e.key === 'Escape') setShowSaveModal(false);
+                                            }}
+                                        />
+                                    </div>
+                                    <div className={styles.modalActions}>
+                                        <button
+                                            onClick={() => setShowSaveModal(false)}
+                                            className={styles.cancelBtn}
+                                        >
+                                            {language === 'tr' ? 'İptal' : 'Cancel'}
+                                        </button>
+                                        <button
+                                            onClick={handleSaveConfirm}
+                                            disabled={!saveName.trim() || isSaving}
+                                            className={styles.saveBtn}
+                                        >
+                                            {isSaving ? (
+                                                <div className={styles.spinner}></div>
+                                            ) : (
+                                                <Save size={16} />
+                                            )}
+                                            {language === 'tr' ? 'Kaydet' : 'Save'}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
                         <button
                             className="no-print"

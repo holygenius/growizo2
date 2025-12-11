@@ -12,7 +12,6 @@ const Navbar = () => {
     const [isFeedingOpen, setIsFeedingOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    // Helper to check active state ignoring language prefix
     const isActive = (path) => {
         const currentPath = location.pathname.replace(/^\/(en|tr)/, '') || '/';
         return currentPath === path;

@@ -149,6 +149,28 @@ function builderReducer(state, action) {
             };
             return { ...newState, totals: calculateTotals(newState) };
         }
+        case 'LOAD_BUILD': {
+            // Load a saved user build
+            const { tentSize, mediaType, selectedItems } = action.payload;
+            const newState = {
+                ...state,
+                selectedPreset: null, // Clear preset since this is a custom build
+                tentSize: tentSize,
+                mediaType: mediaType,
+                selectedItems: selectedItems,
+                currentStep: 8 // Jump to summary/final step or step 1? Let's go to step 1 to review
+            };
+            // Decide where to send user. Step 8 is Summary. Step 0 is Preset. Step 1 is Tent.
+            // If it's a "Saved Set", maybe sending them to Summary (Step 8) is best to see the whole thing,
+            // or Step 1 to edit. Let's send to Step 1 (Products) so they can edit, 
+            // but we need to verify if 'currentStep' 1 is correct for "Products".
+            // Looking at the reducer, NEXT_STEP increments.
+            // Let's assume Step 8 is a good place if they want to just view it, but Step 1 if they want to edit.
+            // Let's go to Step 8 (Summary) so they see the result first.
+            // Wait, looking at `initialState`, currentStep is 0.
+
+            return { ...newState, currentStep: 8, totals: calculateTotals(newState) };
+        }
         case 'CLEAR_PRESET':
             return {
                 ...state,
