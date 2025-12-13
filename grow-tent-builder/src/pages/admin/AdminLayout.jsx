@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import {
     LayoutDashboard,
@@ -12,7 +12,8 @@ import {
     Calendar,
     Box,
     Bell,
-    Search
+    Search,
+    ClipboardList
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useAdmin, AdminProvider } from '../../context/AdminContext';
@@ -21,9 +22,26 @@ import LanguageSwitcher from './components/LanguageSwitcher';
 import { ToastContainer, ConfirmDialog } from './components/Toast';
 
 const AdminLayoutContent = () => {
-    const { user, signInWithGoogle, signOut, isAdmin, loading: authLoading } = useAuth();
+    const { user, signInWithGoogle, signOut, isAdmin, loading: authLoading, logAdminAccess } = useAuth();
     const { t } = useAdmin();
     const location = useLocation();
+    const hasLoggedLogin = useRef(false);
+
+    // Log admin login when authenticated admin accesses the panel
+    useEffect(() => {
+        if (user && isAdmin && !hasLoggedLogin.current) {
+            logAdminAccess('login', { path: location.pathname });
+            hasLoggedLogin.current = true;
+        }
+    }, [user, isAdmin, logAdminAccess, location.pathname]);
+
+    // Handle sign out with logging
+    const handleSignOut = async () => {
+        if (user && isAdmin) {
+            await logAdminAccess('logout');
+        }
+        signOut();
+    };
 
     if (authLoading) {
         return (
@@ -38,8 +56,12 @@ const AdminLayoutContent = () => {
         return (
             <div className={styles.adminContainer} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <div className={styles.panel} style={{ maxWidth: '400px', width: '100%', textAlign: 'center', padding: '3rem' }}>
-                    <div className={styles.logoIcon} style={{ fontSize: '3rem', marginBottom: '1rem', display: 'inline-block' }}>🌿</div>
-                    <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{t('adminPortal')}</h2>
+                    <img 
+                        src="/icons/icon-192x192.png" 
+                        alt="growOS" 
+                        style={{ width: '64px', height: '64px', marginBottom: '1rem', borderRadius: '12px' }}
+                    />
+                    <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>growOS</h2>
                     <p style={{ color: '#94a3b8', marginBottom: '2rem' }}>{t('pleaseSignIn')}</p>
 
                     <button
@@ -126,6 +148,7 @@ const AdminLayoutContent = () => {
         },
         {
             section: t('settings'), items: [
+                { name: t('accessLogs') || 'Access Logs', icon: ClipboardList, path: '/admin/logs' },
                 { name: t('settings'), icon: Settings, path: '/admin/settings' }
             ]
         }
@@ -153,8 +176,12 @@ const AdminLayoutContent = () => {
             {/* Sidebar Navigation */}
             <aside className={styles.sidebar}>
                 <div className={styles.sidebarHeader}>
-                    <span className={styles.logoIcon}>🌿</span>
-                    <span className={styles.brandName}>GroAdmin</span>
+                    <img 
+                        src="/icons/icon-192x192.png" 
+                        alt="growOS" 
+                        style={{ width: '32px', height: '32px', borderRadius: '8px' }}
+                    />
+                    <span className={styles.brandName}>growOS</span>
                 </div>
 
                 <nav style={{ flex: 1 }}>
@@ -189,7 +216,7 @@ const AdminLayoutContent = () => {
                         <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{t('superAdmin')}</div>
                     </div>
                     <button
-                        onClick={signOut}
+                        onClick={handleSignOut}
                         style={{ background: 'none', border: 'none', color: '#f87171', cursor: 'pointer', padding: '0.5rem' }}
                         title={t('signOut')}
                     >

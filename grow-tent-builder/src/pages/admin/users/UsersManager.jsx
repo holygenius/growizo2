@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { adminService } from '../../../services/adminService';
-import { Trash2, Edit2, Plus, X, Save, RefreshCw, Shield, Users, UserCheck } from 'lucide-react';
+import { Trash2, Edit2, Plus, X, Save, RefreshCw, Shield, Users, UserCheck, ChevronDown, ChevronUp, Leaf, Lightbulb, Tent, Gauge } from 'lucide-react';
 import styles from '../Admin.module.css';
 import TableFilter from '../components/TableFilter';
 import { useAdmin } from '../../../context/AdminContext';
@@ -242,6 +242,25 @@ export default function UsersManager() {
         });
     };
 
+    // Onboarding data helpers
+    const [expandedUser, setExpandedUser] = useState(null);
+
+    const getOnboardingLabel = (field, value) => {
+        if (!value) return '-';
+        const labels = {
+            plantType: { herbs: '🌿 Herbs', vegetables: '🥬 Vegetables', flowers: '🌺 Flowers' },
+            experienceLevel: { beginner: '🌱 Beginner', intermediate: '🌿 Intermediate', expert: '🏆 Expert' },
+            tentSize: { '60x60': '📦 60x60', '100x100': '📦 100x100', '120x120': '📦 120x120' },
+            lightPreference: { led: '💡 LED', hps: '🔥 HPS', unsure: '❓ Unsure' },
+            automationLevel: { manual: '✋ Manual', semi: '⚙️ Semi', full: '🤖 Full' }
+        };
+        return labels[field]?.[value] || value;
+    };
+
+    const hasOnboardingData = (user) => {
+        return user.onboarding_data && Object.keys(user.onboarding_data).length > 0;
+    };
+
     return (
         <div>
             <div className={styles.topBar} style={{ marginBottom: '2rem' }}>
@@ -334,17 +353,19 @@ export default function UsersManager() {
                                     <th>{t('usersPage.name')}</th>
                                     <th>{t('usersPage.email')}</th>
                                     <th>{t('usersPage.provider')}</th>
+                                    <th>{t('usersPage.onboarding') || 'Onboarding'}</th>
                                     <th>{t('usersPage.registeredAt')}</th>
                                     <th>{t('usersPage.status')}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {loading ? (
-                                    <tr><td colSpan="5" style={{ textAlign: 'center', padding: '2rem' }}>{t('common.loading')}</td></tr>
+                                    <tr><td colSpan="6" style={{ textAlign: 'center', padding: '2rem' }}>{t('common.loading')}</td></tr>
                                 ) : filteredAllUsers.length === 0 ? (
-                                    <tr><td colSpan="5" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>{t('usersPage.noUsers')}</td></tr>
+                                    <tr><td colSpan="6" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>{t('usersPage.noUsers')}</td></tr>
                                 ) : filteredAllUsers.map(user => (
-                                    <tr key={user.id}>
+                                    <React.Fragment key={user.id}>
+                                    <tr>
                                         <td style={{ fontWeight: 600 }}>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                                 {user.avatar_url && (
@@ -369,6 +390,35 @@ export default function UsersManager() {
                                                 {user.provider || 'email'}
                                             </span>
                                         </td>
+                                        <td>
+                                            {hasOnboardingData(user) ? (
+                                                <button
+                                                    onClick={() => setExpandedUser(expandedUser === user.id ? null : user.id)}
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '0.25rem',
+                                                        background: 'rgba(16, 185, 129, 0.1)',
+                                                        border: 'none',
+                                                        padding: '0.25rem 0.5rem',
+                                                        borderRadius: '0.25rem',
+                                                        color: '#10b981',
+                                                        cursor: 'pointer',
+                                                        fontSize: '0.75rem'
+                                                    }}
+                                                >
+                                                    <Leaf size={12} />
+                                                    {t('usersPage.completed') || 'Completed'}
+                                                    {expandedUser === user.id ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                                                </button>
+                                            ) : user.onboarding_completed ? (
+                                                <span style={{ color: '#f59e0b', fontSize: '0.75rem' }}>
+                                                    {t('usersPage.skipped') || 'Skipped'}
+                                                </span>
+                                            ) : (
+                                                <span style={{ color: '#64748b', fontSize: '0.75rem' }}>-</span>
+                                            )}
+                                        </td>
                                         <td style={{ color: '#94a3b8', fontSize: '0.875rem' }}>
                                             {formatDate(user.created_at)}
                                         </td>
@@ -386,6 +436,35 @@ export default function UsersManager() {
                                             )}
                                         </td>
                                     </tr>
+                                    {expandedUser === user.id && hasOnboardingData(user) && (
+                                        <tr>
+                                            <td colSpan="6" style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem' }}>
+                                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.05)', padding: '0.5rem 0.75rem', borderRadius: '0.5rem' }}>
+                                                        <Leaf size={16} style={{ color: '#10b981' }} />
+                                                        <span style={{ color: '#94a3b8', fontSize: '0.75rem' }}>{t('usersPage.plantType') || 'Plant'}:</span>
+                                                        <span style={{ fontSize: '0.875rem' }}>{getOnboardingLabel('plantType', user.onboarding_data?.plantType)}</span>
+                                                    </div>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.05)', padding: '0.5rem 0.75rem', borderRadius: '0.5rem' }}>
+                                                        <Gauge size={16} style={{ color: '#3b82f6' }} />
+                                                        <span style={{ color: '#94a3b8', fontSize: '0.75rem' }}>{t('usersPage.experience') || 'Experience'}:</span>
+                                                        <span style={{ fontSize: '0.875rem' }}>{getOnboardingLabel('experienceLevel', user.onboarding_data?.experienceLevel)}</span>
+                                                    </div>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.05)', padding: '0.5rem 0.75rem', borderRadius: '0.5rem' }}>
+                                                        <Tent size={16} style={{ color: '#f59e0b' }} />
+                                                        <span style={{ color: '#94a3b8', fontSize: '0.75rem' }}>{t('usersPage.tentSize') || 'Tent'}:</span>
+                                                        <span style={{ fontSize: '0.875rem' }}>{getOnboardingLabel('tentSize', user.onboarding_data?.tentSize)}</span>
+                                                    </div>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.05)', padding: '0.5rem 0.75rem', borderRadius: '0.5rem' }}>
+                                                        <Lightbulb size={16} style={{ color: '#eab308' }} />
+                                                        <span style={{ color: '#94a3b8', fontSize: '0.75rem' }}>{t('usersPage.light') || 'Light'}:</span>
+                                                        <span style={{ fontSize: '0.875rem' }}>{getOnboardingLabel('lightPreference', user.onboarding_data?.lightPreference)}</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )}
+                                    </React.Fragment>
                                 ))}
                             </tbody>
                         </table>

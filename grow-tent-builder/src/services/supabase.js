@@ -12,16 +12,25 @@
 
 import { createClient } from '@supabase/supabase-js';
 
+// Validate environment variables
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Validate environment variables
-const isConfigured = supabaseUrl && supabaseAnonKey && 
+const isValidUrl = (url) => {
+    try {
+        return !!new URL(url);
+    } catch {
+        return false;
+    }
+};
+
+const isConfigured = supabaseUrl &&
+    supabaseAnonKey &&
     !supabaseUrl.includes('your-project-id') &&
-    !supabaseAnonKey.includes('your-anon-key');
+    isValidUrl(supabaseUrl);
 
 // Create client only if properly configured
-export const supabase = isConfigured 
+export const supabase = isConfigured
     ? createClient(supabaseUrl, supabaseAnonKey, {
         auth: {
             autoRefreshToken: true,
@@ -34,13 +43,22 @@ export const supabase = isConfigured
 // Helper to check if Supabase is available
 export const isSupabaseConfigured = () => !!supabase;
 
-// Development warning
-if (!isConfigured && import.meta.env.DEV) {
-    console.warn(
-        '⚠️ Supabase is not configured.\n' +
-        'Copy .env.example to .env.local and add your Supabase credentials.\n' +
-        'Get them from: https://supabase.com/dashboard/project/YOUR_PROJECT/settings/api'
-    );
+// Development warning and debugging
+if (import.meta.env.DEV) {
+    if (!isConfigured) {
+        console.warn(
+            '⚠️ Supabase is not configured.\n' +
+            'URL: ' + (supabaseUrl ? 'Set' : 'Missing') + '\n' +
+            'Key: ' + (supabaseAnonKey ? 'Set' : 'Missing') + '\n' +
+            'Copy .env.example to .env.local and add your Supabase credentials.\n' +
+            'Get them from: https://supabase.com/dashboard/project/YOUR_PROJECT/settings/api'
+        );
+    } else {
+        console.log('✅ Supabase Client Initialized', {
+            url: supabaseUrl?.substring(0, 20) + '...',
+            configured: true
+        });
+    }
 }
 
 export default supabase;
