@@ -55,5 +55,4 @@ export default defineConfig({
       }
     })
   ],
-  base: '/', // Repository name for GitHub Pages
 })

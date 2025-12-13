@@ -43,6 +43,11 @@ Build for production:
 npm run build
 ```
 
+Deploy (Netlify):
+
+- CI workflow (`.github/workflows/deploy.yml`) builds the app from `grow-tent-builder/` and deploys to Netlify with `netlify-cli`.
+- Required secrets: `NETLIFY_AUTH_TOKEN`, `NETLIFY_SITE_ID`, plus runtime envs `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_GTAG_ID` (optional).
+
 Preview the production build locally:
 
 ```bash

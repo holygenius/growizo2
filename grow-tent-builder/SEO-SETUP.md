@@ -4,7 +4,11 @@ This document explains the SEO configuration for the GroWizard web application.
 
 ## Problem Statement
 
-Google Search Console was reporting 404 errors when crawling language-specific routes like `www.growizard.app/tr`, even though these pages work correctly in browsers. This is a common issue with Single Page Applications (SPAs) deployed on GitHub Pages.
+Google Search Console was reporting 404 errors when crawling language-specific routes like `www.growizard.app/tr`, even though these pages work correctly in browsers. This was tied to GitHub Pages' SPA limitations and is now addressed with a different hosting approach.
+
+## Hosting Update
+
+The app is no longer deployed on GitHub Pages. Production deploys now run on Netlify using the repo workflow. Netlify’s SPA-aware rewrites (see `netlify.toml`) route all paths to `index.html` with a 200 status. The GitHub Pages-specific 404 copy step has been removed.
 
 ## Root Cause
 
@@ -17,21 +21,13 @@ The original `404.html` file contained only a minimal redirect script with "Redi
 
 ## Solution Implemented
 
-### 1. Full App in 404.html
+### 1. SPA rewrites on the hosting provider
 
-**File**: `scripts/post-build.js`
+**Files**:
+- `netlify.toml`: Redirects all routes to `/index.html` with HTTP 200
+- `vercel.json`: Rewrites `/(.*)` to `/index.html` (kept for local parity; production uses Netlify)
 
-A post-build script now copies `index.html` to `404.html`, ensuring that the full React application loads even when GitHub Pages returns a 404 status. This allows:
-
-- The React app to load completely
-- React Router to handle the routing client-side
-- Proper content to be rendered for Google's crawler
-
-**Build Process**:
-```bash
-npm run build
-# Runs: sitemap → vite build → post-build
-```
+These platform-level rewrites serve the full React app for any route without returning a 404. The old GitHub Pages workflow and the post-build `404.html` copy have been removed from the build.
 
 ### 2. SEO Meta Tags
 
@@ -57,12 +53,11 @@ npm run build
 
 When a crawler (or user) requests `https://www.growizard.app/tr`:
 
-1. **GitHub Pages**: Returns HTTP 404 status (unavoidable limitation)
-2. **Content**: Serves `404.html` which contains the full React app
-3. **JavaScript**: React app loads and initializes
-4. **Routing**: React Router routes to the Turkish landing page
-5. **Rendering**: Page renders with proper content and SEO meta tags
-6. **Indexing**: Google can index the rendered content
+1. **Hosting layer**: Rewrites any route to `index.html` and returns HTTP 200
+2. **JavaScript**: React app loads and initializes
+3. **Routing**: React Router routes to the Turkish landing page
+4. **Rendering**: Page renders with proper content and SEO meta tags
+5. **Indexing**: Google can index the rendered content
 
 ## Testing Instructions
 
@@ -101,19 +96,11 @@ Visit the pages in a browser and check:
 
 ## Limitations
 
-### GitHub Pages 404 Status
+### Routing Considerations
 
-GitHub Pages will always return an HTTP 404 status code for non-existent files. While we serve the full app content in `404.html`, the status code remains 404. 
-
-**Impact**: 
-- Modern crawlers (including Google) can handle this because they execute JavaScript and see the rendered content
-- Very old crawlers that don't execute JavaScript might still see it as a 404
-
-**Alternative Solutions**:
-If the 404 status becomes a significant issue, consider:
-1. **Netlify**: Properly handles SPA routing with 200 status codes (config already present in `netlify.toml`)
-2. **Vercel**: Similar to Netlify (config already present in `vercel.json`)
-3. **Pre-rendering**: Generate static HTML for key pages
+- Keep the SPA rewrites in `netlify.toml` (and `vercel.json` if used locally) aligned with production hosting.
+- If a different platform is used later, ensure it serves `index.html` for all unknown routes with HTTP 200.
+- Pre-rendering remains an option for critical pages if needed.
 
 ## Future Improvements
 

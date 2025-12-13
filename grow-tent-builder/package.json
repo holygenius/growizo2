@@ -9,11 +9,10 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "npm run sitemap && vite build && npm run post-build",
+    "build": "npm run sitemap && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "sitemap": "node scripts/generate-sitemap.js",
-    "post-build": "node scripts/post-build.js"
+    "sitemap": "node scripts/generate-sitemap.js"
   },
   "dependencies": {
     "@react-three/drei": "^9.120.4",
