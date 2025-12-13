@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import ReactDOM from 'react-dom';
 import { adminService } from '../../../services/adminService';
 import { Trash2, Edit2, Plus, X, Save, RefreshCw, Search } from 'lucide-react';
 import styles from '../Admin.module.css';
@@ -20,20 +21,20 @@ const SPEC_SUGGESTIONS = {
 };
 
 const ProductForm = ({ initialData, brands, categories, onClose, onSuccess }) => {
-    const { t } = useAdmin();
     const [formData, setFormData] = useState({
         sku: '',
         brand_id: '',
         category_id: '',
         name: { en: '', tr: '' },
         description: { en: '', tr: '' },
-        summary_description: { en: '', tr: '' },
+        summary_description: { en: '', tr: '' }, // For UI only, not saved to DB
         price: 0,
         product_type: 'general',
         specs: {},
         images: [], // Birden fazla görsel desteği
         is_active: true,
-        is_featured: false
+        is_featured: false,
+        icon: '' // Product icon/thumbnail
     });
     const [loading, setLoading] = useState(false);
     const [ikasProducts, setIkasProducts] = useState([]);
@@ -114,12 +115,50 @@ const ProductForm = ({ initialData, brands, categories, onClose, onSuccess }) =>
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Validation
+        if (!formData.sku?.trim()) {
+            alert('SKU is required');
+            return;
+        }
+        if (!formData.name?.en?.trim()) {
+            alert('Product name (English) is required');
+            return;
+        }
+        if (!formData.brand_id) {
+            alert('Brand is required');
+            return;
+        }
+        if (!formData.category_id) {
+            alert('Category is required');
+            return;
+        }
+
         setLoading(true);
         try {
+            // Prepare data - send all form fields to database
+            const submitData = {
+                sku: formData.sku,
+                brand_id: formData.brand_id || null,
+                category_id: formData.category_id || null,
+                name: formData.name,
+                description: formData.description,
+                summary_description: formData.summary_description,
+                price: formData.price,
+                product_type: formData.product_type,
+                specs: formData.specs,
+                images: formData.images,
+                is_active: formData.is_active,
+                is_featured: formData.is_featured,
+                icon: formData.icon
+            };
+
+            console.log('📤 Submitting product data:', submitData);
+
             if (initialData?.id) {
-                await adminService.update('products', initialData.id, formData);
+                await adminService.update('products', initialData.id, submitData);
             } else {
-                await adminService.create('products', formData);
+                await adminService.create('products', submitData);
             }
             onSuccess();
             onClose();
@@ -133,169 +172,172 @@ const ProductForm = ({ initialData, brands, categories, onClose, onSuccess }) =>
 
     const currentSuggestions = SPEC_SUGGESTIONS[formData.product_type] || SPEC_SUGGESTIONS.general;
 
-    return (
-        <div className={styles.panel} style={{ marginBottom: '2rem' }}>
-            <div className={styles.panelHeader}>
-                <h3 className={styles.panelTitle}>{initialData ? 'Edit Product' : 'New Product'}</h3>
-                <button onClick={onClose} className={styles.iconBtn}><X size={20} /></button>
-            </div>
+    // IKAS Modal Portal
+    const ikasModal = showIkasSelector ? ReactDOM.createPortal(
+        <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0,0,0,0.7)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999
+        }} onClick={() => setShowIkasSelector(false)}>
+            <div style={{
+                background: '#1e293b',
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '0.75rem',
+                padding: '2rem',
+                maxWidth: '600px',
+                maxHeight: '80vh',
+                overflow: 'auto',
+                width: '90%'
+            }} onClick={(e) => e.stopPropagation()}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                    <h3 style={{ color: '#fff', margin: 0 }}>🛍️ Select Product from YesilGrow</h3>
+                    <button onClick={() => setShowIkasSelector(false)} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer' }}><X size={24} /></button>
+                </div>
 
-            {/* IKAS Selector Modal */}
-            {showIkasSelector && (
-                <div style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    background: 'rgba(0,0,0,0.5)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    zIndex: 1000
-                }}>
-                    <div style={{
-                        background: '#1e293b',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: '0.75rem',
-                        padding: '2rem',
-                        maxWidth: '600px',
-                        maxHeight: '80vh',
-                        overflow: 'auto',
-                        width: '90%'
-                    }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                            <h3 style={{ color: '#fff', margin: 0 }}>🛍️ Select Product from YesilGrow</h3>
-                            <button onClick={() => setShowIkasSelector(false)} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer' }}><X size={24} /></button>
-                        </div>
-
-                        {ikasProducts.length === 0 ? (
-                            <button
-                                type="button"
-                                onClick={fetchIkasProducts}
-                                disabled={ikasLoading}
+                {ikasProducts.length === 0 ? (
+                    <button
+                        type="button"
+                        onClick={fetchIkasProducts}
+                        disabled={ikasLoading}
+                        style={{
+                            width: '100%',
+                            padding: '0.75rem',
+                            background: '#3b82f6',
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: '0.5rem',
+                            cursor: 'pointer',
+                            marginBottom: '1rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '0.5rem'
+                        }}
+                    >
+                        {ikasLoading ? <RefreshCw className="animate-spin" size={20} /> : <Plus size={20} />}
+                        {ikasLoading ? 'Loading Products...' : 'Fetch YesilGrow Products'}
+                    </button>
+                ) : (
+                    <>
+                        <div style={{ marginBottom: '1rem' }}>
+                            <input
+                                type="text"
+                                placeholder="Search by name, SKU or barcode..."
+                                value={ikasSearch}
+                                onChange={e => setIkasSearch(e.target.value)}
                                 style={{
                                     width: '100%',
                                     padding: '0.75rem',
-                                    background: '#3b82f6',
+                                    background: 'rgba(255,255,255,0.05)',
+                                    border: '1px solid rgba(255,255,255,0.1)',
                                     color: '#fff',
-                                    border: 'none',
                                     borderRadius: '0.5rem',
-                                    cursor: 'pointer',
-                                    marginBottom: '1rem',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '0.5rem'
+                                    boxSizing: 'border-box'
                                 }}
-                            >
-                                {ikasLoading ? <RefreshCw className="animate-spin" size={20} /> : <Plus size={20} />}
-                                {ikasLoading ? 'Loading Products...' : 'Fetch YesilGrow Products'}
-                            </button>
-                        ) : (
-                            <>
-                                <div style={{ marginBottom: '1rem' }}>
-                                    <input
-                                        type="text"
-                                        placeholder="Search by name, SKU or barcode..."
-                                        value={ikasSearch}
-                                        onChange={e => setIkasSearch(e.target.value)}
-                                        style={{
-                                            width: '100%',
-                                            padding: '0.75rem',
-                                            background: 'rgba(255,255,255,0.05)',
-                                            border: '1px solid rgba(255,255,255,0.1)',
-                                            color: '#fff',
-                                            borderRadius: '0.5rem',
-                                            boxSizing: 'border-box'
-                                        }}
-                                    />
-                                </div>
+                            />
+                        </div>
 
-                                <div style={{ display: 'grid', gap: '0.75rem', maxHeight: '500px', overflow: 'auto' }}>
-                                    {filteredIkasProducts.length === 0 ? (
-                                        <p style={{ color: '#94a3b8', textAlign: 'center', padding: '2rem' }}>No products found</p>
-                                    ) : (
-                                        filteredIkasProducts.map((product, idx) => (
-                                            <div
-                                                key={idx}
-                                                onClick={() => handleSelectIkasProduct(product)}
-                                                style={{
-                                                    padding: '1rem',
-                                                    background: selectedIkasProduct?.vendorProductId === product.vendorProductId ? 'rgba(59, 130, 246, 0.2)' : 'rgba(255,255,255,0.05)',
-                                                    border: selectedIkasProduct?.vendorProductId === product.vendorProductId ? '1px solid #3b82f6' : '1px solid rgba(255,255,255,0.1)',
-                                                    borderRadius: '0.5rem',
-                                                    cursor: 'pointer',
-                                                    transition: 'all 0.2s'
-                                                }}
-                                                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-                                                onMouseLeave={e => e.currentTarget.style.background = selectedIkasProduct?.vendorProductId === product.vendorProductId ? 'rgba(59, 130, 246, 0.2)' : 'rgba(255,255,255,0.05)'}
-                                            >
-                                                {/* Görsel Preview */}
-                                                {product.images && product.images.length > 0 && (
-                                                    <div style={{ marginBottom: '0.75rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                                                        {product.images.slice(0, 3).map((img, imgIdx) => (
-                                                            <div key={imgIdx} style={{
-                                                                width: '50px',
-                                                                height: '50px',
-                                                                borderRadius: '0.375rem',
-                                                                overflow: 'hidden',
-                                                                background: '#0f172a',
-                                                                border: '1px solid rgba(255,255,255,0.1)'
-                                                            }}>
-                                                                <img 
-                                                                    src={img.url} 
-                                                                    alt={img.altText}
-                                                                    style={{ 
-                                                                        width: '100%', 
-                                                                        height: '100%', 
-                                                                        objectFit: 'cover' 
-                                                                    }}
-                                                                    onError={(e) => {
-                                                                        e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="50" height="50"%3E%3Crect fill="%23475569" width="50" height="50"/%3E%3Ctext x="50%25" y="50%25" fill="%2394a3b8" text-anchor="middle" dy=".3em"%3ENo Image%3C/text%3E%3C/svg%3E';
-                                                                    }}
-                                                                />
-                                                            </div>
-                                                        ))}
-                                                        {product.images.length > 3 && (
-                                                            <div style={{
-                                                                width: '50px',
-                                                                height: '50px',
-                                                                borderRadius: '0.375rem',
-                                                                background: '#0f172a',
-                                                                border: '1px solid rgba(255,255,255,0.1)',
-                                                                display: 'flex',
-                                                                alignItems: 'center',
-                                                                justifyContent: 'center',
-                                                                color: '#94a3b8',
-                                                                fontSize: '0.75rem',
-                                                                fontWeight: 600
-                                                            }}>
-                                                                +{product.images.length - 3}
-                                                            </div>
-                                                        )}
+                        <div style={{ display: 'grid', gap: '0.75rem', maxHeight: '500px', overflow: 'auto' }}>
+                            {filteredIkasProducts.length === 0 ? (
+                                <p style={{ color: '#94a3b8', textAlign: 'center', padding: '2rem' }}>No products found</p>
+                            ) : (
+                                filteredIkasProducts.map((product, idx) => (
+                                    <div
+                                        key={idx}
+                                        onClick={() => handleSelectIkasProduct(product)}
+                                        style={{
+                                            padding: '1rem',
+                                            background: selectedIkasProduct?.vendorProductId === product.vendorProductId ? 'rgba(59, 130, 246, 0.2)' : 'rgba(255,255,255,0.05)',
+                                            border: selectedIkasProduct?.vendorProductId === product.vendorProductId ? '1px solid #3b82f6' : '1px solid rgba(255,255,255,0.1)',
+                                            borderRadius: '0.5rem',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s'
+                                        }}
+                                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                                        onMouseLeave={e => e.currentTarget.style.background = selectedIkasProduct?.vendorProductId === product.vendorProductId ? 'rgba(59, 130, 246, 0.2)' : 'rgba(255,255,255,0.05)'}
+                                    >
+                                        {/* Görsel Preview */}
+                                        {product.images && product.images.length > 0 && (
+                                            <div style={{ marginBottom: '0.75rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                                {product.images.slice(0, 3).map((img, imgIdx) => (
+                                                    <div key={imgIdx} style={{
+                                                        width: '50px',
+                                                        height: '50px',
+                                                        borderRadius: '0.375rem',
+                                                        overflow: 'hidden',
+                                                        background: '#0f172a',
+                                                        border: '1px solid rgba(255,255,255,0.1)'
+                                                    }}>
+                                                        <img 
+                                                            src={img.url} 
+                                                            alt={img.altText}
+                                                            style={{ 
+                                                                width: '100%', 
+                                                                height: '100%', 
+                                                                objectFit: 'cover' 
+                                                            }}
+                                                            onError={(e) => {
+                                                                e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="50" height="50"%3E%3Crect fill="%23475569" width="50" height="50"/%3E%3Ctext x="50%25" y="50%25" fill="%2394a3b8" text-anchor="middle" dy=".3em"%3ENo Image%3C/text%3E%3C/svg%3E';
+                                                            }}
+                                                        />
+                                                    </div>
+                                                ))}
+                                                {product.images.length > 3 && (
+                                                    <div style={{
+                                                        width: '50px',
+                                                        height: '50px',
+                                                        borderRadius: '0.375rem',
+                                                        background: '#0f172a',
+                                                        border: '1px solid rgba(255,255,255,0.1)',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        color: '#94a3b8',
+                                                        fontSize: '0.75rem',
+                                                        fontWeight: 600
+                                                    }}>
+                                                        +{product.images.length - 3}
                                                     </div>
                                                 )}
-                                                <div style={{ color: '#fff', fontWeight: 600, marginBottom: '0.5rem' }}>{product.name}</div>
-                                                <div style={{ color: '#94a3b8', fontSize: '0.875rem', display: 'grid', gap: '0.25rem' }}>
-                                                    <div>SKU: {product.sku}</div>
-                                                    <div>Barcode: {product.barcode}</div>
-                                                    <div>📸 Images: {product.images?.length || 0}</div>
-                                                    <div style={{ color: '#10b981' }}>
-                                                        💰 Price: {product.price}₺ | Stock: {product.stock}
-                                                    </div>
-                                                </div>
                                             </div>
-                                        ))
-                                    )}
-                                </div>
-                            </>
-                        )}
-                    </div>
-                </div>
-            )}
+                                        )}
+                                        <div style={{ color: '#fff', fontWeight: 600, marginBottom: '0.5rem' }}>{product.name}</div>
+                                        <div style={{ color: '#94a3b8', fontSize: '0.875rem', display: 'grid', gap: '0.25rem' }}>
+                                            <div>SKU: {product.sku}</div>
+                                            <div>Barcode: {product.barcode}</div>
+                                            <div>📸 Images: {product.images?.length || 0}</div>
+                                            <div style={{ color: '#10b981' }}>
+                                                💰 Price: {product.price}₺ | Stock: {product.stock}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    </>
+                )}
+            </div>
+        </div>,
+        document.body
+    ) : null;
 
-            <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1.5rem', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
+    return (
+        <>
+            {ikasModal}
+            <div className={styles.panel} style={{ marginBottom: '2rem' }}>
+                <div className={styles.panelHeader}>
+                    <h3 className={styles.panelTitle}>{initialData ? 'Edit Product' : 'New Product'}</h3>
+                    <button onClick={onClose} className={styles.iconBtn}><X size={20} /></button>
+                </div>
+
+                <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1.5rem', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
                 {/* IKAS Selector Button */}
                 {!initialData && (
                     <button
@@ -647,13 +689,29 @@ const ProductForm = ({ initialData, brands, categories, onClose, onSuccess }) =>
                     <button type="button" onClick={onClose} className={styles.actionBtn} style={{ flexDirection: 'row', padding: '0.75rem 1.5rem', height: 'auto' }}>
                         Cancel
                     </button>
-                    <button type="submit" disabled={loading} className={styles.actionBtn} style={{ flexDirection: 'row', padding: '0.75rem 1.5rem', height: 'auto', background: '#10b981', color: '#fff', border: 'none' }}>
+                    <button 
+                        type="submit" 
+                        disabled={loading || !formData.sku?.trim() || !formData.name?.en?.trim() || !formData.brand_id || !formData.category_id}
+                        className={styles.actionBtn} 
+                        style={{ 
+                            flexDirection: 'row', 
+                            padding: '0.75rem 1.5rem', 
+                            height: 'auto', 
+                            background: (loading || !formData.sku?.trim() || !formData.name?.en?.trim() || !formData.brand_id || !formData.category_id) ? '#6b7280' : '#10b981', 
+                            color: '#fff', 
+                            border: 'none',
+                            opacity: (loading || !formData.sku?.trim() || !formData.name?.en?.trim() || !formData.brand_id || !formData.category_id) ? 0.6 : 1,
+                            cursor: (loading || !formData.sku?.trim() || !formData.name?.en?.trim() || !formData.brand_id || !formData.category_id) ? 'not-allowed' : 'pointer'
+                        }}
+                        title={!formData.sku?.trim() ? 'SKU is required' : !formData.name?.en?.trim() ? 'Product name is required' : !formData.brand_id ? 'Brand is required' : !formData.category_id ? 'Category is required' : ''}
+                    >
                         {loading ? <RefreshCw className="animate-spin" size={20} /> : <Save size={20} />}
                         Save Product
                     </button>
                 </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        </>
     );
 };
 
@@ -812,33 +870,18 @@ export default function ProductsManager() {
             />
 
             {isEditing && (
-                <div className={styles.modalOverlay} onClick={() => setIsEditing(false)}>
-                    <div className={styles.modalContainer} onClick={(e) => e.stopPropagation()}>
-                        <div className={styles.modalHeader}>
-                            <h2 className={styles.modalTitle}>
-                                {selectedProduct ? t('editProduct') : t('addProduct')}
-                            </h2>
-                            <button
-                                className={styles.modalCloseBtn}
-                                onClick={() => setIsEditing(false)}
-                                title="Close"
-                            >
-                                <X size={24} />
-                            </button>
-                        </div>
-                        <div className={styles.modalContent}>
-                            <ProductForm
-                                initialData={selectedProduct}
-                                brands={brands}
-                                categories={categories}
-                                onClose={() => setIsEditing(false)}
-                                onSuccess={loadData}
-                            />
-                        </div>
-                    </div>
+                <div style={{ marginBottom: '2rem', animation: 'slideIn 0.3s ease-out' }}>
+                    <ProductForm
+                        initialData={selectedProduct}
+                        brands={brands}
+                        categories={categories}
+                        onClose={() => setIsEditing(false)}
+                        onSuccess={loadData}
+                    />
                 </div>
             )}
 
+            {!isEditing && (
             <div className={styles.panel}>
                 <div className={styles.tableContainer}>
                     <table className={styles.table}>
@@ -898,6 +941,7 @@ export default function ProductsManager() {
                     </table>
                 </div>
             </div>
+            )}
         </div>
     );
 }

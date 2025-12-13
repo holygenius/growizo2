@@ -118,11 +118,12 @@ CREATE TABLE public.preset_sets (
 );
 CREATE TABLE public.products (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
-  sku character varying NOT NULL UNIQUE,
+  sku character varying(255) NOT NULL UNIQUE,
   brand_id uuid,
   category_id uuid,
   name jsonb NOT NULL,
   description jsonb DEFAULT '{}'::jsonb,
+  summary_description jsonb DEFAULT '{}'::jsonb,
   function_detailed jsonb DEFAULT '{}'::jsonb,
   key_properties jsonb DEFAULT '{}'::jsonb,
   price integer DEFAULT 0,
