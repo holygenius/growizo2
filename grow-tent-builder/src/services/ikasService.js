@@ -310,12 +310,16 @@ export class IkasApiService {
  */
 export class YesilGrowApiService {
     constructor() {
-        // IKAS credentials for YesilGrow
+        // IKAS credentials for YesilGrow from environment variables
         const config = {
-            clientId: '3bc76118-fdad-421e-b62c-3ddf1bce1637',
-            clientSecret: 's_Lum7Zovyq8FfJmqWYq1UXnE70f56d280ac1a4cb1a6bf9ffb09817099',
-            baseUrl: 'https://yesilgrow.myikas.com/api',
+            clientId: import.meta.env.VITE_IKAS_CLIENT_ID,
+            clientSecret: import.meta.env.VITE_IKAS_CLIENT_SECRET,
+            baseUrl: import.meta.env.VITE_IKAS_BASE_URL,
         };
+
+        if (!config.clientId || !config.clientSecret || !config.baseUrl) {
+            console.warn('⚠️ IKAS credentials not found in environment variables');
+        }
 
         this.ikasService = new IkasApiService(config.clientId, config.clientSecret, config.baseUrl);
     }
