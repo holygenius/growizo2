@@ -3,6 +3,7 @@ import supabase from './supabase';
 export const adminService = {
     // Generic CRUD
     async getAll(table, options = {}) {
+        if (!supabase) throw new Error('Supabase client is not initialized');
         let query = supabase.from(table).select('*', { count: 'exact' });
 
         if (options.orderBy) {
@@ -21,6 +22,7 @@ export const adminService = {
     },
 
     async getById(table, id) {
+        if (!supabase) throw new Error('Supabase client is not initialized');
         const { data, error } = await supabase
             .from(table)
             .select('*')
@@ -32,6 +34,7 @@ export const adminService = {
     },
 
     async create(table, data) {
+        if (!supabase) throw new Error('Supabase client is not initialized');
         const { data: created, error } = await supabase
             .from(table)
             .insert([data])
@@ -43,6 +46,7 @@ export const adminService = {
     },
 
     async update(table, id, data) {
+        if (!supabase) throw new Error('Supabase client is not initialized');
         const { data: updated, error } = await supabase
             .from(table)
             .update(data)
@@ -55,6 +59,7 @@ export const adminService = {
     },
 
     async delete(table, id) {
+        if (!supabase) throw new Error('Supabase client is not initialized');
         const { error } = await supabase
             .from(table)
             .delete()
@@ -66,6 +71,7 @@ export const adminService = {
 
     // Specific Helpers
     async uploadImage(file, bucket = 'images') {
+        if (!supabase) throw new Error('Supabase client is not initialized');
         const fileExt = file.name.split('.').pop();
         const fileName = `${Math.random()}.${fileExt}`;
         const filePath = `${fileName}`;

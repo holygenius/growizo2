@@ -1,27 +1,56 @@
-/**
- * Auth Callback Component
- * Handles OAuth redirect from Supabase
- */
-
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import supabase, { isSupabaseConfigured } from '../../services/supabase';
+import { userService } from '../../services/userService';
 import { useSettings } from '../../context/SettingsContext';
 
 export default function AuthCallback() {
     const navigate = useNavigate();
     const location = useLocation();
-    const { language } = useSettings();
+    const { language, getOnboardingUrl } = useSettings();
     const [error, setError] = useState(null);
     const [status, setStatus] = useState('Processing...');
+    const isProcessing = useRef(false);
+
+    // Check if user should see onboarding (new user without completed onboarding)
+    const checkAndRedirect = async (userId) => {
+        try {
+            const { data, error } = await userService.getUserOnboardingStatus(userId);
+
+            if (error) {
+                console.error('Error checking user status:', error);
+                return `/${language}`;
+            }
+
+            // If user exists and hasn't completed onboarding, go to onboarding
+            if (data && !data.onboarding_completed) {
+                return getOnboardingUrl ? getOnboardingUrl() : `/${language}/onboarding`;
+            }
+
+            // Otherwise go to home
+            return `/${language}`;
+        } catch (err) {
+            console.error('checkAndRedirect error:', err);
+            return `/${language}`;
+        }
+    };
 
     useEffect(() => {
+        // Prevent multiple executions
+        if (isProcessing.current) {
+            console.log('⏳ Already processing, skipping...');
+            return;
+        }
+
         const handleCallback = async () => {
+            // Mark as processing immediately
+            isProcessing.current = true;
+
             console.log('🔐 AuthCallback started');
             console.log('📍 Current URL:', window.location.href);
             console.log('🔍 Search params:', location.search);
             console.log('🔍 Hash:', location.hash);
-            
+
             if (!isSupabaseConfigured()) {
                 setError('Auth not configured');
                 return;
@@ -31,10 +60,10 @@ export default function AuthCallback() {
                 // Check for error in URL params
                 const params = new URLSearchParams(location.search);
                 const hashParams = new URLSearchParams(location.hash.substring(1));
-                
+
                 const errorParam = params.get('error') || hashParams.get('error');
                 const errorDescription = params.get('error_description') || hashParams.get('error_description');
-                
+
                 if (errorParam) {
                     console.error('❌ OAuth error:', errorParam, errorDescription);
                     setError(errorDescription || errorParam);
@@ -44,26 +73,27 @@ export default function AuthCallback() {
                 // Check for code in URL (PKCE flow)
                 const code = params.get('code');
                 console.log('🔑 Code from URL:', code ? 'Present' : 'Not found');
-                
+
                 if (code) {
                     setStatus('Exchanging code for session...');
                     console.log('🔄 Exchanging code for session...');
-                    
+
                     const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
-                    
+
                     if (exchangeError) {
                         console.error('❌ Code exchange error:', exchangeError);
                         setError(exchangeError.message);
                         return;
                     }
-                    
+
                     console.log('✅ Session obtained:', data.session ? 'Yes' : 'No');
                     console.log('👤 User:', data.session?.user?.email);
-                    
+
                     if (data.session) {
                         setStatus('Success! Redirecting...');
+                        const redirectUrl = await checkAndRedirect(data.session.user.id);
                         setTimeout(() => {
-                            navigate(`/${language}`, { replace: true });
+                            navigate(redirectUrl, { replace: true });
                         }, 500);
                         return;
                     }
@@ -74,27 +104,48 @@ export default function AuthCallback() {
                 if (accessToken) {
                     console.log('🔑 Access token found in hash');
                     setStatus('Setting session from token...');
-                    
-                    const { data, error: setError } = await supabase.auth.setSession({
+
+                    const refreshToken = hashParams.get('refresh_token') || '';
+                    console.log('🔄 Setting session with tokens...');
+
+                    const { data, error: sessionSetError } = await supabase.auth.setSession({
                         access_token: accessToken,
-                        refresh_token: hashParams.get('refresh_token') || ''
+                        refresh_token: refreshToken
                     });
-                    
-                    if (!setError && data.session) {
+
+                    if (sessionSetError) {
+                        console.error('❌ Session set error:', sessionSetError);
+                        setError(sessionSetError.message);
+                        return;
+                    }
+
+                    if (data.session) {
                         console.log('✅ Session set from hash');
+                        console.log('👤 User:', data.session.user?.email);
+                        setStatus('Success! Checking account...');
+
+                        const redirectUrl = await checkAndRedirect(data.session.user.id);
+                        console.log('🚀 Redirecting to:', redirectUrl);
+                        setStatus('Success! Redirecting...');
+
                         setTimeout(() => {
-                            navigate(`/${language}`, { replace: true });
-                        }, 500);
+                            navigate(redirectUrl, { replace: true });
+                        }, 300);
+                        return;
+                    } else {
+                        console.error('❌ No session returned after setSession');
+                        setError('Could not establish session');
                         return;
                     }
                 }
 
-                // Fallback: Try to get existing session
+                // Fallback: Try to get existing session (only if no tokens were found)
+                console.log('📋 No tokens in URL, checking existing session...');
                 setStatus('Checking existing session...');
                 const { data, error: sessionError } = await supabase.auth.getSession();
-                
-                console.log('📋 Existing session:', data.session ? 'Found' : 'Not found');
-                
+
+                console.log('📋 Existing session check result:', data.session ? 'Found' : 'Not found');
+
                 if (sessionError) {
                     console.error('❌ Session error:', sessionError);
                     setError(sessionError.message);
@@ -103,12 +154,13 @@ export default function AuthCallback() {
 
                 if (data.session) {
                     console.log('✅ Using existing session');
-                    navigate(`/${language}`, { replace: true });
+                    const redirectUrl = await checkAndRedirect(data.session.user.id);
+                    navigate(redirectUrl, { replace: true });
                 } else {
                     console.log('⚠️ No session found, redirecting anyway');
                     navigate(`/${language}`, { replace: true });
                 }
-                
+
             } catch (err) {
                 console.error('❌ Callback error:', err);
                 setError(err.message);
@@ -120,18 +172,18 @@ export default function AuthCallback() {
 
     if (error) {
         return (
-            <div style={{ 
-                display: 'flex', 
+            <div style={{
+                display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'center', 
-                justifyContent: 'center', 
+                alignItems: 'center',
+                justifyContent: 'center',
                 height: '100vh',
                 gap: '1rem',
                 background: 'var(--bg-primary)',
                 color: 'var(--text-primary)'
             }}>
                 <p style={{ color: '#ef4444' }}>❌ Authentication error: {error}</p>
-                <button 
+                <button
                     onClick={() => navigate(`/${language}`)}
                     style={{
                         padding: '0.5rem 1rem',
@@ -149,22 +201,22 @@ export default function AuthCallback() {
     }
 
     return (
-        <div style={{ 
-            display: 'flex', 
+        <div style={{
+            display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center', 
-            justifyContent: 'center', 
+            alignItems: 'center',
+            justifyContent: 'center',
             height: '100vh',
             background: 'var(--bg-primary)',
             color: 'var(--text-primary)'
         }}>
             <div style={{ textAlign: 'center' }}>
-                <div style={{ 
-                    width: '40px', 
-                    height: '40px', 
-                    border: '3px solid var(--border-color)', 
-                    borderTop: '3px solid var(--color-primary)', 
-                    borderRadius: '50%', 
+                <div style={{
+                    width: '40px',
+                    height: '40px',
+                    border: '3px solid var(--border-color)',
+                    borderTop: '3px solid var(--color-primary)',
+                    borderRadius: '50%',
                     animation: 'spin 1s linear infinite',
                     margin: '0 auto 1rem'
                 }}></div>

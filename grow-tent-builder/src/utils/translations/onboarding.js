@@ -53,6 +53,11 @@ export const onboardingTranslations = {
     onboardingQ5Tip1: 'Manual systems are low budget but require attention; daily checks should not be neglected.',
     onboardingQ5Tip2: 'Simple timers and sensor-supported fans increase efficiency and reduce error margin.',
     onboardingQ5Tip3: 'Full automation increases yield but has high initial cost; ideal for advanced users.',
+    // Onboarding Prompt Popup
+    onboardingPromptTitle: 'Complete Your Profile',
+    onboardingPromptMessage: 'Let\'s do a quick setup to get personalized recommendations.',
+    onboardingPromptStart: 'Get Started',
+    onboardingPromptSkip: 'Not Now',
   },
   tr: {
     // Onboarding
@@ -108,5 +113,10 @@ export const onboardingTranslations = {
     onboardingQ5Tip1: 'Manuel sistemler düşük bütçelidir ama dikkat gerektirir; günlük kontroller ihmal edilmemelidir.',
     onboardingQ5Tip2: 'Basit zamanlayıcılar ve sensör destekli fanlar verimliliği artırır ve hata payını azaltır.',
     onboardingQ5Tip3: 'Tam otomasyon, verim artışı sağlar ancak başlangıç maliyeti yüksektir; ileri düzey kullanıcılar için idealdir.',
+    // Onboarding Prompt Popup
+    onboardingPromptTitle: 'Profilinizi Tamamlayın',
+    onboardingPromptMessage: 'Kişiselleştirilmiş öneriler almak için hızlı bir ayarlama yapalım.',
+    onboardingPromptStart: 'Başla',
+    onboardingPromptSkip: 'Şimdi Değil',
   }
 };

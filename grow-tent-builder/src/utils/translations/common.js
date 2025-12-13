@@ -31,6 +31,12 @@ export const commonTranslations = {
     organic: 'Organic',
     selectAll: 'Select All',
     clearAll: 'Clear All',
+
+    // Onboarding Prompt
+    'onboardingPrompt.title': 'Complete Your Profile',
+    'onboardingPrompt.message': 'Take a quick tour to personalize your grow setup experience!',
+    'onboardingPrompt.startButton': "Let's Go!",
+    'onboardingPrompt.laterButton': 'Later',
   },
   tr: {
     // General
@@ -64,5 +70,11 @@ export const commonTranslations = {
     organic: 'Organik',
     selectAll: 'Tümünü Seç',
     clearAll: 'Temizle',
+
+    // Onboarding Prompt
+    'onboardingPrompt.title': 'Profilini Tamamla',
+    'onboardingPrompt.message': 'Yetiştirme deneyimini kişiselleştirmek için hızlı bir tur at!',
+    'onboardingPrompt.startButton': 'Hadi Başlayalım!',
+    'onboardingPrompt.laterButton': 'Sonra',
   }
 };

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useOnboarding } from '../context/OnboardingContext';
 import { useSettings } from '../context/SettingsContext';
+import { useAuth } from '../context/AuthContext';
 import styles from './Onboarding.module.css';
 
 export default function Onboarding() {
@@ -10,6 +11,7 @@ export default function Onboarding() {
     const [showTooltip, setShowTooltip] = useState(false);
     const { onboardingData, updateOnboarding, completeOnboarding } = useOnboarding();
     const { getBuilderUrl, t } = useSettings();
+    const { completeUserOnboarding, isAuthenticated } = useAuth();
     const navigate = useNavigate();
 
     const steps = [
@@ -102,6 +104,16 @@ export default function Onboarding() {
             setCurrentStep(currentStep + 1);
         } else {
             completeOnboarding();
+            // Save onboarding data to database if user is authenticated
+            if (isAuthenticated) {
+                completeUserOnboarding({
+                    plantType: onboardingData.plantType,
+                    experienceLevel: onboardingData.experienceLevel,
+                    tentSize: onboardingData.tentSize,
+                    lightPreference: onboardingData.lightPreference,
+                    automationLevel: onboardingData.automationLevel
+                });
+            }
             navigate(getBuilderUrl());
         }
     };
@@ -118,6 +130,17 @@ export default function Onboarding() {
 
     const handleSkip = () => {
         completeOnboarding();
+        // Save partial onboarding data to database if user is authenticated
+        if (isAuthenticated) {
+            completeUserOnboarding({
+                plantType: onboardingData.plantType,
+                experienceLevel: onboardingData.experienceLevel,
+                tentSize: onboardingData.tentSize,
+                lightPreference: onboardingData.lightPreference,
+                automationLevel: onboardingData.automationLevel,
+                skipped: true
+            });
+        }
         navigate(getBuilderUrl());
     };
 
