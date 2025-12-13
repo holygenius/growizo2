@@ -5,7 +5,9 @@ import styles from '../Admin.module.css';
 import ImageUploader from '../components/ImageUploader';
 import TableFilter from '../components/TableFilter';
 import KeyValueEditor from '../components/KeyValueEditor';
+import LocalizedContentEditor from '../components/LocalizedContentEditor';
 import { useAdmin } from '../../../context/AdminContext';
+import { YesilGrowApiService } from '../../../services/ikasService';
 
 // Suggested keys for product specs based on product type
 const SPEC_SUGGESTIONS = {
@@ -25,19 +27,90 @@ const ProductForm = ({ initialData, brands, categories, onClose, onSuccess }) =>
         category_id: '',
         name: { en: '', tr: '' },
         description: { en: '', tr: '' },
+        summary_description: { en: '', tr: '' },
         price: 0,
         product_type: 'general',
         specs: {},
+        images: [], // Birden fazla görsel desteği
         is_active: true,
         is_featured: false
     });
     const [loading, setLoading] = useState(false);
+    const [ikasProducts, setIkasProducts] = useState([]);
+    const [showIkasSelector, setShowIkasSelector] = useState(false);
+    const [ikasLoading, setIkasLoading] = useState(false);
+    const [ikasSearch, setIkasSearch] = useState('');
+    const [selectedIkasProduct, setSelectedIkasProduct] = useState(null);
 
     useEffect(() => {
         if (initialData) {
             setFormData(initialData);
         }
     }, [initialData]);
+
+    const fetchIkasProducts = async () => {
+        setIkasLoading(true);
+        try {
+            const yesilgrow = new YesilGrowApiService();
+            const products = await yesilgrow.getProductsWithVendorInfo();
+            setIkasProducts(products);
+            console.log(`✅ Fetched ${products.length} products from IKAS`);
+        } catch (error) {
+            console.error('❌ Error fetching IKAS products:', error);
+            alert('Error fetching IKAS products: ' + error.message);
+        } finally {
+            setIkasLoading(false);
+        }
+    };
+
+    const filteredIkasProducts = useMemo(() => {
+        if (!ikasSearch) return ikasProducts;
+        return ikasProducts.filter(p =>
+            p.name.toLowerCase().includes(ikasSearch.toLowerCase()) ||
+            p.sku.toLowerCase().includes(ikasSearch.toLowerCase()) ||
+            p.barcode.toLowerCase().includes(ikasSearch.toLowerCase())
+        );
+    }, [ikasProducts, ikasSearch]);
+
+    const handleSelectIkasProduct = (product) => {
+        setSelectedIkasProduct(product);
+        
+        // Görselleri diziye dönüştür (birden fazla görsel desteği)
+        const images = product.images && product.images.length > 0 
+            ? product.images.map(img => ({
+                url: img.url,
+                alt: img.altText || product.name
+              }))
+            : [];
+        
+        setFormData({
+            ...formData,
+            sku: product.sku || formData.sku,
+            price: product.price || formData.price,
+            name: {
+                ...formData.name,
+                en: product.name || formData.name.en,
+                tr: product.name || formData.name.tr
+            },
+            description: {
+                en: product.description || formData.description.en,
+                tr: formData.description.tr
+            },
+            summary_description: {
+                en: product.shortDescription || formData.summary_description.en,
+                tr: formData.summary_description.tr
+            },
+            images: images, // Birden fazla görsel
+            icon: images.length > 0 ? images[0].url : formData.icon, // İlk görsel icon olarak
+            specs: {
+                ...formData.specs,
+                barcode: product.barcode,
+                vendor_id: product.vendorProductId,
+                vendor_sku: product.sku
+            }
+        });
+        setShowIkasSelector(false);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -67,7 +140,205 @@ const ProductForm = ({ initialData, brands, categories, onClose, onSuccess }) =>
                 <button onClick={onClose} className={styles.iconBtn}><X size={20} /></button>
             </div>
 
+            {/* IKAS Selector Modal */}
+            {showIkasSelector && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'rgba(0,0,0,0.5)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 1000
+                }}>
+                    <div style={{
+                        background: '#1e293b',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '0.75rem',
+                        padding: '2rem',
+                        maxWidth: '600px',
+                        maxHeight: '80vh',
+                        overflow: 'auto',
+                        width: '90%'
+                    }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                            <h3 style={{ color: '#fff', margin: 0 }}>🛍️ Select Product from YesilGrow</h3>
+                            <button onClick={() => setShowIkasSelector(false)} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer' }}><X size={24} /></button>
+                        </div>
+
+                        {ikasProducts.length === 0 ? (
+                            <button
+                                type="button"
+                                onClick={fetchIkasProducts}
+                                disabled={ikasLoading}
+                                style={{
+                                    width: '100%',
+                                    padding: '0.75rem',
+                                    background: '#3b82f6',
+                                    color: '#fff',
+                                    border: 'none',
+                                    borderRadius: '0.5rem',
+                                    cursor: 'pointer',
+                                    marginBottom: '1rem',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '0.5rem'
+                                }}
+                            >
+                                {ikasLoading ? <RefreshCw className="animate-spin" size={20} /> : <Plus size={20} />}
+                                {ikasLoading ? 'Loading Products...' : 'Fetch YesilGrow Products'}
+                            </button>
+                        ) : (
+                            <>
+                                <div style={{ marginBottom: '1rem' }}>
+                                    <input
+                                        type="text"
+                                        placeholder="Search by name, SKU or barcode..."
+                                        value={ikasSearch}
+                                        onChange={e => setIkasSearch(e.target.value)}
+                                        style={{
+                                            width: '100%',
+                                            padding: '0.75rem',
+                                            background: 'rgba(255,255,255,0.05)',
+                                            border: '1px solid rgba(255,255,255,0.1)',
+                                            color: '#fff',
+                                            borderRadius: '0.5rem',
+                                            boxSizing: 'border-box'
+                                        }}
+                                    />
+                                </div>
+
+                                <div style={{ display: 'grid', gap: '0.75rem', maxHeight: '500px', overflow: 'auto' }}>
+                                    {filteredIkasProducts.length === 0 ? (
+                                        <p style={{ color: '#94a3b8', textAlign: 'center', padding: '2rem' }}>No products found</p>
+                                    ) : (
+                                        filteredIkasProducts.map((product, idx) => (
+                                            <div
+                                                key={idx}
+                                                onClick={() => handleSelectIkasProduct(product)}
+                                                style={{
+                                                    padding: '1rem',
+                                                    background: selectedIkasProduct?.vendorProductId === product.vendorProductId ? 'rgba(59, 130, 246, 0.2)' : 'rgba(255,255,255,0.05)',
+                                                    border: selectedIkasProduct?.vendorProductId === product.vendorProductId ? '1px solid #3b82f6' : '1px solid rgba(255,255,255,0.1)',
+                                                    borderRadius: '0.5rem',
+                                                    cursor: 'pointer',
+                                                    transition: 'all 0.2s'
+                                                }}
+                                                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                                                onMouseLeave={e => e.currentTarget.style.background = selectedIkasProduct?.vendorProductId === product.vendorProductId ? 'rgba(59, 130, 246, 0.2)' : 'rgba(255,255,255,0.05)'}
+                                            >
+                                                {/* Görsel Preview */}
+                                                {product.images && product.images.length > 0 && (
+                                                    <div style={{ marginBottom: '0.75rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                                        {product.images.slice(0, 3).map((img, imgIdx) => (
+                                                            <div key={imgIdx} style={{
+                                                                width: '50px',
+                                                                height: '50px',
+                                                                borderRadius: '0.375rem',
+                                                                overflow: 'hidden',
+                                                                background: '#0f172a',
+                                                                border: '1px solid rgba(255,255,255,0.1)'
+                                                            }}>
+                                                                <img 
+                                                                    src={img.url} 
+                                                                    alt={img.altText}
+                                                                    style={{ 
+                                                                        width: '100%', 
+                                                                        height: '100%', 
+                                                                        objectFit: 'cover' 
+                                                                    }}
+                                                                    onError={(e) => {
+                                                                        e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="50" height="50"%3E%3Crect fill="%23475569" width="50" height="50"/%3E%3Ctext x="50%25" y="50%25" fill="%2394a3b8" text-anchor="middle" dy=".3em"%3ENo Image%3C/text%3E%3C/svg%3E';
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                        ))}
+                                                        {product.images.length > 3 && (
+                                                            <div style={{
+                                                                width: '50px',
+                                                                height: '50px',
+                                                                borderRadius: '0.375rem',
+                                                                background: '#0f172a',
+                                                                border: '1px solid rgba(255,255,255,0.1)',
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                                color: '#94a3b8',
+                                                                fontSize: '0.75rem',
+                                                                fontWeight: 600
+                                                            }}>
+                                                                +{product.images.length - 3}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
+                                                <div style={{ color: '#fff', fontWeight: 600, marginBottom: '0.5rem' }}>{product.name}</div>
+                                                <div style={{ color: '#94a3b8', fontSize: '0.875rem', display: 'grid', gap: '0.25rem' }}>
+                                                    <div>SKU: {product.sku}</div>
+                                                    <div>Barcode: {product.barcode}</div>
+                                                    <div>📸 Images: {product.images?.length || 0}</div>
+                                                    <div style={{ color: '#10b981' }}>
+                                                        💰 Price: {product.price}₺ | Stock: {product.stock}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))
+                                    )}
+                                </div>
+                            </>
+                        )}
+                    </div>
+                </div>
+            )}
+
             <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1.5rem', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
+                {/* IKAS Selector Button */}
+                {!initialData && (
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setShowIkasSelector(true);
+                            if (ikasProducts.length === 0) {
+                                fetchIkasProducts();
+                            }
+                        }}
+                        style={{
+                            gridColumn: '1 / -1',
+                            padding: '1rem',
+                            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: '0.5rem',
+                            cursor: 'pointer',
+                            fontWeight: 600,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '0.5rem'
+                        }}
+                    >
+                        <Plus size={20} /> 🛍️ Get Product from YesilGrow IKAS
+                    </button>
+                )}
+
+                {selectedIkasProduct && (
+                    <div style={{
+                        gridColumn: '1 / -1',
+                        padding: '1rem',
+                        background: 'rgba(16, 185, 129, 0.1)',
+                        border: '1px solid #10b981',
+                        borderRadius: '0.5rem',
+                        color: '#10b981',
+                        fontSize: '0.875rem'
+                    }}>
+                        ✅ Selected from IKAS: <strong>{selectedIkasProduct.name}</strong>
+                    </div>
+                )}
+
                 <div className={styles.inputGroup}>
                     <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>SKU (Unique)</label>
                     <input
@@ -83,6 +354,8 @@ const ProductForm = ({ initialData, brands, categories, onClose, onSuccess }) =>
                     label="Product Icon"
                     value={formData.icon}
                     onChange={url => setFormData({ ...formData, icon: url })}
+                    bucket="product-images"
+                    helpText="Upload product icon/thumbnail image"
                 />
 
                 <div className={styles.inputGroup}>
@@ -157,6 +430,30 @@ const ProductForm = ({ initialData, brands, categories, onClose, onSuccess }) =>
                     />
                 </div>
 
+                {/* Summary Description - Rich Text */}
+                <div className={styles.inputGroup} style={{ gridColumn: '1 / -1' }}>
+                    <LocalizedContentEditor
+                        label="📝 Summary Description (Short)"
+                        value={formData.summary_description || { en: '', tr: '' }}
+                        onChange={summary_description => setFormData({ ...formData, summary_description })}
+                        minHeight="150px"
+                        placeholder={{ en: 'Write a brief product description...', tr: 'Kısa ürün açıklaması yazın...' }}
+                        helpText="Used for product cards and listings (supports HTML formatting)"
+                    />
+                </div>
+
+                {/* Full Description - Rich Text */}
+                <div className={styles.inputGroup} style={{ gridColumn: '1 / -1' }}>
+                    <LocalizedContentEditor
+                        label="📖 Full Description (Detailed)"
+                        value={formData.description || { en: '', tr: '' }}
+                        onChange={description => setFormData({ ...formData, description })}
+                        minHeight="300px"
+                        placeholder={{ en: 'Write detailed product description with specifications...', tr: 'Ürün detaylarını açıklayın...' }}
+                        helpText="Detailed description for product detail page (supports HTML formatting)"
+                    />
+                </div>
+
                 {/* Specs Key-Value Editor */}
                 <div className={styles.inputGroup} style={{ gridColumn: '1 / -1' }}>
                     <KeyValueEditor
@@ -189,6 +486,161 @@ const ProductForm = ({ initialData, brands, categories, onClose, onSuccess }) =>
                         />
                         Featured
                     </label>
+                </div>
+
+                {/* Birden fazla görsel yönetimi */}
+                <div style={{ gridColumn: '1 / -1', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.5rem', padding: '1rem' }}>
+                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.75rem', fontWeight: 600 }}>
+                        📸 Product Images ({formData.images?.length || 0})
+                    </label>
+                    
+                    {/* Görsel listesi */}
+                    {formData.images && formData.images.length > 0 && (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '0.75rem', marginBottom: '1rem' }}>
+                            {formData.images.map((img, idx) => (
+                                <div key={idx} style={{
+                                    position: 'relative',
+                                    borderRadius: '0.375rem',
+                                    overflow: 'hidden',
+                                    background: '#0f172a',
+                                    border: '1px solid rgba(255,255,255,0.1)',
+                                    aspectRatio: '1'
+                                }}>
+                                    <img 
+                                        src={img.url} 
+                                        alt={img.alt}
+                                        style={{ 
+                                            width: '100%', 
+                                            height: '100%', 
+                                            objectFit: 'cover' 
+                                        }}
+                                        onError={(e) => {
+                                            e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100"%3E%3Crect fill="%23475569" width="100" height="100"/%3E%3Ctext x="50%25" y="50%25" fill="%2394a3b8" text-anchor="middle" dy=".3em"%3ENo Image%3C/text%3E%3C/svg%3E';
+                                        }}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setFormData({
+                                            ...formData,
+                                            images: formData.images.filter((_, i) => i !== idx)
+                                        })}
+                                        style={{
+                                            position: 'absolute',
+                                            top: '0.25rem',
+                                            right: '0.25rem',
+                                            background: '#dc2626',
+                                            color: '#fff',
+                                            border: 'none',
+                                            borderRadius: '50%',
+                                            width: '24px',
+                                            height: '24px',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontSize: '14px'
+                                        }}
+                                        title="Görsel sil"
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    
+                    {/* Görsel ekleme */}
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                        <input
+                            type="text"
+                            placeholder="Görsel URL'sini yapıştır..."
+                            onKeyPress={(e) => {
+                                if (e.key === 'Enter' && e.target.value.trim()) {
+                                    setFormData({
+                                        ...formData,
+                                        images: [...(formData.images || []), { url: e.target.value.trim(), alt: formData.name?.en || 'Product' }]
+                                    });
+                                    e.target.value = '';
+                                }
+                            }}
+                            style={{ 
+                                flex: 1, 
+                                minWidth: '200px',
+                                padding: '0.75rem', 
+                                background: 'rgba(255,255,255,0.05)', 
+                                border: '1px solid rgba(255,255,255,0.1)', 
+                                color: '#fff', 
+                                borderRadius: '0.5rem',
+                                fontSize: '0.875rem'
+                            }}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => {
+                                const url = prompt('Görsel URL\'sini gir:');
+                                if (url && url.trim()) {
+                                    setFormData({
+                                        ...formData,
+                                        images: [...(formData.images || []), { url: url.trim(), alt: formData.name?.en || 'Product' }]
+                                    });
+                                }
+                            }}
+                            style={{
+                                padding: '0.75rem 1.5rem',
+                                background: '#3b82f6',
+                                color: '#fff',
+                                border: 'none',
+                                borderRadius: '0.5rem',
+                                cursor: 'pointer',
+                                fontWeight: 500,
+                                whiteSpace: 'nowrap'
+                            }}
+                        >
+                            + URL ile Ekle
+                        </button>
+                        
+                        {/* File Upload Button */}
+                        <input
+                            type="file"
+                            accept="image/*"
+                            id="product-image-upload"
+                            onChange={async (e) => {
+                                const file = e.target.files?.[0];
+                                if (!file) return;
+                                
+                                try {
+                                    const url = await adminService.uploadImage(file, 'product-images');
+                                    setFormData({
+                                        ...formData,
+                                        images: [...(formData.images || []), { url, alt: formData.name?.en || 'Product' }]
+                                    });
+                                    e.target.value = '';
+                                } catch (error) {
+                                    alert('Upload failed: ' + error.message);
+                                }
+                            }}
+                            style={{ display: 'none' }}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => document.getElementById('product-image-upload').click()}
+                            style={{
+                                padding: '0.75rem 1.5rem',
+                                background: '#10b981',
+                                color: '#fff',
+                                border: 'none',
+                                borderRadius: '0.5rem',
+                                cursor: 'pointer',
+                                fontWeight: 500,
+                                whiteSpace: 'nowrap',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem'
+                            }}
+                        >
+                            <span>📤 Upload</span>
+                        </button>
+                    </div>
                 </div>
 
                 <div style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
@@ -360,13 +812,31 @@ export default function ProductsManager() {
             />
 
             {isEditing && (
-                <ProductForm
-                    initialData={selectedProduct}
-                    brands={brands}
-                    categories={categories}
-                    onClose={() => setIsEditing(false)}
-                    onSuccess={loadData}
-                />
+                <div className={styles.modalOverlay} onClick={() => setIsEditing(false)}>
+                    <div className={styles.modalContainer} onClick={(e) => e.stopPropagation()}>
+                        <div className={styles.modalHeader}>
+                            <h2 className={styles.modalTitle}>
+                                {selectedProduct ? t('editProduct') : t('addProduct')}
+                            </h2>
+                            <button
+                                className={styles.modalCloseBtn}
+                                onClick={() => setIsEditing(false)}
+                                title="Close"
+                            >
+                                <X size={24} />
+                            </button>
+                        </div>
+                        <div className={styles.modalContent}>
+                            <ProductForm
+                                initialData={selectedProduct}
+                                brands={brands}
+                                categories={categories}
+                                onClose={() => setIsEditing(false)}
+                                onSuccess={loadData}
+                            />
+                        </div>
+                    </div>
+                </div>
             )}
 
             <div className={styles.panel}>
