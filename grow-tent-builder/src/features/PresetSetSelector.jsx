@@ -254,6 +254,37 @@ const getTentDimensions = (preset, tentProducts) => {
         }
     }
 
+    // New format: tentSize object
+    if (preset.tentSize && typeof preset.tentSize === 'object') {
+        const { width, depth, height, unit = 'cm' } = preset.tentSize;
+
+        let w = parseFloat(width);
+        let d = parseFloat(depth);
+        let h = parseFloat(height);
+
+        // Convert to feet if necessary (internal builder unit)
+        if (unit === 'cm') {
+            w /= 30.48;
+            d /= 30.48;
+            h /= 30.48;
+        } else if (unit === 'm') {
+            w /= 0.3048;
+            d /= 0.3048;
+            h /= 0.3048;
+        } else if (unit === 'inch') {
+            w /= 12;
+            d /= 12;
+            h /= 12;
+        }
+
+        return {
+            width: w,
+            depth: d,
+            height: h,
+            unit: 'ft'
+        };
+    }
+
     // Fallback: parse from tentSize string (e.g., "60x60x180" or "150x150x200")
     if (preset.tentSize && typeof preset.tentSize === 'string') {
         const parts = preset.tentSize.split('x').map(Number);
@@ -570,7 +601,12 @@ export default function PresetSetSelector() {
                                 color: 'var(--text-secondary)'
                             }}>
                                 <span>📐</span>
-                                <span>{preset.tentSize} cm</span>
+                                <span>
+                                    {typeof preset.tentSize === 'object' && preset.tentSize !== null
+                                        ? `${preset.tentSize.width}x${preset.tentSize.depth}x${preset.tentSize.height} ${preset.tentSize.unit || 'cm'}`
+                                        : `${preset.tentSize} cm`
+                                    }
+                                </span>
                             </div>
                             <div style={{
                                 display: 'flex',
