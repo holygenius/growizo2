@@ -248,7 +248,7 @@ const SUPPLEMENT_CATEGORIES = [
 ];
 
 export default function AdvancedNutrientsSchedule() {
-    const { t } = useSettings();
+    const { t, language } = useSettings();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     
@@ -329,6 +329,7 @@ export default function AdvancedNutrientsSchedule() {
                     ...p,
                     id: p.sku, // Use SKU as ID to match local constants
                     _uuid: p.id, // Keep real UUID if needed
+                    product_name: typeof p.name === 'object' ? (p.name[language] || p.name.en || p.name.tr) : p.name,
                     // Ensure category_key is available (from specs or inferred)
                     category_key: p.specs?.category_key || 'base_nutrient',
                     // Map other properties if needed
@@ -345,7 +346,7 @@ export default function AdvancedNutrientsSchedule() {
             }
         }
         loadData();
-    }, []);
+    }, [language]);
 
     // Get current base nutrient option
     const currentBaseNutrient = useMemo(() => {

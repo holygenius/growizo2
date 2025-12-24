@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useSettings } from '../../context/SettingsContext';
 import {
@@ -125,6 +125,7 @@ export default function CannaSchedule() {
                     ...p,
                     id: p.sku, // Use SKU as ID to match legacy selection logic
                     _uuid: p.id,
+                    product_name: typeof p.name === 'object' ? (p.name[language] || p.name.en || p.name.tr) : p.name,
                     system: p.specs?.system || 'all',
                     category_key: p.specs?.category_key || 'base_nutrient',
                     function_key: p.specs?.function_key || 'funcBaseNutrientVeg',
@@ -149,7 +150,7 @@ export default function CannaSchedule() {
             }
         }
         loadData();
-    }, []);
+    }, [language]);
 
     // currentSystemInfo removed - using SYSTEM_INFO directly
 
