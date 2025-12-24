@@ -22,6 +22,7 @@ import ProductsManager from './pages/admin/catalog/ProductsManager';
 import FeedingSchedulesManager from './pages/admin/growth/FeedingSchedulesManager';
 import FeedingScheduleProductsManager from './pages/admin/growth/FeedingScheduleProductsManager';
 import PresetSetsManager from './pages/admin/growth/PresetSetsManager';
+import ANScheduleManager from './pages/admin/growth/ANScheduleManager';
 import BlogPostsManager from './pages/admin/content/BlogPostsManager';
 import UsersManager from './pages/admin/users/UsersManager';
 import SettingsManager from './pages/admin/settings/SettingsManager';
@@ -89,6 +90,7 @@ function AppContent() {
         <Route path="products" element={<ProductsManager />} />
         <Route path="schedules" element={<FeedingSchedulesManager />} />
         <Route path="schedule-products" element={<FeedingScheduleProductsManager />} />
+        <Route path="an-schedule" element={<ANScheduleManager />} />
         <Route path="presets" element={<PresetSetsManager />} />
         <Route path="blog" element={<BlogPostsManager />} />
         <Route path="users" element={<UsersManager />} />

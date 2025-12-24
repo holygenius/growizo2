@@ -137,6 +137,7 @@ const AdminLayoutContent = () => {
             section: t('growthSystems'), items: [
                 { name: t('feedingSchedules'), icon: Calendar, path: '/admin/schedules' },
                 { name: t('scheduleProducts'), icon: Tags, path: '/admin/schedule-products' },
+                { name: 'AN Schedule', icon: Calendar, path: '/admin/an-schedule' },
                 { name: t('presetSets'), icon: Box, path: '/admin/presets' }
             ]
         },

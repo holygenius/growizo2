@@ -230,13 +230,13 @@ const PresetForm = ({ initialData, onClose, onSuccess }) => {
                                 fontSize: '0.875rem'
                             }}
                         >
-                            <Plus size={16} /> Add Product
+                            <Plus size={16} /> {t('addProduct')}
                         </button>
                     </div>
 
                     {formData.products.length === 0 ? (
                         <div style={{ textAlign: 'center', padding: '2rem', background: 'rgba(255,255,255,0.02)', borderRadius: '0.5rem', color: '#64748b' }}>
-                            No products added to this set yet.
+                            {t('noProductsAdded')}
                         </div>
                     ) : (
                         <div style={{ display: 'grid', gap: '0.75rem' }}>
@@ -262,11 +262,11 @@ const PresetForm = ({ initialData, onClose, onSuccess }) => {
 
                                         <div style={{ flex: 1 }}>
                                             <div style={{ color: '#fff', fontWeight: 500 }}>{details.name?.en || item.sku}</div>
-                                            <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>SKU: {item.sku}</div>
+                                            <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>{t('sku')}: {item.sku}</div>
                                         </div>
 
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                            <label style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Qty:</label>
+                                            <label style={{ color: '#94a3b8', fontSize: '0.8rem' }}>{t('quantity')}:</label>
                                             <input
                                                 type="number"
                                                 min="1"

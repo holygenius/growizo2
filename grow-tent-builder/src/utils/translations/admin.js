@@ -63,6 +63,10 @@ export const adminTranslations = {
     totalPrice: 'Total Price',
     mainImage: 'Main Image',
     tentSizeConfig: 'Tent Size Configuration',
+    width: 'Width',
+    depth: 'Depth',
+    height: 'Height',
+    unit: 'Unit',
     confirmDeletePreset: 'Are you sure you want to delete this preset set?',
 
     // Common Actions
@@ -199,7 +203,14 @@ export const adminTranslations = {
     editPreset: 'Edit Preset',
     presetName: 'Preset Name',
     presetDescription: 'Preset Description',
+    presetDescription: 'Preset Description',
     includedProducts: 'Included Products',
+    selectProduct: 'Select Product',
+    searchProductPlaceholder: 'Search by name or SKU...',
+    loadingProducts: 'Loading products...',
+    noImage: 'No Image',
+    quantity: 'Quantity',
+    noProductsAdded: 'No products added to this set yet.',
 
     // Activity Log
     activityLog: 'Activity Log',
@@ -377,6 +388,10 @@ export const adminTranslations = {
     totalPrice: 'Toplam Fiyat',
     mainImage: 'Ana Görsel',
     tentSizeConfig: 'Çadır Boyutu Yapılandırması',
+    width: 'Genişlik',
+    depth: 'Derinlik',
+    height: 'Yükseklik',
+    unit: 'Birim',
     confirmDeletePreset: 'Bu hazır seti silmek istediğinizden emin misiniz?',
 
     // Common Actions
@@ -514,6 +529,12 @@ export const adminTranslations = {
     presetName: 'Set Adı',
     presetDescription: 'Set Açıklaması',
     includedProducts: 'Dahil Edilen Ürünler',
+    selectProduct: 'Ürün Seç',
+    searchProductPlaceholder: 'İsim veya stok kodu ile ara...',
+    loadingProducts: 'Ürünler yükleniyor...',
+    noImage: 'Görsel Yok',
+    quantity: 'Adet',
+    noProductsAdded: 'Bu sete henüz ürün eklenmedi.',
 
     // Activity Log
     activityLog: 'Aktivite Günlüğü',

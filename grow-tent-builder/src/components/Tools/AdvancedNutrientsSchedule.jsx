@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { useSettings } from '../../context/SettingsContext';
 import { productService } from '../../services/productService';
 import { brandService } from '../../services/brandService';
+import { anScheduleService } from '../../services/anScheduleService';
 import Navbar from '../Navbar';
 import Footer from '../Footer';
 import styles from './FeedingSchedule.module.css';
@@ -250,6 +251,20 @@ export default function AdvancedNutrientsSchedule() {
     const { t } = useSettings();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    
+    // Config state - loaded from database or defaults
+    const [config, setConfig] = useState({
+        weekLabels: WEEK_LABELS,
+        phaseInfo: PHASE_INFO,
+        productCategories: PRODUCT_CATEGORIES,
+        baseNutrientOptions: BASE_NUTRIENT_OPTIONS,
+        nutrientSeries: NUTRIENT_SERIES,
+        lifecyclePhases: LIFECYCLE_PHASES,
+        supplementCategories: SUPPLEMENT_CATEGORIES,
+        proTipsKeys: PRO_TIPS_KEYS,
+        defaultAdditives: ['voodoo-juice', 'b-52', 'big-bud', 'overdrive', 'flawless-finish']
+    });
+    
     const [selectedBaseNutrientId, setSelectedBaseNutrientId] = useState(BASE_NUTRIENT_OPTIONS[0].id);
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [waterAmount, setWaterAmount] = useState(10); // Litre
@@ -260,6 +275,42 @@ export default function AdvancedNutrientsSchedule() {
     const [expandedCategories, setExpandedCategories] = useState(
         Object.keys(PRODUCT_CATEGORIES).reduce((acc, key) => ({ ...acc, [key]: true }), {})
     );
+
+    // Load config from database
+    useEffect(() => {
+        async function loadConfig() {
+            try {
+                const dbConfig = await anScheduleService.fetchConfig();
+                if (dbConfig && Object.keys(dbConfig).length > 0) {
+                    setConfig({
+                        weekLabels: dbConfig.week_labels || WEEK_LABELS,
+                        phaseInfo: dbConfig.phase_info || PHASE_INFO,
+                        productCategories: dbConfig.product_categories || PRODUCT_CATEGORIES,
+                        baseNutrientOptions: dbConfig.base_nutrient_options || BASE_NUTRIENT_OPTIONS,
+                        nutrientSeries: dbConfig.nutrient_series || NUTRIENT_SERIES,
+                        lifecyclePhases: dbConfig.lifecycle_phases || LIFECYCLE_PHASES,
+                        supplementCategories: dbConfig.supplement_categories || SUPPLEMENT_CATEGORIES,
+                        proTipsKeys: dbConfig.pro_tips_keys || PRO_TIPS_KEYS,
+                        defaultAdditives: dbConfig.default_additives || ['voodoo-juice', 'b-52', 'big-bud', 'overdrive', 'flawless-finish']
+                    });
+                    // Update expanded categories if productCategories changed
+                    if (dbConfig.product_categories) {
+                        setExpandedCategories(
+                            Object.keys(dbConfig.product_categories).reduce((acc, key) => ({ ...acc, [key]: true }), {})
+                        );
+                    }
+                    // Update selected base nutrient if options changed
+                    if (dbConfig.base_nutrient_options && dbConfig.base_nutrient_options.length > 0) {
+                        setSelectedBaseNutrientId(dbConfig.base_nutrient_options[0].id);
+                    }
+                }
+            } catch (err) {
+                console.error('Error loading AN config from database:', err);
+                // Keep using defaults
+            }
+        }
+        loadConfig();
+    }, []);
 
     // Fetch products
     useEffect(() => {
@@ -298,17 +349,17 @@ export default function AdvancedNutrientsSchedule() {
 
     // Get current base nutrient option
     const currentBaseNutrient = useMemo(() => {
-        return BASE_NUTRIENT_OPTIONS.find(opt => opt.id === selectedBaseNutrientId) || BASE_NUTRIENT_OPTIONS[0];
-    }, [selectedBaseNutrientId]);
+        return config.baseNutrientOptions.find(opt => opt.id === selectedBaseNutrientId) || config.baseNutrientOptions[0];
+    }, [selectedBaseNutrientId, config.baseNutrientOptions]);
 
     // Group products by category
     const productsByCategory = useMemo(() => {
         const grouped = {};
-        Object.keys(PRODUCT_CATEGORIES).forEach(catKey => {
+        Object.keys(config.productCategories).forEach(catKey => {
             grouped[catKey] = products.filter(p => p.category_key === catKey);
         });
         return grouped;
-    }, [products]);
+    }, [products, config.productCategories]);
 
     // Toggle category expansion
     const toggleCategory = (categoryKey) => {
@@ -321,7 +372,7 @@ export default function AdvancedNutrientsSchedule() {
     // Initialize selected products when base nutrient changes
     useEffect(() => {
         // Get IDs of all base nutrients (from all options) to remove them
-        const allBaseNutrientIds = new Set(BASE_NUTRIENT_OPTIONS.flatMap(opt => opt.products));
+        const allBaseNutrientIds = new Set(config.baseNutrientOptions.flatMap(opt => opt.products));
 
         setSelectedProducts(prev => {
             // Keep existing additives (products not in any base nutrient list)
@@ -367,9 +418,8 @@ export default function AdvancedNutrientsSchedule() {
 
     // Reset to default (Base + Essentials)
     const resetToDefault = () => {
-        // Default additives could be defined, for now just Base + Voodoo + B52 + Big Bud + Overdrive + Flush
-        const defaultAdditives = ['voodoo-juice', 'b-52', 'big-bud', 'overdrive', 'flawless-finish'];
-        setSelectedProducts([...currentBaseNutrient.products, ...defaultAdditives]);
+        // Default additives from config
+        setSelectedProducts([...currentBaseNutrient.products, ...config.defaultAdditives]);
     };
 
     // Get schedule based on current selection
@@ -416,7 +466,7 @@ export default function AdvancedNutrientsSchedule() {
     // Get phase info for a week index
     const getPhaseForWeek = (weekIndex) => {
         const weekNum = weekIndex + 1;
-        for (const [, phase] of Object.entries(PHASE_INFO)) {
+        for (const [, phase] of Object.entries(config.phaseInfo)) {
             if (phase.weeks.includes(weekNum)) {
                 return phase;
             }
@@ -449,7 +499,7 @@ export default function AdvancedNutrientsSchedule() {
     // Get selected products summary by category
     const selectedProductsSummary = useMemo(() => {
         const summary = {};
-        Object.entries(PRODUCT_CATEGORIES).forEach(([catKey, category]) => {
+        Object.entries(config.productCategories).forEach(([catKey, category]) => {
             const productsInCat = products.filter(
                 p => p.category_key === catKey && (selectedProducts.includes(p.id) || selectedProducts.includes(p.sku))
             );
@@ -462,7 +512,7 @@ export default function AdvancedNutrientsSchedule() {
             }
         });
         return summary;
-    }, [selectedProducts, products]);
+    }, [selectedProducts, products, config.productCategories]);
 
     const content = (
         <motion.div
@@ -647,7 +697,7 @@ export default function AdvancedNutrientsSchedule() {
                             <p>{t('anSelectBaseNutrient')}</p>
                         </div>
                         <div className={styles.baseNutrientGrid}>
-                            {BASE_NUTRIENT_OPTIONS.map((option, index) => (
+                            {config.baseNutrientOptions.map((option, index) => (
                                 <motion.div
                                     key={option.id}
                                     className={`${styles.baseNutrientCard} ${selectedBaseNutrientId === option.id ? styles.selected : ''}`}
@@ -997,7 +1047,7 @@ export default function AdvancedNutrientsSchedule() {
                             <th className={styles.unitHeader}>
                                 {t('unit')}
                             </th>
-                            {WEEK_LABELS.map((week, index) => {
+                            {config.weekLabels.map((week, index) => {
                                 const phase = getPhaseForWeek(index);
                                 return (
                                     <th
@@ -1054,7 +1104,7 @@ export default function AdvancedNutrientsSchedule() {
                                         <td className={styles.unitCell}>
                                             <span className={styles.unitBadge}>{product.dose_unit}</span>
                                         </td>
-                                        {WEEK_LABELS.map((week, index) => {
+                                        {config.weekLabels.map((week, index) => {
                                             const phase = getPhaseForWeek(index);
                                             return (
                                                 <td
@@ -1077,7 +1127,7 @@ export default function AdvancedNutrientsSchedule() {
                                 <td className={styles.totalsLabel} colSpan={2}>
                                     <strong>📊 {t('totalForWater')} ({waterAmount}L {t('water')})</strong>
                                 </td>
-                                {WEEK_LABELS.map((week, index) => {
+                                {config.weekLabels.map((week, index) => {
                                     const totals = calculateTotalForWeek(week);
                                     const phase = getPhaseForWeek(index);
                                     return (
@@ -1140,7 +1190,7 @@ export default function AdvancedNutrientsSchedule() {
             <div className={styles.lifecycleSection}>
                 <h3 className={styles.seriesSectionTitle}>{t('anLifecyclePhasesTitle')}</h3>
                 <div className={styles.lifecycleGrid}>
-                    {LIFECYCLE_PHASES.map((phase, index) => (
+                    {config.lifecyclePhases.map((phase, index) => (
                         <motion.div
                             key={phase.id}
                             className={styles.lifecycleCard}
@@ -1166,7 +1216,7 @@ export default function AdvancedNutrientsSchedule() {
             <div className={styles.seriesSection}>
                 <h3 className={styles.seriesSectionTitle}>{t('anFeaturedNutrientSeries')}</h3>
                 <div className={styles.seriesCards}>
-                    {NUTRIENT_SERIES.map((series, index) => (
+                    {config.nutrientSeries.map((series, index) => (
                         <motion.div
                             key={series.id}
                             className={styles.seriesCard}
@@ -1193,7 +1243,7 @@ export default function AdvancedNutrientsSchedule() {
 
             {/* Supplement Categories */}
             <div className={styles.glassGrid}>
-                {SUPPLEMENT_CATEGORIES.map((cat, index) => (
+                {config.supplementCategories.map((cat, index) => (
                     <motion.div
                         key={index}
                         className={styles.glassCard}
@@ -1222,7 +1272,7 @@ export default function AdvancedNutrientsSchedule() {
                     <h3 className={styles.proTipsTitle}>{t('anProTipsTitle')}</h3>
                 </div>
                 <div className={styles.proTipsList}>
-                    {PRO_TIPS_KEYS.map((tipKey, index) => (
+                    {config.proTipsKeys.map((tipKey, index) => (
                         <motion.div
                             key={index}
                             className={styles.proTipItem}
@@ -1394,7 +1444,14 @@ export default function AdvancedNutrientsSchedule() {
                 <title>{t('anFeedingScheduleTitle')} | GroWizard</title>
             </Helmet>
             <Navbar />
-            {content}
+            {loading ? (
+                <div className={styles.loadingContainer}>
+                    <div className={styles.loadingSpinner} />
+                    <p>{t('loading') || 'Loading...'}</p>
+                </div>
+            ) : (
+                content
+            )}
             <Footer />
         </div>
     );

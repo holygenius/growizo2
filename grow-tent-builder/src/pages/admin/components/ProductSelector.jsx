@@ -3,8 +3,10 @@ import { adminService } from '../../../services/adminService';
 import { Check } from 'lucide-react';
 import styles from '../Admin.module.css';
 import TableFilter from './TableFilter';
+import { useAdmin } from '../../../context/AdminContext';
 
 export default function ProductSelector({ onSelect, selectedSkus = [], onClose }) {
+    const { t } = useAdmin();
     const [products, setProducts] = useState([]);
     const [brands, setBrands] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -49,18 +51,17 @@ export default function ProductSelector({ onSelect, selectedSkus = [], onClose }
             const matchesCategory = categoryFilter === 'all' || p.category_id === categoryFilter;
             const matchesType = typeFilter === 'all' || p.product_type === typeFilter;
 
-            // Only show active products in selector usually, but let's show all just in case admin wants to add hidden product
             return matchesSearch && matchesBrand && matchesCategory && matchesType;
         });
     }, [products, searchTerm, brandFilter, categoryFilter, typeFilter]);
 
     const productTypeOptions = [
-        { value: 'general', label: 'General' },
-        { value: 'tent', label: 'Tent' },
-        { value: 'light', label: 'Light' },
-        { value: 'fan', label: 'Fan' },
-        { value: 'nutrient', label: 'Nutrient' },
-        { value: 'substrate', label: 'Substrate' }
+        { value: 'general', label: t('general') },
+        { value: 'tent', label: t('tent') },
+        { value: 'light', label: t('light') },
+        { value: 'fan', label: t('fan') },
+        { value: 'nutrient', label: t('nutrient') },
+        { value: 'substrate', label: t('substrate') }
     ];
 
     return (
@@ -90,7 +91,7 @@ export default function ProductSelector({ onSelect, selectedSkus = [], onClose }
             }} onClick={e => e.stopPropagation()}>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#fff' }}>Select Product</h3>
+                    <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#fff' }}>{t('selectProduct')}</h3>
                     <button onClick={onClose} className={styles.iconBtn} style={{ background: 'none', border: 'none', color: '#fff', fontSize: '1.5rem', cursor: 'pointer' }}>×</button>
                 </div>
 
@@ -98,25 +99,25 @@ export default function ProductSelector({ onSelect, selectedSkus = [], onClose }
                     <TableFilter
                         searchTerm={searchTerm}
                         onSearchChange={setSearchTerm}
-                        placeholder="Search by name or SKU..."
+                        placeholder={t('searchProductPlaceholder')}
                         resultCount={filteredProducts.length}
                         totalCount={products.length}
                         filters={[
                             {
                                 key: 'brand',
-                                label: 'Brand',
+                                label: t('brand'),
                                 value: brandFilter,
                                 options: brands.map(b => ({ value: b.id, label: b.name }))
                             },
                             {
                                 key: 'category',
-                                label: 'Category',
+                                label: t('category'),
                                 value: categoryFilter,
                                 options: categories.map(c => ({ value: c.id, label: c.name?.en || c.key }))
                             },
                             {
                                 key: 'type',
-                                label: 'Type',
+                                label: t('type'),
                                 value: typeFilter,
                                 options: productTypeOptions
                             }
@@ -131,7 +132,7 @@ export default function ProductSelector({ onSelect, selectedSkus = [], onClose }
 
                 <div style={{ overflowY: 'auto', flex: 1, paddingRight: '0.5rem' }}>
                     {loading ? (
-                        <div style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>Loading products...</div>
+                        <div style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>{t('loadingProducts')}</div>
                     ) : (
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
                             {filteredProducts.map(product => {
@@ -191,7 +192,7 @@ export default function ProductSelector({ onSelect, selectedSkus = [], onClose }
                                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                                 />
                                             ) : (
-                                                <div style={{ color: '#64748b', fontSize: '0.75rem' }}>No Image</div>
+                                                <div style={{ color: '#64748b', fontSize: '0.75rem' }}>{t('noImage')}</div>
                                             )}
                                         </div>
 
@@ -200,7 +201,7 @@ export default function ProductSelector({ onSelect, selectedSkus = [], onClose }
                                         </div>
 
                                         <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>
-                                            SKU: {product.sku}
+                                            {t('sku')}: {product.sku}
                                         </div>
 
                                         <div style={{ color: '#3b82f6', fontWeight: 600, fontSize: '0.9rem', marginTop: 'auto' }}>
