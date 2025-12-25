@@ -41,6 +41,13 @@ const Navbar = () => {
                             {t('navHome')}
                         </Link>
 
+                        <Link
+                            to={getLocalizedPath('/products')}
+                            className={`${styles.navLink} ${isActive('/products') || isActive('/urunler') ? styles.navLinkActive : ''}`}
+                        >
+                            {t('navProducts') || 'Store'}
+                        </Link>
+
                         <div
                             className={styles.dropdownContainer}
                             onMouseEnter={() => setIsToolsOpen(true)}
@@ -129,6 +136,14 @@ const Navbar = () => {
                             onClick={() => setIsMobileMenuOpen(false)}
                         >
                             {t('navHome')}
+                        </Link>
+
+                        <Link
+                            to={getLocalizedPath('/products')}
+                            className={`${styles.mobileLink} ${isActive('/products') || isActive('/urunler') ? styles.mobileLinkActive : ''}`}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                            {t('navProducts') || 'Store'}
                         </Link>
 
                         <div>

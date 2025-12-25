@@ -30,6 +30,8 @@ import AdminLogsManager from './pages/admin/settings/AdminLogsManager';
 import FeedingSchedule from './components/Tools/FeedingSchedule';
 import AdvancedNutrientsSchedule from './components/Tools/AdvancedNutrientsSchedule';
 import CannaSchedule from './components/Tools/CannaSchedule';
+import ProductList from './components/Products/ProductList';
+import ProductDetail from './components/Products/ProductDetail';
 import { AuthCallback } from './components/Auth';
 
 import { Helmet } from 'react-helmet-async';
@@ -121,6 +123,11 @@ function AppContent() {
             <Route path="feeding/biobizz" element={<FeedingSchedule />} />
             <Route path="feeding/advanced-nutrients" element={<AdvancedNutrientsSchedule />} />
             <Route path="feeding/canna" element={<CannaSchedule />} />
+
+            {/* Store Routes */}
+            <Route path="products" element={<ProductList />} />
+            <Route path="products/:id" element={<ProductDetail />} />
+
             {/* TR Routes - Türkçe URL'ler */}
             <Route path="baslangic" element={<Onboarding />} />
             <Route path="bitki-yetistirme-kabini-olusturucu" element={<BuilderApp />} />
@@ -136,6 +143,11 @@ function AppContent() {
             <Route path="beslenme/biobizz" element={<FeedingSchedule />} />
             <Route path="beslenme/advanced-nutrients" element={<AdvancedNutrientsSchedule />} />
             <Route path="beslenme/canna" element={<CannaSchedule />} />
+
+            {/* TR Store Routes */}
+            <Route path="urunler" element={<ProductList />} />
+            <Route path="urunler/:id" element={<ProductDetail />} />
+
             {/* Fallback for old/indexed /tr/blog/slug URLs */}
             <Route path="blog/:slug" element={<BlogPost />} />
             <Route path="profile" element={<ProfilePage />} />

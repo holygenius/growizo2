@@ -145,7 +145,8 @@ export function SettingsProvider({ children }) {
         '/tools/unit-converter': '/araclar/birim-donusturucu',
         '/tools/co2-calculator': '/araclar/co2-hesaplayici',
         '/tools/ppfd-heatmap': '/araclar/ppfd-isi-haritasi',
-        '/feeding/biobizz': '/beslenme/biobizz'
+        '/feeding/biobizz': '/beslenme/biobizz',
+        '/products': '/urunler'
     };
 
     const getLocalizedPath = (path) => {
