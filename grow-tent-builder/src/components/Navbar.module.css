@@ -45,6 +45,10 @@
   font-weight: 500;
   transition: color 0.2s;
   cursor: pointer;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .navLinkActive {
