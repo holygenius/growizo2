@@ -3,6 +3,7 @@
   background-color: var(--bg-app);
   color: var(--text-primary);
   font-family: 'Inter', sans-serif;
+  padding-top: 70px;
 }
 
 /* Header */
@@ -41,7 +42,7 @@
 
 .brandLogoFallback {
   font-weight: 700;
-  color: #22c55e;
+  color: var(--color-primary);
   font-size: 1.1rem;
 }
 
@@ -110,9 +111,8 @@
 }
 
 .substrateBtn {
-  background: #1e293b;
-  border-color: var(--border-color);
   background: var(--bg-card);
+  border-color: var(--border-color);
 }
 
 .substrateBtn:hover {
@@ -367,8 +367,8 @@
 }
 
 .productCard {
-  background: #0f172a;
-  border: 1px solid #334155;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 1rem;
   cursor: pointer;
@@ -378,8 +378,8 @@
 }
 
 .productCard:hover {
-  border-color: #475569;
-  background: #162032;
+  border-color: var(--text-secondary);
+  background: var(--bg-surface-hover);
 }
 
 .productCard.selected {
@@ -402,7 +402,7 @@
 
 .productName {
   font-weight: 700;
-  color: #f8fafc;
+  color: var(--text-primary);
   flex: 1;
 }
 
@@ -413,7 +413,7 @@
 
 .productFunction {
   font-size: 0.8rem;
-  color: #94a3b8;
+  color: var(--text-muted);
   margin-bottom: 0.5rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -422,7 +422,7 @@
 
 .productShortDesc {
   font-size: 0.9rem;
-  color: #cbd5e1;
+  color: var(--text-secondary);
   margin-bottom: 0.75rem;
   line-height: 1.4;
 }
@@ -432,7 +432,7 @@
   padding: 0;
   margin: 0;
   font-size: 0.8rem;
-  color: #64748b;
+  color: var(--text-muted);
 }
 
 .productBenefits li {
@@ -455,10 +455,11 @@
   gap: 1.5rem;
   justify-content: center;
   margin-bottom: 2rem;
-  background: #1e293b;
+  margin-bottom: 2rem;
+  background: var(--bg-surface);
   padding: 1rem;
   border-radius: 12px;
-  border: 1px solid #334155;
+  border: 1px solid var(--border-color);
 }
 
 .phaseItem {
@@ -475,7 +476,7 @@
 
 .phaseLabel {
   font-weight: 600;
-  color: #cbd5e1;
+  color: var(--text-primary);
   font-size: 0.9rem;
 }
 
@@ -488,9 +489,9 @@
 .tableWrapper {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  background: #1e293b;
+  background: var(--bg-card);
   border-radius: 16px;
-  border: 1px solid #334155;
+  border: 1px solid var(--border-color);
   margin-bottom: 3rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
@@ -506,8 +507,8 @@
 .scheduleTable td {
   padding: 1rem;
   text-align: center;
-  border-bottom: 1px solid #334155;
-  border-right: 1px solid #334155;
+  border-bottom: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
 }
 
 .scheduleTable th:last-child,
@@ -525,8 +526,8 @@
   position: sticky;
   top: 0;
   z-index: 20;
-  background: #0f172a;
-  color: #f8fafc;
+  background: var(--bg-surface);
+  color: var(--text-primary);
   font-weight: 700;
   text-align: left;
 }
@@ -535,7 +536,7 @@
   left: 0;
   z-index: 30;
   min-width: 200px;
-  border-right: 1px solid #334155;
+  border-right: 1px solid var(--border-color);
 }
 
 .unitHeader {
@@ -549,18 +550,18 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  background: #0f172a;
+  background: var(--bg-surface);
   border-top: 3px solid transparent;
   transition: background-color 0.2s;
 }
 
 .weekHeader.highlighted {
-  background-color: #1e293b !important;
+  background-color: var(--bg-surface-hover) !important;
 }
 
 .weekLabel {
   font-weight: 700;
-  color: #f8fafc;
+  color: var(--text-primary);
   margin-bottom: 0.25rem;
 }
 
@@ -572,17 +573,17 @@
   position: sticky;
   left: 0;
   z-index: 10;
-  background: #1e293b;
+  background: var(--bg-card);
   text-align: left;
-  border-right: 1px solid #334155;
+  border-right: 1px solid var(--border-color);
 }
 
 .unitCell {
   position: sticky;
   left: 200px;
   z-index: 10;
-  background: #1e293b;
-  color: #94a3b8;
+  background: var(--bg-card);
+  color: var(--text-muted);
   font-size: 0.8rem;
   font-weight: 600;
 }
@@ -612,13 +613,13 @@
 
 .productTitle {
   font-weight: 700;
-  color: #f8fafc;
+  color: var(--text-primary);
   font-size: 0.95rem;
 }
 
 .productSubtitle {
   font-size: 0.75rem;
-  color: #94a3b8;
+  color: var(--text-muted);
   max-width: 150px;
   white-space: nowrap;
   overflow: hidden;
@@ -636,7 +637,7 @@
 
 .doseValue {
   font-weight: 700;
-  color: #f8fafc;
+  color: var(--text-primary);
   font-size: 1.1rem;
 }
 
@@ -655,7 +656,7 @@
 }
 
 .emptyCell {
-  color: #475569;
+  color: var(--text-disabled);
 }
 
 .specialCell {
@@ -687,7 +688,7 @@
 }
 
 .totalsRow {
-  background: #0f172a;
+  background: var(--bg-surface);
   font-weight: 700;
 }
 
@@ -695,14 +696,14 @@
   position: sticky;
   left: 0;
   z-index: 10;
-  background: #0f172a;
+  background: var(--bg-surface);
   text-align: right;
   padding-right: 1rem;
-  color: #94a3b8;
+  color: var(--text-secondary);
 }
 
 .totalsCell {
-  color: #f8fafc;
+  color: var(--text-primary);
 }
 
 .totalValue {
@@ -711,17 +712,17 @@
 
 /* Notes Section */
 .notesSection {
-  background: #1e293b;
+  background: var(--bg-card);
   border-radius: 16px;
   padding: 2rem;
   margin-bottom: 3rem;
-  border: 1px solid #334155;
+  border: 1px solid var(--border-color);
 }
 
 .notesTitle {
   font-size: 1.5rem;
   margin-bottom: 1.5rem;
-  color: #f8fafc;
+  color: var(--text-primary);
 }
 
 .notesList {
@@ -731,10 +732,10 @@
 }
 
 .noteItem {
-  background: #0f172a;
+  background: var(--bg-surface);
   padding: 1.5rem;
   border-radius: 12px;
-  border: 1px solid #334155;
+  border: 1px solid var(--border-color);
 }
 
 .noteHeader {
@@ -742,7 +743,7 @@
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.75rem;
-  color: #f8fafc;
+  color: var(--text-primary);
 }
 
 .noteDot {
@@ -752,7 +753,7 @@
 }
 
 .noteText {
-  color: #cbd5e1;
+  color: var(--text-secondary);
   font-size: 0.9rem;
   line-height: 1.5;
   margin-bottom: 0.75rem;
@@ -778,7 +779,7 @@
 .tipsTitle {
   font-size: 1.5rem;
   margin-bottom: 1.5rem;
-  color: #f8fafc;
+  color: var(--text-primary);
   text-align: center;
 }
 
@@ -789,10 +790,10 @@
 }
 
 .tipItem {
-  background: rgba(30, 41, 59, 0.5);
+  background: var(--bg-surface);
   padding: 1.5rem;
   border-radius: 12px;
-  border: 1px solid #334155;
+  border: 1px solid var(--border-color);
   text-align: center;
 }
 

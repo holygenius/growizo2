@@ -69,13 +69,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   font-size: 0.875rem;
   font-weight: 600;
 }
 
 .dots {
-  color: #475569;
+  color: var(--text-muted);
   letter-spacing: 2px;
   font-size: 1.2rem;
   line-height: 0.5;
@@ -142,7 +142,7 @@
 }
 
 .divider {
-  color: #475569;
+  color: var(--text-muted);
 }
 
 .highlightBlue {
@@ -164,7 +164,7 @@
 .infoSection {
   max-width: 800px;
   width: 100%;
-  color: #cbd5e1;
+  color: var(--text-primary);
   line-height: 1.7;
 }
 
@@ -195,11 +195,12 @@
 }
 
 .example {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--bg-surface);
   padding: 1rem;
   border-radius: 0.5rem;
   border-left: 4px solid #3b82f6;
   margin-bottom: 1.5rem;
+  color: var(--text-primary);
 }
 
 .tipsList {
@@ -213,8 +214,8 @@
 }
 
 .faqItem {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 1rem;
   padding: 1.5rem;
 }
@@ -227,7 +228,7 @@
 
 .faqItem p {
   margin-bottom: 0;
-  color: var(--text-muted);
+  color: var(--text-primary);
 }
 
 @media (max-width: 768px) {

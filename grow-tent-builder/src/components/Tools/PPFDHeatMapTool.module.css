@@ -1,9 +1,10 @@
 .ppfdToolContainer {
   min-height: 100vh;
-  background: #0a0a0a;
-  color: white;
+  background: var(--bg-app);
+  color: var(--text-primary);
   display: flex;
   flex-direction: column;
+  padding-top: 70px;
 }
 
 .toolMain {
@@ -21,14 +22,12 @@
 
 .toolHeader h1 {
   font-size: 2.5rem;
-  background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
 }
 
 .toolHeader p {
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 .toolWorkspace {
@@ -39,11 +38,12 @@
 }
 
 .glassPanel {
-  background: rgba(30, 41, 59, 0.5);
+  background: var(--bg-card);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
   border-radius: 1rem;
   padding: 1.5rem;
+  box-shadow: var(--shadow-md);
 }
 
 .controlsPanel {
@@ -54,7 +54,7 @@
 
 .controlGroup h3 {
   font-size: 1rem;
-  color: #10b981;
+  color: var(--text-secondary);
   margin-bottom: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -62,7 +62,7 @@
 
 .unitToggle {
   display: flex;
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--bg-surface);
   border-radius: 0.5rem;
   padding: 0.25rem;
 }
@@ -71,7 +71,7 @@
   flex: 1;
   background: transparent;
   border: none;
-  color: #94a3b8;
+  color: var(--text-muted);
   padding: 0.5rem;
   border-radius: 0.25rem;
   cursor: pointer;
@@ -97,15 +97,15 @@
 .inputWrap label {
   display: block;
   font-size: 0.8rem;
-  color: #94a3b8;
+  color: var(--text-secondary);
   margin-bottom: 0.25rem;
 }
 
 .inputWrap input {
   width: 100%;
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
   padding: 0.5rem;
   border-radius: 0.5rem;
 }
@@ -138,7 +138,7 @@
   gap: 0.5rem;
   cursor: pointer;
   font-size: 0.9rem;
-  color: #cbd5e1;
+  color: var(--text-muted);
 }
 
 .filterItem input {
@@ -156,19 +156,19 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
   padding: 0.75rem;
   border-radius: 0.5rem;
-  color: white;
+  color: var(--text-primary);
   cursor: pointer;
   transition: all 0.2s;
   text-align: left;
 }
 
 .lightBtn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: #10b981;
+  background: var(--bg-surface-hover);
+  border-color: var(--border-color);
 }
 
 .lightInfo {
@@ -184,7 +184,7 @@
 .lightSpecs {
   display: block;
   font-size: 0.75rem;
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 .addIcon {
@@ -213,14 +213,14 @@
 .metricLabel {
   display: block;
   font-size: 0.75rem;
-  color: #94a3b8;
+  color: var(--text-muted);
   margin-bottom: 0.25rem;
 }
 
 .metricValue {
   font-size: 1.25rem;
   font-weight: 700;
-  color: white;
+  color: var(--text-primary);
 }
 
 .sceneContainer {
@@ -244,8 +244,8 @@
   position: relative;
   border-radius: 1rem;
   overflow: hidden;
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  border: 2px solid var(--border-color);
+  box-shadow: var(--shadow-lg);
   touch-action: none;
 }
 
@@ -313,7 +313,7 @@
 }
 
 .instructions {
-  color: #94a3b8;
+  color: var(--text-muted);
   font-size: 0.9rem;
   margin-top: 0.5rem;
 }
@@ -331,7 +331,7 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.85rem;
-  color: #cbd5e1;
+  color: var(--text-muted);
 }
 
 .dot {

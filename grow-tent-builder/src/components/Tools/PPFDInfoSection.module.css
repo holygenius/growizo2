@@ -1,22 +1,20 @@
 .ppfdInfoSection {
   margin-top: 4rem;
   padding-top: 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--border-color);
 }
 
 .sectionTitle {
   text-align: center;
   font-size: 2rem;
   margin-bottom: 2rem;
-  background: linear-gradient(to right, #fff, #94a3b8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--text-primary);
 }
 
 .glassPanel {
-  background: rgba(30, 41, 59, 0.4);
+  background: var(--bg-card);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
   border-radius: 1rem;
   padding: 1.5rem;
 }
@@ -29,7 +27,7 @@
 }
 
 .infoCard h3 {
-  color: #10b981;
+  color: var(--text-secondary);
   margin-bottom: 1rem;
   font-size: 1.2rem;
 }
@@ -51,7 +49,7 @@
 }
 
 .subText {
-  color: #94a3b8;
+  color: var(--text-muted);
   font-style: italic;
 }
 
@@ -68,7 +66,7 @@
 .quote {
   border-left: 3px solid #10b981;
   padding-left: 1rem;
-  color: #cbd5e1;
+  color: var(--text-muted);
   font-style: italic;
 }
 
@@ -78,7 +76,7 @@
 }
 
 .comparisonSection h3 {
-  color: #f59e0b;
+  color: var(--text-primary);
   margin-bottom: 1rem;
   text-align: center;
 }
@@ -97,20 +95,20 @@
 .comparisonTable td {
   padding: 1rem;
   text-align: left;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .comparisonTable th {
-  color: #94a3b8;
+  color: var(--text-secondary);
   font-weight: 600;
 }
 
 .comparisonTable td {
-  color: #e2e8f0;
+  color: var(--text-primary);
 }
 
 .highlightCol {
-  background: rgba(16, 185, 129, 0.05);
+  background: var(--bg-surface-hover);
   font-weight: 600;
   color: #10b981 !important;
 }
@@ -129,7 +127,7 @@
 }
 
 .faqSection h3 {
-  color: #3b82f6;
+  color: var(--text-primary);
   margin-bottom: 1rem;
 }
 
@@ -140,15 +138,15 @@
 }
 
 .accordionItem {
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
   border-radius: 0.5rem;
   overflow: hidden;
   transition: all 0.3s;
 }
 
 .accordionItemActive {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(59, 130, 246, 0.3);
+  background: var(--bg-surface);
+  border-color: #3b82f6;
 }
 
 .accordionHeader {
@@ -157,7 +155,7 @@
   padding: 1rem;
   background: transparent;
   border: none;
-  color: white;
+  color: var(--text-primary);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -177,7 +175,7 @@
   overflow: hidden;
   transition: max-height 0.3s ease-out;
   padding: 0 1rem;
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 .accordionItemActive .accordionContent {
@@ -186,7 +184,7 @@
 }
 
 .quizSection h3 {
-  color: #ec4899;
+  color: var(--text-primary);
   margin-bottom: 1rem;
 }
 
@@ -209,17 +207,17 @@
 
 .optionBtn {
   padding: 0.75rem;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
   border-radius: 0.5rem;
-  color: #cbd5e1;
+  color: var(--text-primary);
   cursor: pointer;
   text-align: left;
   transition: all 0.2s;
 }
 
 .optionBtn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--bg-surface-hover);
 }
 
 .optionBtnSelected {
@@ -242,7 +240,7 @@
 
 .quizFooter {
   margin-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--border-color);
   padding-top: 1rem;
 }
 
@@ -277,19 +275,20 @@
 
 .resetBtn {
   background: transparent;
-  border: 1px solid #94a3b8;
-  color: #94a3b8;
+  border: 1px solid var(--text-muted);
+  color: var(--text-muted);
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   cursor: pointer;
 }
 
 .resetBtn:hover {
-  border-color: white;
-  color: white;
+  border-color: var(--text-primary);
+  color: var(--text-primary);
 }
 
 @media (max-width: 768px) {
+
   .infoGrid,
   .interactiveGrid {
     grid-template-columns: 1fr;

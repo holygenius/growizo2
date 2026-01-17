@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useEffect, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Text, Grid, PerspectiveCamera } from '@react-three/drei';
 import * as THREE from 'three';
+import { useSettings } from '../../context/SettingsContext';
 
 // Color scale helper
 const getVoxelColor = (ppfd) => {
@@ -196,9 +197,12 @@ const VoxelGrid = ({ dimensions, activeLights, width, depth, height, unit, activ
     );
 };
 
-const GuideLines = ({ width, depth, height, unit, dimensions }) => {
+const GuideLines = ({ width, depth, height, unit, dimensions, theme }) => {
     const scaleFactor = unit === 'cm' ? 0.1 : 3.0;
     const interval = unit === 'cm' ? 10 : 1; // 10cm or 1ft
+
+    // Text color based on theme
+    const textColor = theme === 'light' ? '#1f2937' : '#ffffff';
 
     const RulerAxis = ({ size, actualSize, color, axis, position, labelOffset }) => {
         const ticks = [];
@@ -293,7 +297,7 @@ const GuideLines = ({ width, depth, height, unit, dimensions }) => {
             <RulerAxis
                 size={width}
                 actualSize={dimensions.width}
-                color="#ff6600"
+                color={theme === 'light' ? '#d97706' : '#ff6600'}
                 axis="x"
                 position={[-width / 2, -0.1, depth / 2 + 0.5]}
                 labelOffset={[0, 0, 0.5]}
@@ -303,7 +307,7 @@ const GuideLines = ({ width, depth, height, unit, dimensions }) => {
             <RulerAxis
                 size={depth}
                 actualSize={dimensions.depth}
-                color="#00ff66"
+                color={theme === 'light' ? '#059669' : '#00ff66'}
                 axis="z"
                 position={[-width / 2 - 0.5, -0.1, -depth / 2]}
                 labelOffset={[-0.5, 0, 0]}
@@ -313,7 +317,7 @@ const GuideLines = ({ width, depth, height, unit, dimensions }) => {
             <RulerAxis
                 size={height}
                 actualSize={dimensions.height}
-                color="#6600ff"
+                color={theme === 'light' ? '#7c3aed' : '#6600ff'}
                 axis="y"
                 position={[-width / 2 - 0.5, 0, -depth / 2 - 0.5]}
                 labelOffset={[-0.5, 0, 0]}
@@ -322,7 +326,11 @@ const GuideLines = ({ width, depth, height, unit, dimensions }) => {
     );
 };
 
-const TentBox = ({ width, depth, height }) => {
+const TentBox = ({ width, depth, height, theme }) => {
+    // Theme colors
+    const cellColor = theme === 'light' ? '#e2e8e6' : '#333';
+    const sectionColor = theme === 'light' ? '#10b981' : '#10b981';
+
     return (
         <group>
             <Grid
@@ -331,12 +339,13 @@ const TentBox = ({ width, depth, height }) => {
                 cellSize={width / 10}
                 sectionSize={width / 2}
                 fadeDistance={width * 2}
-                sectionColor="#10b981"
-                cellColor="#333"
+                sectionColor={sectionColor}
+                cellColor={cellColor}
+                infiniteGrid
             />
             <lineSegments position={[0, height / 2, 0]}>
                 <edgesGeometry args={[new THREE.BoxGeometry(width, height, depth)]} />
-                <lineBasicMaterial color="#10b981" opacity={0.3} transparent />
+                <lineBasicMaterial color={theme === 'light' ? '#059669' : '#10b981'} opacity={0.3} transparent />
             </lineSegments>
         </group>
     );
@@ -407,13 +416,18 @@ const CameraRig = ({ targetPosition }) => {
 };
 
 export default function PPFD3DScene({ dimensions, activeLights, unit, activeFilters, showGuideLines = true, voxelOpacity = 0.3 }) {
+    const { theme } = useSettings();
     const scaleFactor = unit === 'cm' ? 0.1 : 3.0;
     const width = (dimensions.width || 1) * scaleFactor;
     const depth = (dimensions.depth || 1) * scaleFactor;
     const height = (dimensions.height || 1) * scaleFactor;
 
+    // Background color based on theme
+    // Dark: #050505, Light: #ECF0EE (Soft Sage Surface from walkthrough)
+    const bgColor = theme === 'light' ? '#ECF0EE' : '#050505';
+
     return (
-        <div style={{ width: '100%', height: '100%', minHeight: '500px', background: '#050505' }}>
+        <div style={{ width: '100%', height: '100%', minHeight: '500px', background: bgColor, transition: 'background-color 0.3s' }}>
             <Canvas shadows dpr={[1, 2]}>
                 <PerspectiveCamera makeDefault position={[width * 1.5, height * 1.2, width * 1.5]} fov={50} />
                 <CameraRig targetPosition={[width * 1.5, height * 1.2, width * 1.5]} />
@@ -440,10 +454,11 @@ export default function PPFD3DScene({ dimensions, activeLights, unit, activeFilt
                         height={height}
                         unit={unit}
                         dimensions={dimensions}
+                        theme={theme}
                     />
                 )}
 
-                <TentBox width={width} depth={depth} height={height} />
+                <TentBox width={width} depth={depth} height={height} theme={theme} />
                 <Lights activeLights={activeLights} width={width} depth={depth} height={height} />
                 <axesHelper args={[5]} />
             </Canvas>
