@@ -8,6 +8,33 @@ const ImageUploader = ({ label, value, onChange, bucket = 'images', helpText }) 
     const [error, setError] = useState(null);
     const fileInputRef = useRef(null);
 
+    const [showGallery, setShowGallery] = useState(false);
+    const [galleryImages, setGalleryImages] = useState([]);
+    const [loadingGallery, setLoadingGallery] = useState(false);
+
+    const loadGallery = async () => {
+        setLoadingGallery(true);
+        try {
+            const files = await adminService.listBucketFiles(bucket);
+            setGalleryImages(files || []);
+        } catch (error) {
+            console.error('Error loading gallery:', error);
+            setError('Failed to load library images');
+        } finally {
+            setLoadingGallery(false);
+        }
+    };
+
+    const handleOpenGallery = () => {
+        setShowGallery(true);
+        loadGallery();
+    };
+
+    const handleSelectImage = (url) => {
+        onChange(url);
+        setShowGallery(false);
+    };
+
     const handleFileChange = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -34,7 +61,117 @@ const ImageUploader = ({ label, value, onChange, bucket = 'images', helpText }) 
 
     return (
         <div className={styles.inputGroup} style={{ gridColumn: '1 / -1' }}>
-            <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>{label}</label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                <label style={{ display: 'block', color: '#94a3b8' }}>{label}</label>
+                <button
+                    type="button"
+                    onClick={handleOpenGallery}
+                    style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#3b82f6',
+                        cursor: 'pointer',
+                        fontSize: '0.875rem',
+                        textDecoration: 'underline'
+                    }}
+                >
+                    Select from Library
+                </button>
+            </div>
+
+            {/* Gallery Modal */}
+            {showGallery && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'rgba(0,0,0,0.8)',
+                    zIndex: 9999,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '2rem'
+                }} onClick={() => setShowGallery(false)}>
+                    <div style={{
+                        background: '#1e293b',
+                        borderRadius: '0.75rem',
+                        padding: '1.5rem',
+                        width: '100%',
+                        maxWidth: '800px',
+                        maxHeight: '80vh',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '1rem'
+                    }} onClick={e => e.stopPropagation()}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <h3 style={{ margin: 0, color: '#fff' }}>Select Image</h3>
+                            <button onClick={() => setShowGallery(false)} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer' }}><X size={24} /></button>
+                        </div>
+
+                        <div style={{
+                            flex: 1,
+                            overflow: 'auto',
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
+                            gap: '1rem',
+                            padding: '1rem',
+                            background: 'rgba(0,0,0,0.2)',
+                            borderRadius: '0.5rem'
+                        }}>
+                            {loadingGallery ? (
+                                <div style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#94a3b8', padding: '2rem' }}>
+                                    <Loader2 className="animate-spin" size={32} />
+                                    <div>Loading library...</div>
+                                </div>
+                            ) : galleryImages.length === 0 ? (
+                                <div style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#94a3b8', padding: '2rem' }}>
+                                    No images found in {bucket}
+                                </div>
+                            ) : (
+                                galleryImages.map((file, idx) => (
+                                    <div
+                                        key={idx}
+                                        onClick={() => handleSelectImage(file.publicUrl)}
+                                        style={{
+                                            aspectRatio: '1',
+                                            cursor: 'pointer',
+                                            position: 'relative',
+                                            borderRadius: '0.5rem',
+                                            overflow: 'hidden',
+                                            border: value === file.publicUrl ? '2px solid #3b82f6' : '1px solid rgba(255,255,255,0.1)',
+                                            transition: 'transform 0.2s',
+                                        }}
+                                        className={styles.galleryItem}
+                                    >
+                                        <img
+                                            src={file.publicUrl}
+                                            alt={file.name}
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                        />
+                                        <div style={{
+                                            position: 'absolute',
+                                            bottom: 0,
+                                            left: 0,
+                                            right: 0,
+                                            background: 'rgba(0,0,0,0.7)',
+                                            color: '#fff',
+                                            fontSize: '0.7rem',
+                                            padding: '0.25rem',
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis'
+                                        }}>
+                                            {file.name}
+                                        </div>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <div style={{
                 border: `2px dashed ${error ? '#ef4444' : 'rgba(255,255,255,0.1)'}`,
