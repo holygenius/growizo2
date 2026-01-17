@@ -4,7 +4,7 @@ export const adminService = {
     // Generic CRUD
     async getAll(table, options = {}) {
         if (!supabase) throw new Error('Supabase client is not initialized');
-        
+
         // Support custom select queries with joins
         const selectQuery = options.select || '*';
         let query = supabase.from(table).select(selectQuery, { count: 'exact' });
@@ -38,10 +38,10 @@ export const adminService = {
 
     async create(table, data) {
         if (!supabase) throw new Error('Supabase client is not initialized');
-        
+
         try {
             console.log(`📝 Creating ${table} with data:`, JSON.stringify(data, null, 2));
-            
+
             const { data: created, error } = await supabase
                 .from(table)
                 .insert([data])
@@ -62,10 +62,10 @@ export const adminService = {
 
     async update(table, id, data) {
         if (!supabase) throw new Error('Supabase client is not initialized');
-        
+
         try {
             console.log(`✏️ Updating ${table}:`, JSON.stringify(data, null, 2));
-            
+
             const { data: updated, error } = await supabase
                 .from(table)
                 .update(data)
@@ -99,7 +99,7 @@ export const adminService = {
     // Specific Helpers
     async uploadImage(file, bucket = 'images') {
         if (!supabase) throw new Error('Supabase client is not initialized');
-        
+
         try {
             const fileExt = file.name.split('.').pop();
             const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
@@ -130,6 +130,35 @@ export const adminService = {
         } catch (error) {
             console.error('❌ Upload failed:', error);
             throw new Error(`Image upload failed: ${error.message}`);
+        }
+    },
+
+    async listBucketFiles(bucket = 'images') {
+        if (!supabase) throw new Error('Supabase client is not initialized');
+        try {
+            console.log(`📂 Listing files in bucket: ${bucket}`);
+            const { data, error } = await supabase.storage
+                .from(bucket)
+                .list(null, {
+                    limit: 100,
+                    offset: 0,
+                    sortBy: { column: 'created_at', order: 'desc' }
+                });
+
+            if (error) throw error;
+
+            // Generate public URLs for all files
+            const filesWithUrls = data.map(file => {
+                const { data: { publicUrl } } = supabase.storage
+                    .from(bucket)
+                    .getPublicUrl(file.name);
+                return { ...file, publicUrl };
+            });
+
+            return filesWithUrls;
+        } catch (error) {
+            console.error('❌ List files failed:', error);
+            throw new Error(`Failed to list files: ${error.message}`);
         }
     }
 };
