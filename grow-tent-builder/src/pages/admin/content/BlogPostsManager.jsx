@@ -51,7 +51,17 @@ const BlogPostForm = ({ initialData, onClose, onSuccess, onPreview }) => {
     };
 
     const [showImport, setShowImport] = useState(false);
-    const [jsonInput, setJsonInput] = useState('');
+    const [jsonInput, setJsonInput] = useState(JSON.stringify({
+        title: { en: "English Title", tr: "Türkçe Başlık" },
+        slug: { en: "english-slug", tr: "turkce-slug" },
+        excerpt: { en: "Short summary...", tr: "Kısa özet..." },
+        content: { en: "<p>Content...</p>", tr: "<p>İçerik...</p>" },
+        category: "Category",
+        author: "Author",
+        tags: ["tag1"],
+        meta_title: { en: "Meta Title", tr: "Meta Başlık" },
+        meta_description: { en: "Meta Desc", tr: "Meta Açıklama" }
+    }, null, 4));
 
     const handleImport = () => {
         try {
