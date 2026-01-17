@@ -6,6 +6,8 @@
 .pageWrapper {
     min-height: 100vh;
     background: var(--bg-app);
+    padding-top: 70px;
+    /* Space for fixed navbar */
 }
 
 /* Hero Banner */

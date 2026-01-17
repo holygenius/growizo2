@@ -4,6 +4,8 @@
   color: var(--text-primary);
   display: flex;
   flex-direction: column;
+  padding-top: 70px;
+  /* Space for fixed navbar */
 }
 
 .toolsContent {
