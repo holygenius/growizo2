@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { adminService } from '../../../services/adminService';
+import { marked } from 'marked';
 import { Trash2, Edit2, Plus, X, Save, RefreshCw, CheckCircle, AlertCircle, Eye } from 'lucide-react';
 import styles from '../Admin.module.css';
 import ImageUploader from '../components/ImageUploader';
@@ -66,6 +67,16 @@ const BlogPostForm = ({ initialData, onClose, onSuccess, onPreview }) => {
     const handleImport = () => {
         try {
             const parsed = JSON.parse(jsonInput);
+
+            // Helper to process content (convert Markdown to HTML if needed)
+            const processContent = (content) => {
+                if (!content) return '';
+                // Simple check if it looks like HTML (starts with <)
+                if (content.trim().startsWith('<')) return content;
+                // Otherwise assume Markdown and convert
+                return marked.parse(content);
+            };
+
             setFormData(prev => ({
                 ...prev,
                 title: {
@@ -81,8 +92,8 @@ const BlogPostForm = ({ initialData, onClose, onSuccess, onPreview }) => {
                     tr: parsed.excerpt?.tr || prev.excerpt.tr
                 },
                 content: {
-                    en: parsed.content?.en || parsed.content || prev.content.en,
-                    tr: parsed.content?.tr || prev.content.tr
+                    en: processContent(parsed.content?.en || parsed.content) || prev.content.en,
+                    tr: processContent(parsed.content?.tr) || prev.content.tr
                 },
                 category: parsed.category || prev.category,
                 author: parsed.author || prev.author,
@@ -98,9 +109,10 @@ const BlogPostForm = ({ initialData, onClose, onSuccess, onPreview }) => {
             }));
             setShowImport(false);
             setJsonInput('');
-            alert('Content imported successfully!');
+            alert('Content imported successfully! Markdown converted to HTML.');
         } catch (error) {
-            alert('Invalid JSON format');
+            console.error('Import error:', error);
+            alert('Invalid JSON format or error parsing content');
         }
     };
 
