@@ -10,8 +10,8 @@ let feedingScheduleCache = null;
 let substrateMappingsCache = null;
 
 /**
- * Fetch all feeding schedule products from Supabase
- * @returns {Promise<Array>} Array of feeding schedule products
+ * Fetch all feeding schedule items from Supabase
+ * @returns {Promise<Array>} Array of feeding schedule items with products
  */
 export async function fetchFeedingScheduleProducts() {
     if (!isSupabaseConfigured()) {
@@ -25,12 +25,30 @@ export async function fetchFeedingScheduleProducts() {
     }
 
     const { data, error } = await supabase
-        .from('feeding_schedule_products')
-        .select('*')
-        .order('product_name', { ascending: true });
+        .from('feeding_schedule_items')
+        .select(`
+            *,
+            products (
+                id,
+                sku,
+                name,
+                icon,
+                images,
+                specs
+            ),
+            feeding_schedules (
+                id,
+                name,
+                substrate_type,
+                brand_id
+            )
+        `)
+        .eq('is_active', true)
+        .order('week_number', { ascending: true })
+        .order('sort_order', { ascending: true });
 
     if (error) {
-        console.error('Error fetching feeding schedule products:', error);
+        console.error('Error fetching feeding schedule items:', error);
         throw error;
     }
 

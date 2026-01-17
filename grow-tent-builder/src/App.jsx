@@ -19,6 +19,8 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import BrandsManager from './pages/admin/catalog/BrandsManager';
 import CategoriesManager from './pages/admin/catalog/CategoriesManager';
 import ProductsManager from './pages/admin/catalog/ProductsManager';
+import VendorsManager from './pages/admin/catalog/VendorsManager';
+import VendorProductsManager from './pages/admin/catalog/VendorProductsManager';
 import FeedingSchedulesManager from './pages/admin/growth/FeedingSchedulesManager';
 import FeedingScheduleProductsManager from './pages/admin/growth/FeedingScheduleProductsManager';
 import PresetSetsManager from './pages/admin/growth/PresetSetsManager';
@@ -90,6 +92,8 @@ function AppContent() {
         <Route path="brands" element={<BrandsManager />} />
         <Route path="categories" element={<CategoriesManager />} />
         <Route path="products" element={<ProductsManager />} />
+        <Route path="vendors" element={<VendorsManager />} />
+        <Route path="vendor-products" element={<VendorProductsManager />} />
         <Route path="schedules" element={<FeedingSchedulesManager />} />
         <Route path="schedule-products" element={<FeedingScheduleProductsManager />} />
         <Route path="an-schedule" element={<ANScheduleManager />} />

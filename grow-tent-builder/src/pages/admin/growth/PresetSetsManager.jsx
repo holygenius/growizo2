@@ -19,8 +19,7 @@ const PresetForm = ({ initialData, onClose, onSuccess }) => {
         media_type: 'soil',
         image_url: '',
         is_active: true,
-        display_order: 0,
-        total_price: 0
+        display_order: 0
     });
     const [loading, setLoading] = useState(false);
     const [showProductSelector, setShowProductSelector] = useState(false);
@@ -136,16 +135,6 @@ const PresetForm = ({ initialData, onClose, onSuccess }) => {
                         <option value="standard">{t('tierStandard')}</option>
                         <option value="premium">{t('tierPremium')}</option>
                     </select>
-                </div>
-
-                <div className={styles.inputGroup}>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>{t('totalPrice')}</label>
-                    <input
-                        type="number"
-                        value={formData.total_price}
-                        onChange={e => setFormData({ ...formData, total_price: parseInt(e.target.value) })}
-                        style={{ width: '100%', padding: '0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '0.5rem' }}
-                    />
                 </div>
 
                 <ImageUploader
@@ -458,7 +447,7 @@ export default function PresetSetsManager() {
                                 <th>{t('name')}</th>
                                 <th>{t('tier')}</th>
                                 <th>{t('dimensions')}</th>
-                                <th>{t('price')}</th>
+                                <th>{t('products')}</th>
                                 <th>{t('status')}</th>
                                 <th>{t('actions')}</th>
                             </tr>
@@ -473,7 +462,7 @@ export default function PresetSetsManager() {
                                     <td style={{ fontWeight: 600 }}>{preset.name?.en || 'No Name'}</td>
                                     <td style={{ textTransform: 'capitalize' }}>{preset.tier}</td>
                                     <td>{preset.tent_size ? `${preset.tent_size.width}x${preset.tent_size.depth}cm` : '-'}</td>
-                                    <td>₺{preset.total_price}</td>
+                                    <td>{Array.isArray(preset.products) ? preset.products.length : 0} {t('items')}</td>
                                     <td>
                                         <span className={`${styles.badge} ${preset.is_active ? styles.badgeSuccess : styles.badgeWarning}`}>
                                             {preset.is_active ? t('active') : t('hidden')}

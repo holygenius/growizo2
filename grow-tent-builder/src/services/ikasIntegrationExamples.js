@@ -95,10 +95,10 @@ export async function exampleShowVendorPrices(productId) {
         if (product.vendor_products && product.vendor_products.length > 0) {
             console.log(`\n💰 Satıcı Fiyatları:`);
 
+            // vendor_products artık doğrudan price içeriyor
             product.vendor_products.forEach(vp => {
-                const price = vp.vendor_prices?.[0];
                 console.log(
-                    `- ${vp.vendors.name}: ${price?.price}₺ (Stok: ${price?.stock_quantity})`
+                    `- ${vp.vendors.name}: ${vp.price}₺ (Stok: ${vp.stock_quantity || 0})`
                 );
             });
         }

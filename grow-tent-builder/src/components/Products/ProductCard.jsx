@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSettings } from '../../context/SettingsContext';
-import { ArrowRight, ShoppingBag, Eye, Star } from 'lucide-react';
+import { ArrowRight, ShoppingBag, Eye, Star, Store } from 'lucide-react';
 import styles from './Products.module.css';
 
 const ProductCard = ({ product, viewMode = 'grid' }) => {
@@ -12,6 +12,34 @@ const ProductCard = ({ product, viewMode = 'grid' }) => {
     const displayImage = product.images?.[0]?.url || product.icon || '/images/placeholder-product.png';
     const productName = product.name[language] || product.name.en;
     const brandName = product.brands?.name || 'Unknown Brand';
+
+    // Price display helper - uses price_range if available, falls back to price
+    const renderPrice = () => {
+        const priceRange = product.price_range;
+        
+        if (priceRange && priceRange.min_price !== null) {
+            if (priceRange.min_price === priceRange.max_price) {
+                return <span className={styles.price}>{formatPrice(priceRange.min_price)}</span>;
+            }
+            return (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', flexWrap: 'wrap' }}>
+                    <span className={styles.price}>{formatPrice(priceRange.min_price)}</span>
+                    <span style={{ color: '#64748b' }}>-</span>
+                    <span className={styles.price} style={{ fontSize: '0.9em' }}>{formatPrice(priceRange.max_price)}</span>
+                </div>
+            );
+        }
+        
+        // Fallback to product.price if exists
+        if (product.price) {
+            return <span className={styles.price}>{formatPrice(product.price)}</span>;
+        }
+        
+        return <span style={{ color: '#64748b', fontSize: '0.875rem' }}>{language === 'tr' ? 'Fiyat yok' : 'No price'}</span>;
+    };
+
+    // Vendor count display
+    const vendorCount = product.price_range?.vendor_count || 0;
 
     // Compact view for smaller cards
     if (viewMode === 'compact') {
@@ -29,7 +57,7 @@ const ProductCard = ({ product, viewMode = 'grid' }) => {
                 <div className={styles.cardCompactInfo}>
                     <span className={styles.cardCompactBrand}>{brandName}</span>
                     <h4 className={styles.cardCompactTitle}>{productName}</h4>
-                    <span className={styles.cardCompactPrice}>{formatPrice(product.price)}</span>
+                    <div className={styles.cardCompactPrice}>{renderPrice()}</div>
                 </div>
             </Link>
         );
@@ -47,6 +75,11 @@ const ProductCard = ({ product, viewMode = 'grid' }) => {
                 {product.discount > 0 && (
                     <span className={`${styles.badge} ${styles.badgeDiscount}`}>
                         -{product.discount}%
+                    </span>
+                )}
+                {vendorCount > 0 && (
+                    <span className={`${styles.badge}`} style={{ background: 'rgba(59, 130, 246, 0.2)', color: '#3b82f6' }}>
+                        <Store size={10} /> {vendorCount} {language === 'tr' ? 'satıcı' : 'vendor'}{vendorCount > 1 ? 's' : ''}
                     </span>
                 )}
             </div>
@@ -99,10 +132,7 @@ const ProductCard = ({ product, viewMode = 'grid' }) => {
 
                 <div className={styles.cardFooter}>
                     <div className={styles.priceBlock}>
-                        {product.original_price && product.original_price > product.price && (
-                            <span className={styles.originalPrice}>{formatPrice(product.original_price)}</span>
-                        )}
-                        <span className={styles.price}>{formatPrice(product.price)}</span>
+                        {renderPrice()}
                     </div>
                     
                     <Link 

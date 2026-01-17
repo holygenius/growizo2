@@ -28,7 +28,6 @@ const ProductForm = ({ initialData, brands, categories, onClose, onSuccess }) =>
         name: { en: '', tr: '' },
         description: { en: '', tr: '' },
         summary_description: { en: '', tr: '' }, // For UI only, not saved to DB
-        price: 0,
         product_type: 'general',
         specs: {},
         images: [], // Birden fazla görsel desteği
@@ -87,7 +86,6 @@ const ProductForm = ({ initialData, brands, categories, onClose, onSuccess }) =>
         setFormData({
             ...formData,
             sku: product.sku || formData.sku,
-            price: product.price || formData.price,
             name: {
                 ...formData.name,
                 en: product.name || formData.name.en,
@@ -137,6 +135,7 @@ const ProductForm = ({ initialData, brands, categories, onClose, onSuccess }) =>
         setLoading(true);
         try {
             // Prepare data - send all form fields to database
+            // Note: price is no longer in products table, it's in vendor_products
             const submitData = {
                 sku: formData.sku,
                 brand_id: formData.brand_id || null,
@@ -144,7 +143,6 @@ const ProductForm = ({ initialData, brands, categories, onClose, onSuccess }) =>
                 name: formData.name,
                 description: formData.description,
                 summary_description: formData.summary_description,
-                price: formData.price,
                 product_type: formData.product_type,
                 specs: formData.specs,
                 images: formData.images,
@@ -459,16 +457,6 @@ const ProductForm = ({ initialData, brands, categories, onClose, onSuccess }) =>
                         onChange={e => setFormData({ ...formData, name: { ...formData.name, tr: e.target.value } })}
                         style={{ width: '100%', padding: '0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '0.5rem' }}
                         required
-                    />
-                </div>
-
-                <div className={styles.inputGroup}>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>Price (TRY)</label>
-                    <input
-                        type="number"
-                        value={formData.price}
-                        onChange={e => setFormData({ ...formData, price: parseFloat(e.target.value) })}
-                        style={{ width: '100%', padding: '0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '0.5rem' }}
                     />
                 </div>
 
@@ -891,7 +879,6 @@ export default function ProductsManager() {
                                 <th>{t('name')}</th>
                                 <th>{t('brand')}</th>
                                 <th>{t('category')}</th>
-                                <th>{t('price')}</th>
                                 <th>{t('type')}</th>
                                 <th>{t('status')}</th>
                                 <th>{t('actions')}</th>
@@ -908,7 +895,6 @@ export default function ProductsManager() {
                                     <td style={{ fontWeight: 600 }}>{product.name?.en || 'No Name'}</td>
                                     <td>{getBrandName(product.brand_id)}</td>
                                     <td>{getCategoryName(product.category_id)}</td>
-                                    <td>₺{product.price}</td>
                                     <td style={{ textTransform: 'capitalize' }}>{product.product_type}</td>
                                     <td>
                                         <span className={`${styles.badge} ${product.is_active ? styles.badgeSuccess : styles.badgeWarning}`}>

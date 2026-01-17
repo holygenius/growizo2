@@ -4,7 +4,10 @@ export const adminService = {
     // Generic CRUD
     async getAll(table, options = {}) {
         if (!supabase) throw new Error('Supabase client is not initialized');
-        let query = supabase.from(table).select('*', { count: 'exact' });
+        
+        // Support custom select queries with joins
+        const selectQuery = options.select || '*';
+        let query = supabase.from(table).select(selectQuery, { count: 'exact' });
 
         if (options.orderBy) {
             query = query.order(options.orderBy.column, { ascending: options.orderBy.ascending ?? true });

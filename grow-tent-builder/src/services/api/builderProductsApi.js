@@ -15,13 +15,13 @@ const transformProduct = (product) => {
     const specs = product.specs || {};
     
     // Base product structure
+    // Note: price is no longer in products table, it's in vendor_products
     const transformed = {
         id: product.sku,
         brand: specs.brand || '',
         series: specs.series || '',
         name: product.name?.en || product.name?.tr || product.sku,
         fullName: product.name?.en || product.name?.tr || product.sku,
-        price: product.price || 0,
         tier: specs.tier || 'standard',
         features: specs.features || [],
         image: product.images?.[0] || ''
@@ -59,7 +59,7 @@ export async function fetchProductsByType(productType) {
         .select('*')
         .eq('product_type', productType)
         .eq('is_active', true)
-        .order('price', { ascending: true });
+        .order('sku', { ascending: true });
 
     if (error) {
         console.error(`Error fetching ${productType} products:`, error);
@@ -91,7 +91,7 @@ export async function fetchAllProducts() {
         .select('*')
         .eq('is_active', true)
         .order('product_type', { ascending: true })
-        .order('price', { ascending: true });
+        .order('sku', { ascending: true });
 
     if (error) {
         console.error('Error fetching all products:', error);

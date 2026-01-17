@@ -84,6 +84,7 @@ const ProductList = () => {
                     page: filters.page,
                     limit: 12
                 });
+                console.log('[ProductList] Products loaded:', result.data?.map(p => ({ sku: p.sku, name: p.name?.en })));
                 setProducts(result.data);
                 setTotalCount(result.count);
             } catch (error) {

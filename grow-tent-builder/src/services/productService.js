@@ -8,12 +8,12 @@ export const productService = {
         let query = supabase
             .from('products')
             .select(`
-        *,
-        categories (
-          name,
-          key
-        )
-      `)
+                *,
+                categories (
+                    name,
+                    key
+                )
+            `)
             .eq('brand_id', brandId)
             .eq('is_active', true);
 
@@ -32,18 +32,61 @@ export const productService = {
     },
 
     /**
-     * Get product by SKU
+     * Get product by SKU or ID
      */
-    async getProductBySku(sku) {
-        const { data, error } = await supabase
+    async getProductBySku(skuOrId) {
+        console.log('[productService] getProductBySku called with:', skuOrId);
+        
+        // First try by SKU (case-insensitive)
+        let { data, error } = await supabase
             .from('products')
-            .select('*')
-            .eq('sku', sku)
-            .single();
+            .select(`
+                *,
+                brands (
+                    id,
+                    name,
+                    logo_url
+                ),
+                categories (
+                    id,
+                    name,
+                    key
+                )
+            `)
+            .ilike('sku', skuOrId)
+            .maybeSingle();
+
+        console.log('[productService] SKU query result:', { data, error });
+
+        // If not found by SKU, try by ID (for UUID format)
+        if (!data && !error) {
+            console.log('[productService] Trying by ID...');
+            const idResult = await supabase
+                .from('products')
+                .select(`
+                    *,
+                    brands (
+                        id,
+                        name,
+                        logo_url
+                    ),
+                    categories (
+                        id,
+                        name,
+                        key
+                    )
+                `)
+                .eq('id', skuOrId)
+                .maybeSingle();
+            
+            data = idResult.data;
+            error = idResult.error;
+            console.log('[productService] ID query result:', { data, error });
+        }
 
         if (error) {
-            console.error(`Error fetching product ${sku}:`, error);
-            throw error;
+            console.error(`[productService] Error fetching product ${skuOrId}:`, error);
+            return null;
         }
 
         return data;
@@ -68,17 +111,35 @@ export const productService = {
     },
 
     /**
-     * Get product with vendor prices
+     * Get product with vendor prices (from vendor_products table)
      */
     async getProductWithVendors(productId) {
         const { data, error } = await supabase
             .from('products')
             .select(`
                 *,
+                brands (*),
+                categories (*),
                 vendor_products (
-                    *,
-                    vendors (*),
-                    vendor_prices (*)
+                    id,
+                    vendor_id,
+                    vendor_sku,
+                    vendor_product_name,
+                    barcode,
+                    price,
+                    currency,
+                    product_url,
+                    stock_quantity,
+                    stock_status,
+                    is_active,
+                    last_synced_at,
+                    vendors (
+                        id,
+                        name,
+                        vendor_code,
+                        logo_url,
+                        website_url
+                    )
                 )
             `)
             .eq('id', productId)
@@ -101,9 +162,17 @@ export const productService = {
             .select(`
                 *,
                 vendor_products (
-                    *,
-                    vendors (*),
-                    vendor_prices (*)
+                    id,
+                    price,
+                    currency,
+                    product_url,
+                    stock_status,
+                    vendors (
+                        id,
+                        name,
+                        vendor_code,
+                        logo_url
+                    )
                 )
             `)
             .eq('product_type', type)
@@ -122,18 +191,18 @@ export const productService = {
      */
     async getCheapestVendorPrice(productId) {
         const { data, error } = await supabase
-            .from('vendor_prices')
+            .from('vendor_products')
             .select(`
                 *,
-                vendor_products (*),
                 vendors (*)
             `)
-            .eq('vendor_products.product_id', productId)
+            .eq('product_id', productId)
+            .eq('is_active', true)
             .order('price', { ascending: true })
             .limit(1)
-            .single();
+            .maybeSingle();
 
-        if (error && error.code !== 'PGRST116') { // PGRST116 = no rows
+        if (error && error.code !== 'PGRST116') {
             console.error(`Error fetching cheapest price for product ${productId}:`, error);
             throw error;
         }
@@ -146,13 +215,13 @@ export const productService = {
      */
     async getAllVendorPrices(productId) {
         const { data, error } = await supabase
-            .from('vendor_prices')
+            .from('vendor_products')
             .select(`
                 *,
-                vendor_products (*),
                 vendors (*)
             `)
-            .eq('vendor_products.product_id', productId)
+            .eq('product_id', productId)
+            .eq('is_active', true)
             .order('price', { ascending: true });
 
         if (error) {
@@ -164,99 +233,129 @@ export const productService = {
     },
 
     /**
+     * Get price range for a product (min/max from all vendors)
+     */
+    async getProductPriceRange(productId) {
+        const { data, error } = await supabase
+            .from('vendor_products')
+            .select('price')
+            .eq('product_id', productId)
+            .eq('is_active', true);
+
+        if (error) {
+            console.error(`Error fetching price range for product ${productId}:`, error);
+            return { minPrice: null, maxPrice: null, vendorCount: 0 };
+        }
+
+        if (!data || data.length === 0) {
+            return { minPrice: null, maxPrice: null, vendorCount: 0 };
+        }
+
+        const prices = data.map(d => d.price);
+        return {
+            minPrice: Math.min(...prices),
+            maxPrice: Math.max(...prices),
+            vendorCount: data.length
+        };
+    },
+
+    /**
+     * Get products with price ranges (for listing pages)
+     */
+    async getProductsWithPriceRanges(filters = {}) {
+        let query = supabase
+            .from('products')
+            .select(`
+                *,
+                brands (id, name, slug, logo_url),
+                categories (id, name, key),
+                vendor_products (price, is_active)
+            `)
+            .eq('is_active', true);
+
+        if (filters.brandId) {
+            query = query.eq('brand_id', filters.brandId);
+        }
+        if (filters.categoryId) {
+            query = query.eq('category_id', filters.categoryId);
+        }
+        if (filters.productType) {
+            query = query.eq('product_type', filters.productType);
+        }
+
+        const { data, error } = await query;
+
+        if (error) {
+            console.error('Error fetching products with price ranges:', error);
+            throw error;
+        }
+
+        // Calculate price ranges for each product
+        return (data || []).map(product => {
+            const activePrices = (product.vendor_products || [])
+                .filter(vp => vp.is_active)
+                .map(vp => vp.price);
+            
+            return {
+                ...product,
+                minPrice: activePrices.length > 0 ? Math.min(...activePrices) : null,
+                maxPrice: activePrices.length > 0 ? Math.max(...activePrices) : null,
+                vendorCount: activePrices.length,
+                vendor_products: undefined // Remove raw data
+            };
+        });
+    },
+
+    /**
      * Get vendor price comparison for multiple products
      */
     async getVendorPriceComparison(productIds) {
         const { data, error } = await supabase
-            .from('vendor_prices')
+            .from('vendor_products')
             .select(`
                 *,
-                vendor_products (*),
                 vendors (*)
             `)
-            .in('vendor_products.product_id', productIds)
+            .in('product_id', productIds)
+            .eq('is_active', true)
             .order('price', { ascending: true });
 
         if (error) {
-            console.error(`Error fetching vendor price comparison:`, error);
+            console.error('Error fetching vendor price comparison:', error);
             throw error;
         }
 
         // Group by product ID
         const comparison = {};
-        (data || []).forEach(price => {
-            const productId = price.vendor_products.product_id;
-            if (!comparison[productId]) {
-                comparison[productId] = [];
+        (data || []).forEach(vp => {
+            if (!comparison[vp.product_id]) {
+                comparison[vp.product_id] = [];
             }
-            comparison[productId].push(price);
+            comparison[vp.product_id].push(vp);
         });
 
         return comparison;
     },
 
     /**
-     * Get vendor products for a specific product
-     */
-    async getVendorProductsForProduct(productId, vendorCode = null) {
-        let query = supabase
-            .from('vendor_products')
-            .select(`
-                *,
-                vendors (*),
-                vendor_prices (*)
-            `)
-            .eq('product_id', productId);
-
-        if (vendorCode) {
-            query = query.eq('vendors.vendor_code', vendorCode);
-        }
-
-        const { data, error } = await query;
-
-        if (error) {
-            console.error(`Error fetching vendor products for product ${productId}:`, error);
-            throw error;
-        }
-
-        return data || [];
-    },
-
-    /**
      * Search products with combined filters
+     * Returns products with price_range from vendor_products
      */
-    async searchProducts({ searchTerm = '', brandIds = [], categoryIds = [], minPrice = 0, maxPrice = 100000, sortBy = 'price_asc', page = 1, limit = 12 }) {
+    async searchProducts({ searchTerm = '', brandIds = [], categoryIds = [], sortBy = 'newest', page = 1, limit = 12 }) {
         // Base query
         let query = supabase
             .from('products')
             .select(`
                 *,
                 brands (id, name, slug),
-                categories (id, name, key)
+                categories (id, name, key),
+                vendor_products (price, is_active)
             `, { count: 'exact' })
             .eq('is_active', true);
 
-        // Text search (if any)
+        // Text search
         if (searchTerm) {
-            // Check if user is searching for EN or TR name
-            // Note: JSONB search in Supabase can be tricky.
-            // Simple ilike on converted text or specific fields.
-            // For now, let's try a simple comprehensive search if possible, or search in specific paths
-            // Supabase/PostgREST textSearch on jsonb columns requires specific setup.
-            // Fallback: Use simple ilike on sku or name->>en / name->>tr
-            // Or better: Use an "or" filter for SKU and name fields
-            // query = query.or(`sku.ilike.%${searchTerm}%,name->>en.ilike.%${searchTerm}%,name->>tr.ilike.%${searchTerm}%`);
-            // WARNING: .or() with jsonb arrows might be syntax sensitive.
-
-            // Safer approach for now with PostgREST syntax for JSONB if supported:
-            // But let's stick to simple SKU match or creating a text index on DB side.
-            // Without DB access to create indexes, let's try to filter in JS if dataset is small? 
-            // No, user wants backend filtering.
-
-            // Let's assume standard ilike works on casted columns or use the .or syntax carefully.
-            // query = query.textSearch('name', searchTerm); // Only works if FTS is set up
-
-            query = query.or(`sku.ilike.%${searchTerm}%`); // Minimal implementation
+            query = query.or(`sku.ilike.%${searchTerm}%`);
         }
 
         // Filters
@@ -268,26 +367,13 @@ export const productService = {
             query = query.in('category_id', categoryIds);
         }
 
-        if (minPrice > 0) {
-            query = query.gte('price', minPrice);
-        }
-
-        if (maxPrice < 100000) {
-            query = query.lte('price', maxPrice);
-        }
-
         // Sorting
-        if (sortBy === 'price_asc') {
-            query = query.order('price', { ascending: true });
-        } else if (sortBy === 'price_desc') {
-            query = query.order('price', { ascending: false });
-        } else if (sortBy === 'newest') {
+        if (sortBy === 'newest') {
             query = query.order('created_at', { ascending: false });
         } else if (sortBy === 'name_asc') {
-            // Sorting by JSONB field might require complex setup, let's skip or try standard
-            // PostgREST doesn't support order by json key easily without computed column
-            // Fallback to title/sku or just created_at
             query = query.order('sku', { ascending: true });
+        } else if (sortBy === 'name_desc') {
+            query = query.order('sku', { ascending: false });
         }
 
         // Pagination
@@ -302,21 +388,38 @@ export const productService = {
             throw error;
         }
 
-        // Client-side filtering for JSONB text search if backend search is limited
-        // This is a temporary workaround if .or() with JSONB doesn't work as expected in current PostgREST version
-        let filteredData = data;
+        // Calculate price ranges and filter by search term
+        let processedData = (data || []).map(product => {
+            const activePrices = (product.vendor_products || [])
+                .filter(vp => vp.is_active)
+                .map(vp => vp.price);
+            
+            return {
+                ...product,
+                // Add price_range object for ProductCard
+                price_range: activePrices.length > 0 ? {
+                    min_price: Math.min(...activePrices),
+                    max_price: Math.max(...activePrices),
+                    vendor_count: activePrices.length
+                } : null,
+                // Legacy fields for backward compatibility
+                minPrice: activePrices.length > 0 ? Math.min(...activePrices) : null,
+                maxPrice: activePrices.length > 0 ? Math.max(...activePrices) : null,
+                vendorCount: activePrices.length,
+                vendor_products: undefined
+            };
+        });
+
+        // Client-side text search for JSONB name fields
         if (searchTerm) {
             const lowerTerm = searchTerm.toLowerCase();
-            filteredData = data.filter(p =>
-                p.sku.toLowerCase().includes(lowerTerm) ||
-                (p.name?.en && p.name.en.toLowerCase().includes(lowerTerm)) ||
-                (p.name?.tr && p.name.tr.toLowerCase().includes(lowerTerm))
+            processedData = processedData.filter(p =>
+                p.sku?.toLowerCase().includes(lowerTerm) ||
+                p.name?.en?.toLowerCase().includes(lowerTerm) ||
+                p.name?.tr?.toLowerCase().includes(lowerTerm)
             );
-            // Note: Pagination will be messed up with client side filtering. 
-            // Ideally we need a Database function or FTS index. 
-            // For now, I will rely on the query.or I wrote above adding SKU match.
         }
 
-        return { data: filteredData, count, page, limit };
+        return { data: processedData, count, page, limit };
     }
 };

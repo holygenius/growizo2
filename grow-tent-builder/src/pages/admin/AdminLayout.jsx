@@ -130,7 +130,9 @@ const AdminLayoutContent = () => {
             section: t('catalog'), items: [
                 { name: t('products'), icon: Package, path: '/admin/products' },
                 { name: t('brands'), icon: Store, path: '/admin/brands' },
-                { name: t('categories'), icon: Tags, path: '/admin/categories' }
+                { name: t('categories'), icon: Tags, path: '/admin/categories' },
+                { name: 'Vendors', icon: Store, path: '/admin/vendors' },
+                { name: 'Vendor Products', icon: Package, path: '/admin/vendor-products' }
             ]
         },
         {

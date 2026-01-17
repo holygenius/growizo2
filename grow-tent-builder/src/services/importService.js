@@ -3,6 +3,8 @@ import { supabase } from './supabase';
 /**
  * Service for managing vendor product imports
  * Handles matching, storing, and syncing vendor products with internal products
+ * 
+ * Updated: vendor_products now contains price and URL directly
  */
 export const importService = {
     /**
@@ -14,7 +16,7 @@ export const importService = {
             .from('vendors')
             .select('*')
             .eq('vendor_code', vendorCode)
-            .single();
+            .maybeSingle();
 
         if (existingVendor) {
             return existingVendor;
@@ -52,23 +54,21 @@ export const importService = {
                 const { data: productBySku } = await supabase
                     .from('products')
                     .select('*')
-                    .eq('sku', sku)
-                    .single();
+                    .ilike('sku', sku)
+                    .maybeSingle();
 
                 if (productBySku) {
                     return productBySku;
                 }
             }
 
-            // Try to find by barcode
+            // Try to find by barcode in specs
             if (barcode) {
-                // This assumes barcodes are stored in a specific field or JSON
-                // Adjust based on your actual schema
                 const { data: productByBarcode } = await supabase
                     .from('products')
                     .select('*')
                     .ilike('key_properties', `%"barcode":"${barcode}"%`)
-                    .single();
+                    .maybeSingle();
 
                 if (productByBarcode) {
                     return productByBarcode;
@@ -84,6 +84,7 @@ export const importService = {
 
     /**
      * Import vendor products and match with existing products
+     * Price and URL are now stored directly in vendor_products
      */
     async importVendorProducts(vendorCode, vendorName, vendorProducts, description = '') {
         const result = {
@@ -115,23 +116,27 @@ export const importService = {
                             .from('vendor_products')
                             .select('id')
                             .eq('vendor_id', vendor.id)
-                            .eq('vendor_product_id', vendorProduct.vendorProductId)
-                            .single();
+                            .eq('product_id', matchingProduct.id)
+                            .maybeSingle();
 
                         if (!existingVendorProduct) {
-                            // Create vendor product link
+                            // Create vendor product link (price included)
                             const { data: newVendorProduct, error: insertError } = await supabase
                                 .from('vendor_products')
                                 .insert([
                                     {
                                         product_id: matchingProduct.id,
                                         vendor_id: vendor.id,
-                                        vendor_product_id: vendorProduct.vendorProductId,
                                         vendor_sku: vendorProduct.sku,
-                                        vendor_name: vendorProduct.name,
+                                        vendor_product_name: vendorProduct.name,
                                         barcode: vendorProduct.barcode,
-                                        is_matched: true,
+                                        price: vendorProduct.price || 0,
+                                        currency: vendorProduct.currency || 'TRY',
+                                        product_url: vendorProduct.url || vendorProduct.productUrl || null,
+                                        stock_quantity: vendorProduct.stock || 0,
+                                        stock_status: vendorProduct.stock > 0 ? 'in_stock' : 'out_of_stock',
                                         is_active: true,
+                                        last_synced_at: new Date().toISOString(),
                                     }
                                 ])
                                 .select()
@@ -139,51 +144,37 @@ export const importService = {
 
                             if (insertError) throw insertError;
 
-                            // Store vendor price
-                            const { error: priceError } = await supabase
-                                .from('vendor_prices')
-                                .insert([
-                                    {
-                                        vendor_product_id: newVendorProduct.id,
-                                        vendor_id: vendor.id,
-                                        price: vendorProduct.price,
-                                        currency: vendorProduct.currency || 'TRY',
-                                        stock_quantity: vendorProduct.stock || 0,
-                                        stock_location: vendorProduct.stockLocation || null,
-                                        last_updated: new Date().toISOString(),
-                                    }
-                                ])
-                                .select()
-                                .single();
-
-                            if (priceError) throw priceError;
-
                             result.matchedProducts++;
+                            result.newVendorProducts++;
                             result.importedProductIds.push(newVendorProduct.id);
                         } else {
-                            // Update existing vendor price
+                            // Update existing vendor product
                             const { error: updateError } = await supabase
-                                .from('vendor_prices')
+                                .from('vendor_products')
                                 .update({
-                                    price: vendorProduct.price,
+                                    vendor_sku: vendorProduct.sku,
+                                    vendor_product_name: vendorProduct.name,
+                                    barcode: vendorProduct.barcode,
+                                    price: vendorProduct.price || 0,
                                     currency: vendorProduct.currency || 'TRY',
+                                    product_url: vendorProduct.url || vendorProduct.productUrl || null,
                                     stock_quantity: vendorProduct.stock || 0,
-                                    stock_location: vendorProduct.stockLocation || null,
-                                    last_updated: new Date().toISOString(),
+                                    stock_status: vendorProduct.stock > 0 ? 'in_stock' : 'out_of_stock',
+                                    last_synced_at: new Date().toISOString(),
                                 })
-                                .eq('vendor_product_id', existingVendorProduct.id);
+                                .eq('id', existingVendorProduct.id);
 
                             if (updateError) throw updateError;
                             result.matchedProducts++;
                         }
                     } else {
-                        // No matching product found - skip for now
+                        // No matching product found - skip
                         result.skippedProducts++;
                         console.log(`⚠️ No matching product found for: ${vendorProduct.name} (SKU: ${vendorProduct.sku})`);
                     }
                 } catch (error) {
                     result.errors.push({
-                        vendorProductId: vendorProduct.vendorProductId,
+                        sku: vendorProduct.sku,
                         name: vendorProduct.name,
                         error: error.message,
                     });
@@ -191,40 +182,11 @@ export const importService = {
                 }
             }
 
-            // Log import results
-            await this.logImport(vendor.id, result);
-
             console.log(`✅ Import completed: ${result.matchedProducts} matched, ${result.skippedProducts} skipped, ${result.errors.length} errors`);
             return result;
         } catch (error) {
             console.error('Error importing vendor products:', error);
             throw error;
-        }
-    },
-
-    /**
-     * Log import attempt for audit trail
-     */
-    async logImport(vendorId, result) {
-        try {
-            const { error } = await supabase
-                .from('vendor_import_logs')
-                .insert([
-                    {
-                        vendor_id: vendorId,
-                        total_products: result.totalProducts,
-                        matched_products: result.matchedProducts,
-                        new_products: result.newVendorProducts,
-                        errors: result.errors.length,
-                        error_details: result.errors.length > 0 ? result.errors : null,
-                    }
-                ]);
-
-            if (error) {
-                console.error('Error logging import:', error);
-            }
-        } catch (error) {
-            console.error('Error in logImport:', error);
         }
     },
 
@@ -238,8 +200,7 @@ export const importService = {
                 .select(`
                     *,
                     products (*),
-                    vendors (*),
-                    vendor_prices (*)
+                    vendors (*)
                 `)
                 .eq('vendors.vendor_code', vendorCode)
                 .eq('is_active', true);
@@ -253,55 +214,9 @@ export const importService = {
     },
 
     /**
-     * Get vendor price information for a product
+     * Get all vendor products for a specific product
      */
-    async getVendorPrice(productId, vendorCode) {
-        try {
-            const { data, error } = await supabase
-                .from('vendor_prices')
-                .select(`
-                    *,
-                    vendor_products (*),
-                    vendors (*)
-                `)
-                .eq('vendor_products.product_id', productId)
-                .eq('vendors.vendor_code', vendorCode)
-                .single();
-
-            if (error && error.code !== 'PGRST116') throw error; // PGRST116 = no rows
-            return data || null;
-        } catch (error) {
-            console.error('Error fetching vendor price:', error);
-            return null;
-        }
-    },
-
-    /**
-     * Get all vendor prices for a product
-     */
-    async getAllVendorPrices(productId) {
-        try {
-            const { data, error } = await supabase
-                .from('vendor_prices')
-                .select(`
-                    *,
-                    vendor_products (*),
-                    vendors (*)
-                `)
-                .eq('vendor_products.product_id', productId);
-
-            if (error) throw error;
-            return data || [];
-        } catch (error) {
-            console.error('Error fetching all vendor prices:', error);
-            return [];
-        }
-    },
-
-    /**
-     * Filter unmatched vendor products for manual matching
-     */
-    async getUnmatchedProducts(vendorCode) {
+    async getProductVendors(productId) {
         try {
             const { data, error } = await supabase
                 .from('vendor_products')
@@ -309,74 +224,72 @@ export const importService = {
                     *,
                     vendors (*)
                 `)
-                .eq('vendors.vendor_code', vendorCode)
-                .eq('is_matched', false)
-                .eq('is_active', true);
+                .eq('product_id', productId)
+                .eq('is_active', true)
+                .order('price', { ascending: true });
 
             if (error) throw error;
             return data || [];
         } catch (error) {
-            console.error('Error fetching unmatched products:', error);
+            console.error('Error fetching product vendors:', error);
             return [];
-        }
-    },
-
-    /**
-     * Manually match a vendor product with an internal product
-     */
-    async matchVendorProduct(vendorProductId, productId) {
-        try {
-            const { data, error } = await supabase
-                .from('vendor_products')
-                .update({
-                    product_id: productId,
-                    is_matched: true,
-                    updated_at: new Date().toISOString(),
-                })
-                .eq('id', vendorProductId)
-                .select()
-                .single();
-
-            if (error) throw error;
-            console.log(`✅ Matched vendor product to internal product: ${productId}`);
-            return data;
-        } catch (error) {
-            console.error('Error matching vendor product:', error);
-            throw error;
         }
     },
 
     /**
      * Update vendor product price and stock
      */
-    async updateVendorPrice(vendorProductId, price, stock, stockLocation = null) {
+    async updateVendorProduct(vendorProductId, updates) {
         try {
-            // Find the vendor price record
-            const { data: vendorPrice, error: fetchError } = await supabase
-                .from('vendor_prices')
-                .select('id')
-                .eq('vendor_product_id', vendorProductId)
-                .single();
-
-            if (fetchError) throw fetchError;
-
-            // Update the price
             const { data, error } = await supabase
-                .from('vendor_prices')
+                .from('vendor_products')
                 .update({
-                    price: price,
-                    stock_quantity: stock,
-                    stock_location: stockLocation,
-                    last_updated: new Date().toISOString(),
+                    ...updates,
+                    last_synced_at: new Date().toISOString(),
                 })
-                .eq('id', vendorPrice.id)
+                .eq('id', vendorProductId)
                 .select()
                 .single();
 
             if (error) throw error;
             return data;
         } catch (error) {
-            console.error('Error updating vendor price:', error);
+            console.error('Error updating vendor product:', error);
+            throw error;
+        }
+    },
+
+    /**
+     * Create vendor product link manually
+     */
+    async linkProductToVendor(productId, vendorId, vendorData) {
+        try {
+            const { data, error } = await supabase
+                .from('vendor_products')
+                .insert([
+                    {
+                        product_id: productId,
+                        vendor_id: vendorId,
+                        vendor_sku: vendorData.sku,
+                        vendor_product_name: vendorData.name,
+                        barcode: vendorData.barcode,
+                        price: vendorData.price || 0,
+                        currency: vendorData.currency || 'TRY',
+                        product_url: vendorData.url,
+                        stock_quantity: vendorData.stock || 0,
+                        stock_status: vendorData.stock > 0 ? 'in_stock' : 'out_of_stock',
+                        is_active: true,
+                        last_synced_at: new Date().toISOString(),
+                    }
+                ])
+                .select()
+                .single();
+
+            if (error) throw error;
+            console.log(`✅ Linked product to vendor`);
+            return data;
+        } catch (error) {
+            console.error('Error linking product to vendor:', error);
             throw error;
         }
     },

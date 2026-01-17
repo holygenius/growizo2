@@ -203,10 +203,6 @@ export default function ProductSelector({ onSelect, selectedSkus = [], onClose }
                                         <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>
                                             {t('sku')}: {product.sku}
                                         </div>
-
-                                        <div style={{ color: '#3b82f6', fontWeight: 600, fontSize: '0.9rem', marginTop: 'auto' }}>
-                                            ₺{product.price}
-                                        </div>
                                     </div>
                                 );
                             })}
