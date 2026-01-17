@@ -45,7 +45,7 @@ const ToolsPage = () => {
     ];
 
     return (
-        <div className={styles.toolsContainer}>
+        <div className={styles.pageContainer}>
             <Helmet>
                 <title>{t('navTools')} | GroWizard</title>
             </Helmet>

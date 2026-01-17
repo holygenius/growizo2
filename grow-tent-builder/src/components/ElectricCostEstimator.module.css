@@ -1,8 +1,8 @@
 .estimatorContainer {
   width: 100%;
   padding: 12px;
-  background: var(--bg-surface);
-  box-shadow: 0 8px 24px rgba(2,6,23,0.6);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-lg);
   border: 1px solid var(--border-color);
   border-radius: 10px;
   color: var(--text-primary);
@@ -43,9 +43,10 @@
   width: 100%;
   padding: 8px 10px;
   border-radius: 8px;
-  background: var(--bg-card);
+  background: var(--bg-input);
   border: 1px solid var(--border-color);
   color: var(--text-primary);
+  font-weight: 500;
 }
 
 .inputTiny {
@@ -59,7 +60,7 @@
 }
 
 .btn {
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.05);
   color: var(--text-primary);
   border: 1px solid var(--border-color);
   padding: 6px 8px;
@@ -73,8 +74,8 @@
 }
 
 .btnDanger {
-  background: rgba(239,68,68,0.06);
-  border-color: rgba(239,68,68,0.18);
+  background: rgba(239, 68, 68, 0.06);
+  border-color: rgba(239, 68, 68, 0.18);
   color: var(--text-primary);
   flex-shrink: 0;
 }

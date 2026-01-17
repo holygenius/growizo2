@@ -6,7 +6,7 @@ export default function Layout({ children }) {
     const { t, language, setLanguage, currency, setCurrency, unitSystem, setUnitSystem } = useSettings();
 
     return (
-        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'radial-gradient(circle at top center, #1e293b 0%, #0f172a 50%)' }}>
+        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-app)' }}>
             <StatsBar />
 
             <main className="container" style={{ flex: 1, padding: '2rem 1rem', maxWidth: '1000px', margin: '0 auto', width: '100%' }}>
@@ -42,7 +42,7 @@ export default function Layout({ children }) {
                 padding: '2rem',
                 color: 'var(--text-muted)',
                 fontSize: '0.875rem',
-                borderTop: '1px solid rgba(255,255,255,0.05)'
+                borderTop: '1px solid var(--border-color)'
             }}>
                 <div style={{
                     display: 'flex',

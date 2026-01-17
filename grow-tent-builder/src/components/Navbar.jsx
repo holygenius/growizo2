@@ -5,7 +5,7 @@ import { UserMenu } from './Auth';
 import styles from './Navbar.module.css';
 
 const Navbar = () => {
-    const { language, setLanguage, getBuilderUrl, t, getLocalizedPath } = useSettings();
+    const { language, setLanguage, getBuilderUrl, t, getLocalizedPath, theme, toggleTheme } = useSettings();
     const location = useLocation();
     const navigate = useNavigate();
     const [isToolsOpen, setIsToolsOpen] = useState(false);
@@ -34,13 +34,6 @@ const Navbar = () => {
 
                     {/* Desktop Menu */}
                     <div className={styles.navLinks}>
-                        <Link
-                            to={getLocalizedPath('/')}
-                            className={`${styles.navLink} ${isActive('/') ? styles.navLinkActive : ''}`}
-                        >
-                            {t('navHome')}
-                        </Link>
-
                         <Link
                             to={getLocalizedPath('/products')}
                             className={`${styles.navLink} ${isActive('/products') || isActive('/urunler') ? styles.navLinkActive : ''}`}
@@ -105,6 +98,13 @@ const Navbar = () => {
                     <div className={styles.navRight}>
                         <UserMenu />
                         <button
+                            onClick={toggleTheme}
+                            className={styles.themeBtn}
+                            title={theme === 'dark' ? t('lightMode') : t('darkMode')}
+                        >
+                            {theme === 'dark' ? '☀️' : '🌙'}
+                        </button>
+                        <button
                             onClick={handleLanguageSwitch}
                             className={styles.langBtn}
                         >
@@ -130,14 +130,6 @@ const Navbar = () => {
                 {/* Mobile Menu */}
                 {isMobileMenuOpen && (
                     <div className={styles.mobileMenu}>
-                        <Link
-                            to={getLocalizedPath('/')}
-                            className={`${styles.mobileLink} ${isActive('/') ? styles.mobileLinkActive : ''}`}
-                            onClick={() => setIsMobileMenuOpen(false)}
-                        >
-                            {t('navHome')}
-                        </Link>
-
                         <Link
                             to={getLocalizedPath('/products')}
                             className={`${styles.mobileLink} ${isActive('/products') || isActive('/urunler') ? styles.mobileLinkActive : ''}`}
@@ -218,6 +210,15 @@ const Navbar = () => {
 
                         <div className={styles.mobileActions}>
                             <UserMenu />
+                            <button
+                                onClick={() => {
+                                    toggleTheme();
+                                    setIsMobileMenuOpen(false);
+                                }}
+                                className={styles.themeBtn}
+                            >
+                                {theme === 'dark' ? `☀️ ${t('lightMode')}` : `🌙 ${t('darkMode')}`}
+                            </button>
                             <button
                                 onClick={() => {
                                     handleLanguageSwitch();

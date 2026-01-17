@@ -37,6 +37,10 @@ export const commonTranslations = {
     'onboardingPrompt.message': 'Take a quick tour to personalize your grow setup experience!',
     'onboardingPrompt.startButton': "Let's Go!",
     'onboardingPrompt.laterButton': 'Later',
+
+    // Theme
+    lightMode: 'Light Mode',
+    darkMode: 'Dark Mode',
   },
   tr: {
     // General
@@ -76,5 +80,9 @@ export const commonTranslations = {
     'onboardingPrompt.message': 'Yetiştirme deneyimini kişiselleştirmek için hızlı bir tur at!',
     'onboardingPrompt.startButton': 'Hadi Başlayalım!',
     'onboardingPrompt.laterButton': 'Sonra',
+
+    // Theme
+    lightMode: 'Açık Tema',
+    darkMode: 'Koyu Tema',
   }
 };

@@ -5,7 +5,7 @@
 /* Page Wrapper */
 .pageWrapper {
     min-height: 100vh;
-    background: linear-gradient(180deg, #0a0a0a 0%, #0f172a 50%, #0a0a0a 100%);
+    background: var(--bg-app);
 }
 
 /* Hero Banner */
@@ -13,7 +13,7 @@
     position: relative;
     padding: 6rem 1.5rem 4rem;
     background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--border-color);
     overflow: hidden;
 }
 
@@ -37,12 +37,12 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.875rem;
-    color: #64748b;
+    color: var(--text-secondary);
     margin-bottom: 1.5rem;
 }
 
 .breadcrumb a {
-    color: #64748b;
+    color: var(--text-secondary);
     text-decoration: none;
     transition: color 0.2s;
 }
@@ -61,7 +61,7 @@
     gap: 1rem;
     font-size: 2.5rem;
     font-weight: 800;
-    color: #fff;
+    color: var(--text-primary);
     margin: 0 0 1rem;
     letter-spacing: -0.02em;
 }
@@ -72,7 +72,7 @@
 
 .heroSubtitle {
     font-size: 1.1rem;
-    color: #94a3b8;
+    color: var(--text-muted);
     margin: 0;
     max-width: 600px;
 }
@@ -101,13 +101,13 @@
 }
 
 .filterPanel {
-    background: rgba(15, 23, 42, 0.6);
+    background: var(--glass-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--glass-border);
     border-radius: 1.25rem;
     padding: 1.5rem;
-    color: #fff;
+    color: var(--text-primary);
 }
 
 .filterPanelMobile {
@@ -122,7 +122,7 @@
     align-items: center;
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .filterHeaderTitle {
@@ -131,7 +131,7 @@
     gap: 0.5rem;
     font-size: 1rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--text-primary);
     margin: 0;
 }
 
@@ -167,11 +167,11 @@
 
 .searchInput {
     width: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
     border-radius: 0.75rem;
     padding: 0.75rem 2.5rem 0.75rem 2.75rem;
-    color: #fff;
+    color: var(--text-primary);
     font-size: 0.9rem;
     outline: none;
     transition: all 0.2s ease;
@@ -233,8 +233,8 @@
     background: transparent;
     border: none;
     cursor: pointer;
-    color: #fff;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--text-primary);
+    border-top: 1px solid var(--border-color);
 }
 
 .filterSectionHeader:first-child {
@@ -249,7 +249,7 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: #94a3b8;
+    color: var(--text-muted);
 }
 
 .selectedCount {
@@ -285,8 +285,8 @@
 
 .priceInputWrapper {
     flex: 1;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
     border-radius: 0.5rem;
     padding: 0.5rem 0.75rem;
     text-align: center;
@@ -304,7 +304,7 @@
 .priceInputValue {
     font-size: 0.85rem;
     font-weight: 600;
-    color: #10b981;
+    color: var(--color-primary);
 }
 
 .priceSeparator {
@@ -328,7 +328,7 @@
 }
 
 .checkboxList::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--scrollbar-thumb);
     border-radius: 4px;
 }
 
@@ -364,12 +364,12 @@
     flex-shrink: 0;
 }
 
-.checkbox:checked + .checkboxCustom {
+.checkbox:checked+.checkboxCustom {
     background: #10b981;
     border-color: #10b981;
 }
 
-.checkbox:checked + .checkboxCustom::after {
+.checkbox:checked+.checkboxCustom::after {
     content: '';
     position: absolute;
     left: 5px;
@@ -388,7 +388,7 @@
 }
 
 .checkboxItem:hover .checkboxText {
-    color: #fff;
+    color: var(--text-primary);
 }
 
 /* ============================================
@@ -405,9 +405,9 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 1rem;
-    background: rgba(15, 23, 42, 0.4);
+    background: var(--glass-bg);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
     padding: 1rem 1.25rem;
     border-radius: 1rem;
     margin-bottom: 1.5rem;
@@ -512,11 +512,11 @@
 }
 
 .sortSelect {
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
     border-radius: 0.5rem;
     padding: 0.5rem 0.875rem;
-    color: #fff;
+    color: var(--text-primary);
     font-size: 0.85rem;
     outline: none;
     cursor: pointer;
@@ -616,7 +616,9 @@
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* Empty State */
@@ -666,8 +668,8 @@
    ============================================ */
 .card {
     position: relative;
-    background: rgba(30, 41, 59, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 1rem;
     overflow: hidden;
     transition: all 0.3s ease;
@@ -677,9 +679,9 @@
 
 .card:hover {
     transform: translateY(-4px);
-    border-color: rgba(16, 185, 129, 0.2);
-    background: rgba(30, 41, 59, 0.5);
-    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+    border-color: var(--color-primary);
+    background: var(--bg-card);
+    box-shadow: var(--shadow-lg);
 }
 
 /* Badge Container */
@@ -1046,6 +1048,7 @@
     from {
         transform: translateX(-100%);
     }
+
     to {
         transform: translateX(0);
     }
@@ -1317,8 +1320,8 @@
 .detailMainImage {
     position: relative;
     aspect-ratio: 1;
-    background: rgba(30, 41, 59, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
     border-radius: 1.5rem;
     display: flex;
     align-items: center;
@@ -1361,8 +1364,8 @@
     width: 70px;
     height: 70px;
     border-radius: 0.75rem;
-    background: rgba(30, 41, 59, 0.3);
-    border: 2px solid rgba(255, 255, 255, 0.05);
+    background: var(--bg-surface);
+    border: 2px solid var(--border-color);
     overflow: hidden;
     cursor: pointer;
     transition: all 0.2s;
@@ -1406,7 +1409,7 @@
 .detailTitle {
     font-size: 2.25rem;
     font-weight: 800;
-    color: #fff;
+    color: var(--text-primary);
     margin: 0 0 1rem;
     line-height: 1.2;
     letter-spacing: -0.02em;
@@ -1533,8 +1536,8 @@
 
 /* Specs Preview */
 .detailSpecsPreview {
-    background: rgba(15, 23, 42, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
     border-radius: 1rem;
     padding: 1.5rem;
 }
@@ -1583,8 +1586,8 @@
 }
 
 .detailSection {
-    background: rgba(15, 23, 42, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
     border-radius: 1.25rem;
     padding: 2rem;
 }
@@ -1841,6 +1844,7 @@
 
 /* Feeding Schedule Responsive */
 @media (max-width: 640px) {
+
     .feedingScheduleHeaderCell,
     .feedingScheduleCell {
         padding: 0.75rem 1rem;
@@ -1849,4 +1853,83 @@
     .feedingScheduleBody {
         max-height: 300px;
     }
+}
+
+/* Vendor Price List & Details */
+.vendorPriceList {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: var(--bg-surface);
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color);
+}
+
+.vendorPriceTitle {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+.vendorPriceRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+    transition: background-color 0.2s;
+}
+
+.vendorPriceRow:hover {
+    background-color: var(--bg-surface-hover) !important;
+}
+
+.buyButton {
+    background: #3b82f6;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    transition: background-color 0.2s;
+    border: none;
+}
+
+.buyButton:hover {
+    background: #2563eb;
+}
+
+.priceDevider {
+    color: var(--text-muted);
+    margin: 0 0.5rem;
+}
+
+.vendorCount {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-left: 0.75rem;
+}
+
+/* Ensure detail page text is visible in light mode */
+.detailTitle {
+    color: var(--text-primary);
+}
+
+.detailDescription,
+.detailSummary {
+    color: var(--text-secondary);
+}
+
+.detailSpecLabel,
+.detailSpecRowLabel {
+    color: var(--text-muted);
+}
+
+.detailSpecValue,
+.detailSpecRowValue {
+    color: var(--text-primary);
 }

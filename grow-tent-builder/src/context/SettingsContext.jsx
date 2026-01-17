@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { translations } from '../utils/translations';
 
 const SettingsContext = createContext();
@@ -13,6 +13,11 @@ export const CURRENCIES = {
 export const UNITS = {
     IMPERIAL: { label: 'ft', factor: 1, area: 'sq ft', vol: 'cu ft' },
     METRIC: { label: 'cm', factor: 30.48, area: 'm²', vol: 'm³' }
+};
+
+export const THEMES = {
+    DARK: 'dark',
+    LIGHT: 'light'
 };
 
 // Detect browser language
@@ -44,10 +49,45 @@ const getInitialUnitSystem = () => {
     return lang === 'tr' ? 'METRIC' : 'IMPERIAL';
 };
 
+// Detect system theme preference
+const detectSystemTheme = () => {
+    if (typeof window !== 'undefined' && window.matchMedia) {
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    return 'dark';
+};
+
+const getInitialTheme = () => {
+    const saved = localStorage.getItem('theme');
+    if (saved && (saved === 'dark' || saved === 'light')) return saved;
+    return detectSystemTheme();
+};
+
 export function SettingsProvider({ children }) {
     const [language, setLanguageState] = useState(getInitialLanguage);
     const [currency, setCurrencyState] = useState(getInitialCurrency);
     const [unitSystem, setUnitSystemState] = useState(getInitialUnitSystem);
+    const [theme, setThemeState] = useState(getInitialTheme);
+
+    // Apply theme to document on mount and when theme changes
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+        document.body.setAttribute('data-theme', theme);
+    }, [theme]);
+
+    // Listen for system theme changes
+    useEffect(() => {
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        const handleChange = (e) => {
+            const savedTheme = localStorage.getItem('theme');
+            // Only auto-switch if user hasn't set a preference
+            if (!savedTheme) {
+                setThemeState(e.matches ? 'dark' : 'light');
+            }
+        };
+        mediaQuery.addEventListener('change', handleChange);
+        return () => mediaQuery.removeEventListener('change', handleChange);
+    }, []);
 
     // We need to access navigation, but this provider is inside Router in App.jsx
     // So we can't use useNavigate here directly if it's wrapping the Router.
@@ -83,6 +123,19 @@ export function SettingsProvider({ children }) {
     const setUnitSystem = (units) => {
         setUnitSystemState(units);
         localStorage.setItem('unitSystem', units);
+    };
+
+    const setTheme = (newTheme) => {
+        setThemeState(newTheme);
+        localStorage.setItem('theme', newTheme);
+        // Immediately apply to DOM
+        document.documentElement.setAttribute('data-theme', newTheme);
+        document.body.setAttribute('data-theme', newTheme);
+    };
+
+    const toggleTheme = () => {
+        const newTheme = theme === 'dark' ? 'light' : 'dark';
+        setTheme(newTheme);
     };
 
     const t = (key, params = {}) => {
@@ -180,6 +233,7 @@ export function SettingsProvider({ children }) {
             language, setLanguage,
             currency, setCurrency,
             unitSystem, setUnitSystem,
+            theme, setTheme, toggleTheme,
             t,
             formatPrice,
             formatUnit,

@@ -1,16 +1,16 @@
 .pageContainer {
   min-height: 100vh;
-  background-color: #0f172a;
-  color: #e2e8f0;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
   font-family: 'Inter', sans-serif;
 }
 
 /* Header */
 .header {
-  background: linear-gradient(to bottom, #1e293b, #0f172a);
+  background: var(--bg-surface);
   padding: 3rem 1rem;
   text-align: center;
-  border-bottom: 1px solid #334155;
+  border-bottom: 1px solid var(--border-color);
   position: relative;
   overflow: hidden;
 }
@@ -57,7 +57,7 @@
 
 .subtitle {
   font-size: 1.1rem;
-  color: #94a3b8;
+  color: var(--text-muted);
   margin-bottom: 2rem;
   line-height: 1.6;
 }
@@ -70,12 +70,12 @@
 }
 
 .featureTag {
-  background: rgba(30, 41, 59, 0.5);
+  background: var(--bg-surface-hover);
   padding: 0.5rem 1rem;
   border-radius: 8px;
   font-size: 0.9rem;
-  color: #cbd5e1;
-  border: 1px solid #334155;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
 }
 
 /* Container */
@@ -94,11 +94,11 @@
 .substrateSelectorTitle {
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
-  color: #f8fafc;
+  color: var(--text-primary);
 }
 
 .substrateSelectorDesc {
-  color: #94a3b8;
+  color: var(--text-muted);
   margin-bottom: 2rem;
 }
 
@@ -111,21 +111,13 @@
 
 .substrateBtn {
   background: #1e293b;
-  border: 2px solid #334155;
-  padding: 1rem 1.5rem;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 160px;
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  border-color: var(--border-color);
+  background: var(--bg-card);
 }
 
 .substrateBtn:hover {
-  border-color: #475569;
-  background: #263344;
+  border-color: var(--text-muted);
+  background: var(--bg-surface-hover);
 }
 
 .substrateBtn.active {
@@ -135,18 +127,18 @@
 
 .substrateName {
   font-weight: 700;
-  color: #f8fafc;
+  color: var(--text-primary);
   font-size: 1.1rem;
 }
 
 .substrateInfo {
   font-size: 0.8rem;
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 /* Controls */
 .controls {
-  background: #1e293b;
+  background: var(--bg-card);
   padding: 1.5rem;
   border-radius: 16px;
   margin-bottom: 2rem;
@@ -154,7 +146,7 @@
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   align-items: flex-end;
   gap: 1.5rem;
-  border: 1px solid #334155;
+  border: 1px solid var(--border-color);
   position: relative;
   z-index: 20;
 }
@@ -172,15 +164,15 @@
 
 .controlLabel {
   font-size: 0.9rem;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-weight: 600;
 }
 
 .waterInput {
   display: flex;
   align-items: center;
-  background: #0f172a;
-  border: 1px solid #334155;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 0.5rem;
   width: 120px;
@@ -189,7 +181,7 @@
 .numberInput {
   background: transparent;
   border: none;
-  color: #f8fafc;
+  color: var(--text-primary);
   font-size: 1.1rem;
   width: 100%;
   outline: none;
@@ -204,10 +196,10 @@
 
 .toggleButtons {
   display: flex;
-  background: #0f172a;
+  background: var(--bg-input);
   padding: 0.25rem;
   border-radius: 8px;
-  border: 1px solid #334155;
+  border: 1px solid var(--border-color);
 }
 
 .toggleBtn {
@@ -215,15 +207,15 @@
   border-radius: 6px;
   border: none;
   background: transparent;
-  color: #94a3b8;
+  color: var(--text-muted);
   cursor: pointer;
   font-weight: 600;
   transition: all 0.2s ease;
 }
 
 .toggleBtn.active {
-  background: #334155;
-  color: #f8fafc;
+  background: var(--bg-surface-hover);
+  color: var(--text-primary);
 }
 
 /* ========================================
@@ -234,10 +226,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(15, 23, 42, 0.8);
+  background: var(--bg-card);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
   border-radius: 16px;
   padding: 1rem 1.25rem;
   cursor: pointer;
@@ -259,8 +251,8 @@
 }
 
 .productSelectorBtn:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  background: rgba(30, 41, 59, 0.8);
+  border-color: var(--border-color);
+  background: var(--bg-surface-hover);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
@@ -293,12 +285,12 @@
 .productSelectorName {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #f8fafc;
+  color: var(--text-primary);
 }
 
 .productSelectorDesc {
   font-size: 0.85rem;
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 .productSelectorCount {
@@ -324,11 +316,11 @@
 
 /* Product Selector Dropdown */
 .productSelector {
-  background: #1e293b;
+  background: var(--bg-card);
   border-radius: 16px;
   padding: 1.5rem;
   margin-bottom: 2rem;
-  border: 1px solid #334155;
+  border: 1px solid var(--border-color);
   overflow: hidden;
 }
 
@@ -343,7 +335,7 @@
 
 .productSelectorHeader h3 {
   font-size: 1.2rem;
-  color: #f8fafc;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -2809,18 +2801,17 @@
 .heroGradient {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, 
-    rgba(34, 197, 94, 0.15) 0%, 
-    rgba(16, 185, 129, 0.1) 25%,
-    rgba(6, 78, 59, 0.2) 50%,
-    rgba(15, 23, 42, 0.95) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(34, 197, 94, 0.15) 0%,
+      rgba(16, 185, 129, 0.1) 25%,
+      rgba(6, 78, 59, 0.2) 50%,
+      rgba(15, 23, 42, 0.95) 100%);
 }
 
 .heroPattern {
   position: absolute;
   inset: 0;
-  background-image: 
+  background-image:
     radial-gradient(circle at 20% 30%, rgba(34, 197, 94, 0.1) 0%, transparent 50%),
     radial-gradient(circle at 80% 70%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
     url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
@@ -3256,16 +3247,15 @@
 
 .tableControls {
   margin: 1.5rem 0;
-  background: linear-gradient(135deg, 
-    rgba(30, 41, 59, 0.6), 
-    rgba(51, 65, 85, 0.4)
-  );
+  background: linear-gradient(135deg,
+      rgba(30, 41, 59, 0.6),
+      rgba(51, 65, 85, 0.4));
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
   padding: 1.25rem;
-  box-shadow: 
+  box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
@@ -3563,5 +3553,7 @@
 }
 
 @keyframes loadingSpin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }

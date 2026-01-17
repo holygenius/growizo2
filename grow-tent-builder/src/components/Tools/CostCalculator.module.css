@@ -1,7 +1,7 @@
 .pageContainer {
   min-height: 100vh;
-  background: #0a0a0a;
-  color: white;
+  background: var(--bg-app);
+  color: var(--text-primary);
   display: flex;
   flex-direction: column;
 }
@@ -19,14 +19,14 @@
 }
 
 .toolCard {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 1.5rem;
   padding: 3rem;
   max-width: 500px;
   width: 100%;
-  color: white;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-lg);
 }
 
 .toolHeader {
@@ -43,12 +43,12 @@
 .toolHeader h1 {
   font-size: 1.75rem;
   margin-bottom: 0.5rem;
-  color: white;
+  color: var(--text-primary);
   font-weight: 700;
 }
 
 .toolHeader p {
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 .calculatorForm {
@@ -67,7 +67,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #94a3b8;
+  color: var(--text-secondary);
   font-size: 0.875rem;
   font-weight: 600;
 }
@@ -80,8 +80,8 @@
 }
 
 .inputWrapper {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
   border-radius: 0.75rem;
   padding: 0.75rem 1rem;
   display: flex;
@@ -105,7 +105,7 @@
   border: none;
   font-size: 1.25rem;
   font-weight: 600;
-  color: white;
+  color: var(--text-primary);
   width: 100%;
   outline: none;
 }
@@ -167,10 +167,10 @@
 }
 
 .infoSection h2 {
-  color: white;
+  color: var(--text-primary);
   font-size: 1.75rem;
   margin: 3rem 0 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--border-color);
   padding-bottom: 0.5rem;
 }
 
@@ -218,14 +218,14 @@
 }
 
 .faqItem h3 {
-  color: #e2e8f0;
+  color: var(--text-primary);
   font-size: 1.1rem;
   margin-bottom: 0.75rem;
 }
 
 .faqItem p {
   margin-bottom: 0;
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 @media (max-width: 768px) {
