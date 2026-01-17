@@ -5,8 +5,10 @@
 }
 
 .postHero {
-  height: 60vh;
-  min-height: 400px;
+  min-height: 60vh;
+  /* Ensure it doesn't get smaller than 60vh, but can grow */
+  padding-top: 100px;
+  /* Space for fixed navbar */
   background-size: cover;
   background-position: center;
   position: relative;

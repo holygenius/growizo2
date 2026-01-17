@@ -109,7 +109,8 @@ const BlogPostForm = ({ initialData, onClose, onSuccess, onPreview }) => {
             }));
             setShowImport(false);
             setJsonInput('');
-            alert('Content imported successfully! Markdown converted to HTML.');
+            setJsonInput('');
+            // alert('Content imported successfully! Markdown converted to HTML.');
         } catch (error) {
             console.error('Import error:', error);
             alert('Invalid JSON format or error parsing content');
