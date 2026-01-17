@@ -73,9 +73,9 @@ const BlogPostForm = ({ initialData, onClose, onSuccess, onPreview }) => {
                     {initialData ? t('blogPage.editPost') || t('editBlogPost') : t('blogPage.newPost') || t('newBlogPost')}
                 </h3>
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <button 
+                    <button
                         type="button"
-                        onClick={() => onPreview(formData)} 
+                        onClick={() => onPreview(formData)}
                         className={styles.iconBtn}
                         title={t('blogPage.preview') || 'Preview'}
                         style={{ color: '#3b82f6' }}
@@ -168,6 +168,7 @@ const BlogPostForm = ({ initialData, onClose, onSuccess, onPreview }) => {
                     label={t('coverImage')}
                     value={formData.image_url}
                     onChange={url => setFormData({ ...formData, image_url: url })}
+                    bucket="blogImages"
                 />
 
                 {/* Excerpt - Localized Rich Text */}
@@ -208,7 +209,7 @@ const BlogPostForm = ({ initialData, onClose, onSuccess, onPreview }) => {
                         {t('published')}
                     </label>
                     <span style={{ color: '#64748b', fontSize: '0.875rem' }}>
-                        {formData.is_published 
+                        {formData.is_published
                             ? (t('blogPage.willBeVisible') || 'Post will be visible to all users')
                             : (t('blogPage.savedAsDraft') || 'Post will be saved as draft')
                         }
@@ -217,10 +218,10 @@ const BlogPostForm = ({ initialData, onClose, onSuccess, onPreview }) => {
 
                 {/* Action Buttons */}
                 <div style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'space-between', gap: '1rem', marginTop: '1rem' }}>
-                    <button 
-                        type="button" 
-                        onClick={() => onPreview(formData)} 
-                        className={styles.actionBtn} 
+                    <button
+                        type="button"
+                        onClick={() => onPreview(formData)}
+                        className={styles.actionBtn}
                         style={{ flexDirection: 'row', padding: '0.75rem 1.5rem', height: 'auto', background: 'rgba(59, 130, 246, 0.2)', color: '#3b82f6', border: '1px solid rgba(59, 130, 246, 0.3)' }}
                     >
                         <Eye size={18} />
@@ -260,11 +261,11 @@ export default function BlogPostsManager() {
 
     const filteredPosts = useMemo(() => {
         return posts.filter(post => {
-            const matchesSearch = !searchTerm || 
+            const matchesSearch = !searchTerm ||
                 post.title?.en?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 post.title?.tr?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 post.author?.toLowerCase().includes(searchTerm.toLowerCase());
-            const matchesStatus = statusFilter === 'all' || 
+            const matchesStatus = statusFilter === 'all' ||
                 (statusFilter === 'published' && post.is_published) ||
                 (statusFilter === 'draft' && !post.is_published);
             const matchesCategory = categoryFilter === 'all' || post.category === categoryFilter;
@@ -430,9 +431,9 @@ export default function BlogPostsManager() {
 
             {/* Preview Modal */}
             {previewPost && (
-                <BlogPreviewModal 
-                    post={previewPost} 
-                    onClose={() => setPreviewPost(null)} 
+                <BlogPreviewModal
+                    post={previewPost}
+                    onClose={() => setPreviewPost(null)}
                 />
             )}
         </div>
