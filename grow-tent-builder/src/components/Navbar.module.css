@@ -183,19 +183,34 @@
   padding: 0.5rem;
 }
 
-.mobileMenu {
-  position: absolute;
-  top: 100%;
+.mobileOverlay {
+  position: fixed;
+  top: 0;
   left: 0;
   right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
+}
+
+.mobileMenu {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: var(--bg-card);
-  border-bottom: 1px solid var(--border-color);
-  padding: 1rem;
+  border-top: 1px solid var(--border-color);
+  padding: 1rem 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
   box-shadow: var(--shadow-lg);
   animation: slideDown 0.3s ease-out;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  z-index: 9999;
 }
 
 @keyframes slideDown {

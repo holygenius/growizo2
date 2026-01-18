@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSettings } from '../context/SettingsContext';
 import { UserMenu } from './Auth';
@@ -11,6 +11,18 @@ const Navbar = () => {
     const [isToolsOpen, setIsToolsOpen] = useState(false);
     const [isFeedingOpen, setIsFeedingOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    useEffect(() => {
+        if (isMobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [isMobileMenuOpen]);
 
     const isActive = (path) => {
         const currentPath = location.pathname.replace(/^\/(en|tr)/, '') || '/';
@@ -126,9 +138,12 @@ const Navbar = () => {
                         {isMobileMenuOpen ? '✕' : '☰'}
                     </button>
                 </div>
+            </nav>
 
-                {/* Mobile Menu */}
-                {isMobileMenuOpen && (
+            {/* Mobile Menu - Outside nav for proper z-index */}
+            {isMobileMenuOpen && (
+                <>
+                    <div className={styles.mobileOverlay} onClick={() => setIsMobileMenuOpen(false)} />
                     <div className={styles.mobileMenu}>
                         <Link
                             to={getLocalizedPath('/products')}
@@ -237,8 +252,8 @@ const Navbar = () => {
                             </Link>
                         </div>
                     </div>
-                )}
-            </nav>
+                </>
+            )}
         </>
     );
 };
