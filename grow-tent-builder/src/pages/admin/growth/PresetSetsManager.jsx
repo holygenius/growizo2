@@ -17,6 +17,8 @@ const PresetForm = ({ initialData, onClose, onSuccess }) => {
         tent_size: { width: 120, depth: 120, height: 200, unit: 'cm' },
         products: [],
         media_type: 'soil',
+        nutrient_brand: '', // Brand name for nutrients
+        plant_count: 0, // Number of plants
         image_url: '',
         is_active: true,
         display_order: 0
@@ -135,6 +137,28 @@ const PresetForm = ({ initialData, onClose, onSuccess }) => {
                         <option value="standard">{t('tierStandard')}</option>
                         <option value="premium">{t('tierPremium')}</option>
                     </select>
+                </div>
+
+                <div className={styles.inputGroup}>
+                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>🧪 {t('nutrientBrand') || 'Nutrient Brand'}</label>
+                    <input
+                        type="text"
+                        value={formData.nutrient_brand || ''}
+                        onChange={e => setFormData({ ...formData, nutrient_brand: e.target.value })}
+                        placeholder="e.g., BioBizz, Advanced Nutrients"
+                        style={{ width: '100%', padding: '0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '0.5rem' }}
+                    />
+                </div>
+
+                <div className={styles.inputGroup}>
+                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>🌱 {t('plantCount') || 'Plant Count'}</label>
+                    <input
+                        type="number"
+                        min="0"
+                        value={formData.plant_count || 0}
+                        onChange={e => setFormData({ ...formData, plant_count: parseInt(e.target.value) || 0 })}
+                        style={{ width: '100%', padding: '0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '0.5rem' }}
+                    />
                 </div>
 
                 <ImageUploader

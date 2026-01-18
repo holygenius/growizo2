@@ -27,10 +27,14 @@ const ProductForm = ({ initialData, brands, categories, onClose, onSuccess }) =>
         category_id: '',
         name: { en: '', tr: '' },
         description: { en: '', tr: '' },
-        summary_description: { en: '', tr: '' }, // For UI only, not saved to DB
+        summary_description: { en: '', tr: '' },
+        function_detailed: { en: '', tr: '' }, // Detailed function description
+        key_properties: { en: '', tr: '' }, // Key properties/features
         product_type: 'general',
         specs: {},
         images: [], // Birden fazla görsel desteği
+        available_packaging: [], // Packaging options array
+        compatible_media: ['soil', 'coco', 'hydro'], // Growing media compatibility
         is_active: true,
         is_featured: false,
         icon: '' // Product icon/thumbnail
@@ -143,6 +147,10 @@ const ProductForm = ({ initialData, brands, categories, onClose, onSuccess }) =>
                 name: formData.name,
                 description: formData.description,
                 summary_description: formData.summary_description,
+                function_detailed: formData.function_detailed,
+                key_properties: formData.key_properties,
+                available_packaging: formData.available_packaging,
+                compatible_media: formData.compatible_media,
                 product_type: formData.product_type,
                 specs: formData.specs,
                 images: formData.images,
@@ -482,6 +490,68 @@ const ProductForm = ({ initialData, brands, categories, onClose, onSuccess }) =>
                         placeholder={{ en: 'Write detailed product description with specifications...', tr: 'Ürün detaylarını açıklayın...' }}
                         helpText="Detailed description for product detail page (supports HTML formatting)"
                     />
+                </div>
+
+                {/* Function Detailed - Rich Text */}
+                <div className={styles.inputGroup} style={{ gridColumn: '1 / -1' }}>
+                    <LocalizedContentEditor
+                        label="🔧 Function Detailed"
+                        value={formData.function_detailed || { en: '', tr: '' }}
+                        onChange={function_detailed => setFormData({ ...formData, function_detailed })}
+                        minHeight="200px"
+                        placeholder={{ en: 'Explain how the product works...', tr: 'Ürünün nasıl çalıştığını açıklayın...' }}
+                        helpText="Detailed explanation of product functionality"
+                    />
+                </div>
+
+                {/* Key Properties - Rich Text */}
+                <div className={styles.inputGroup} style={{ gridColumn: '1 / -1' }}>
+                    <LocalizedContentEditor
+                        label="⭐ Key Properties"
+                        value={formData.key_properties || { en: '', tr: '' }}
+                        onChange={key_properties => setFormData({ ...formData, key_properties })}
+                        minHeight="150px"
+                        placeholder={{ en: 'List key features and benefits...', tr: 'Önemli özellikleri ve faydaları listeleyin...' }}
+                        helpText="Key features and properties of the product"
+                    />
+                </div>
+
+                {/* Available Packaging */}
+                <div className={styles.inputGroup}>
+                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>📦 Available Packaging</label>
+                    <input
+                        type="text"
+                        value={(formData.available_packaging || []).join(', ')}
+                        onChange={e => setFormData({ ...formData, available_packaging: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })}
+                        placeholder="250ml, 500ml, 1L, 5L"
+                        style={{ width: '100%', padding: '0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '0.5rem' }}
+                    />
+                    <small style={{ color: '#64748b', marginTop: '0.25rem', display: 'block' }}>Comma separated list of packaging sizes</small>
+                </div>
+
+                {/* Compatible Media */}
+                <div className={styles.inputGroup}>
+                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '0.5rem' }}>🌱 Compatible Growing Media</label>
+                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                        {['soil', 'coco', 'hydro'].map(media => (
+                            <label key={media} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#fff', cursor: 'pointer' }}>
+                                <input
+                                    type="checkbox"
+                                    checked={(formData.compatible_media || []).includes(media)}
+                                    onChange={e => {
+                                        const current = formData.compatible_media || [];
+                                        if (e.target.checked) {
+                                            setFormData({ ...formData, compatible_media: [...current, media] });
+                                        } else {
+                                            setFormData({ ...formData, compatible_media: current.filter(m => m !== media) });
+                                        }
+                                    }}
+                                    style={{ width: '1.25rem', height: '1.25rem' }}
+                                />
+                                {media.charAt(0).toUpperCase() + media.slice(1)}
+                            </label>
+                        ))}
+                    </div>
                 </div>
 
                 {/* Specs Key-Value Editor */}
