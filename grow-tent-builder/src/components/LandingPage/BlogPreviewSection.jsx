@@ -34,6 +34,9 @@ export default function BlogPreviewSection() {
                         <div className="preview-content">
                             <span className="preview-tag">{post.category}</span>
                             <h3>{post.title?.[language] || post.title?.tr}</h3>
+                            {post.excerpt && (
+                                <p>{post.excerpt?.[language] || post.excerpt?.tr}</p>
+                            )}
                             <div className="preview-meta">
                                 <span>{post.readTime}</span>
                                 <span className="arrow">→</span>
