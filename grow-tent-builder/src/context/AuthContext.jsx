@@ -40,8 +40,14 @@ export function AuthProvider({ children }) {
     };
 
     // Check admin status - uses userService
-    const checkAdminStatus = async (userId) => {
+    // keepCurrentOnTimeout: if true, keeps current isAdmin state on timeout (for token refresh scenarios)
+    const checkAdminStatus = async (userId, keepCurrentOnTimeout = false) => {
         const result = await userService.checkAdminStatus(userId);
+        // If result is null/undefined (timeout), optionally keep current state
+        if (result === null && keepCurrentOnTimeout) {
+            console.log('🔐 DEBUG [AuthContext]: Admin check timed out, keeping current state');
+            return;
+        }
         setIsAdmin(result);
     };
 
@@ -51,12 +57,16 @@ export function AuthProvider({ children }) {
             return;
         }
 
+        // Track if initial admin check has been done
+        let initialCheckDone = false;
+
         // Get initial session
         supabase.auth.getSession().then(async ({ data: { session } }) => {
             setSession(session);
             setUser(session?.user ?? null);
             if (session?.user) {
-                await checkAdminStatus(session.user.id);
+                await checkAdminStatus(session.user.id, false);
+                initialCheckDone = true;
                 // Also check if user needs onboarding on initial load
                 const isNew = await checkIfNewUser(session.user.id);
                 console.log('🔐 DEBUG [AuthContext]: Initial session - isNewUser =', isNew);
@@ -72,7 +82,16 @@ export function AuthProvider({ children }) {
                 setUser(session?.user ?? null);
 
                 if (session?.user) {
-                    checkAdminStatus(session.user.id);
+                    // Skip admin re-check on TOKEN_REFRESHED to avoid unnecessary DB calls
+                    // that might timeout and cause logout
+                    if (event === 'TOKEN_REFRESHED') {
+                        console.log('🔐 DEBUG [AuthContext]: Token refreshed, skipping admin re-check');
+                        return;
+                    }
+
+                    // For SIGNED_IN, do a fresh check. For other events, keep current state on timeout.
+                    const keepOnTimeout = event !== 'SIGNED_IN' && initialCheckDone;
+                    checkAdminStatus(session.user.id, keepOnTimeout);
 
                     // Check if this is a new user on SIGNED_IN event
                     if (event === 'SIGNED_IN') {

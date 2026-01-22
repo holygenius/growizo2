@@ -101,7 +101,7 @@ export const userService = {
     /**
      * Check if user is an active admin
      * @param {string} userId - User UUID
-     * @returns {Promise<boolean>}
+     * @returns {Promise<boolean|null>} - true/false for admin status, null if timeout
      */
     async checkAdminStatus(userId) {
         if (!userId || !isSupabaseConfigured()) {
@@ -115,8 +115,16 @@ export const userService = {
                     .select('id')
                     .eq('id', userId)
                     .eq('is_active', true)
-                    .maybeSingle()
+                    .maybeSingle(),
+                10000,
+                { data: null, error: { message: 'Query timeout' }, timeout: true }
             );
+
+            // Return null on timeout so caller can decide what to do
+            if (result.timeout) {
+                console.warn('🔐 checkAdminStatus: Query timed out, returning null');
+                return null;
+            }
 
             return !!result.data && !result.error;
         } catch (error) {

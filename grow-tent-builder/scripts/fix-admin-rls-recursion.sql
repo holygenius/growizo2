@@ -123,10 +123,41 @@ BEGIN
 END $$;
 
 -- ============================================================
--- STEP 2: DROP ALL VERSIONS OF is_admin FUNCTION
+-- STEP 2: DROP DEPENDENT POLICIES FIRST (that use is_admin_check)
 -- ============================================================
-DROP FUNCTION IF EXISTS public.is_admin_check();
-DROP FUNCTION IF EXISTS public.is_admin(uuid);
+DROP POLICY IF EXISTS "admin_logs_select" ON public.admin_access_logs;
+DROP POLICY IF EXISTS "schedule_items_admin_read" ON public.feeding_schedule_items;
+DROP POLICY IF EXISTS "schedule_items_admin_insert" ON public.feeding_schedule_items;
+DROP POLICY IF EXISTS "schedule_items_admin_update" ON public.feeding_schedule_items;
+DROP POLICY IF EXISTS "schedule_items_admin_delete" ON public.feeding_schedule_items;
+
+-- Drop all policies on admin_access_logs
+DO $$ 
+DECLARE 
+    pol RECORD;
+BEGIN
+    FOR pol IN SELECT policyname FROM pg_policies WHERE tablename = 'admin_access_logs' AND schemaname = 'public'
+    LOOP
+        EXECUTE format('DROP POLICY IF EXISTS %I ON public.admin_access_logs', pol.policyname);
+    END LOOP;
+END $$;
+
+-- Drop all policies on feeding_schedule_items
+DO $$ 
+DECLARE 
+    pol RECORD;
+BEGIN
+    FOR pol IN SELECT policyname FROM pg_policies WHERE tablename = 'feeding_schedule_items' AND schemaname = 'public'
+    LOOP
+        EXECUTE format('DROP POLICY IF EXISTS %I ON public.feeding_schedule_items', pol.policyname);
+    END LOOP;
+END $$;
+
+-- ============================================================
+-- STEP 3: DROP ALL VERSIONS OF is_admin FUNCTION (now safe)
+-- ============================================================
+DROP FUNCTION IF EXISTS public.is_admin_check() CASCADE;
+DROP FUNCTION IF EXISTS public.is_admin(uuid) CASCADE;
 
 -- ============================================================
 -- STEP 3: CREATE HELPER FUNCTION (SECURITY DEFINER)
@@ -449,6 +480,51 @@ USING (public.is_admin_check());
 -- Admins can delete preset sets
 CREATE POLICY "preset_sets_admin_delete"
 ON public.preset_sets FOR DELETE
+USING (public.is_admin_check());
+
+-- ============================================================
+-- STEP 15: CREATE POLICIES FOR admin_access_logs
+-- ============================================================
+ALTER TABLE public.admin_access_logs ENABLE ROW LEVEL SECURITY;
+
+-- Admins can read logs
+CREATE POLICY "admin_logs_select"
+ON public.admin_access_logs FOR SELECT
+USING (public.is_admin_check());
+
+-- Admins can insert logs
+CREATE POLICY "admin_logs_insert"
+ON public.admin_access_logs FOR INSERT
+WITH CHECK (public.is_admin_check());
+
+-- ============================================================
+-- STEP 16: CREATE POLICIES FOR feeding_schedule_items
+-- ============================================================
+ALTER TABLE public.feeding_schedule_items ENABLE ROW LEVEL SECURITY;
+
+-- Anyone can read schedule items (public data)
+CREATE POLICY "schedule_items_public_read"
+ON public.feeding_schedule_items FOR SELECT
+USING (true);
+
+-- Admins can read all schedule items
+CREATE POLICY "schedule_items_admin_read"
+ON public.feeding_schedule_items FOR SELECT
+USING (public.is_admin_check());
+
+-- Admins can insert schedule items
+CREATE POLICY "schedule_items_admin_insert"
+ON public.feeding_schedule_items FOR INSERT
+WITH CHECK (public.is_admin_check());
+
+-- Admins can update schedule items
+CREATE POLICY "schedule_items_admin_update"
+ON public.feeding_schedule_items FOR UPDATE
+USING (public.is_admin_check());
+
+-- Admins can delete schedule items
+CREATE POLICY "schedule_items_admin_delete"
+ON public.feeding_schedule_items FOR DELETE
 USING (public.is_admin_check());
 
 -- ============================================================

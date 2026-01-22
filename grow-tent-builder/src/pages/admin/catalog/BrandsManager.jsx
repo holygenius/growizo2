@@ -79,12 +79,14 @@ const BrandForm = ({ initialData, onClose, onSuccess }) => {
                     label="Brand Logo"
                     value={formData.logo_url}
                     onChange={url => setFormData({ ...formData, logo_url: url })}
+                    bucket="brand-images"
                 />
 
                 <ImageUploader
                     label="Brand Icon"
                     value={formData.icon}
                     onChange={url => setFormData({ ...formData, icon: url })}
+                    bucket="brand-images"
                 />
 
                 <div className={styles.inputGroup}>
