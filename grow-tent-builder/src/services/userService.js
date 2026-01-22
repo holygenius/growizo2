@@ -100,7 +100,8 @@ export const userService = {
 
     /**
      * Check if user is an active admin
-     * @param {string} userId - User UUID
+     * Uses the is_admin_check() RPC function which bypasses RLS
+     * @param {string} userId - User UUID (not used, function uses auth.uid())
      * @returns {Promise<boolean|null>} - true/false for admin status, null if timeout
      */
     async checkAdminStatus(userId) {
@@ -109,13 +110,9 @@ export const userService = {
         }
 
         try {
+            // Use RPC function instead of direct table query to avoid RLS recursion
             const result = await withTimeout(
-                supabase
-                    .from('admin_users')
-                    .select('id')
-                    .eq('id', userId)
-                    .eq('is_active', true)
-                    .maybeSingle(),
+                supabase.rpc('is_admin_check'),
                 10000,
                 { data: null, error: { message: 'Query timeout' }, timeout: true }
             );
@@ -126,7 +123,13 @@ export const userService = {
                 return null;
             }
 
-            return !!result.data && !result.error;
+            if (result.error) {
+                console.error('🔐 checkAdminStatus RPC error:', result.error);
+                return false;
+            }
+
+            console.log('🔐 checkAdminStatus result:', result.data);
+            return !!result.data;
         } catch (error) {
             console.error('userService.checkAdminStatus error:', error);
             return false;

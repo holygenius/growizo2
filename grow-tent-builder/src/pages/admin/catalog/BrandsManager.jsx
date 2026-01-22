@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { adminService } from '../../../services/adminService';
 import { Trash2, Edit2, Plus, X, Save, RefreshCw } from 'lucide-react';
 import styles from '../Admin.module.css';
-import ImageUploader from '../components/ImageUploader';
+import GalleryPicker from '../components/GalleryPicker';
 import TableFilter from '../components/TableFilter';
 import { useAdmin } from '../../../context/AdminContext';
 
@@ -75,14 +75,14 @@ const BrandForm = ({ initialData, onClose, onSuccess }) => {
                     />
                 </div>
 
-                <ImageUploader
+                <GalleryPicker
                     label="Brand Logo"
                     value={formData.logo_url}
                     onChange={url => setFormData({ ...formData, logo_url: url })}
                     bucket="brand-images"
                 />
 
-                <ImageUploader
+                <GalleryPicker
                     label="Brand Icon"
                     value={formData.icon}
                     onChange={url => setFormData({ ...formData, icon: url })}
