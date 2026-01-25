@@ -34,7 +34,9 @@ const updateSW = registerSW({
     },
     onRegisterError(error) {
         console.error('❌ Service Worker registration error:', error);
-    }
+    },
+    // Immediately reload when new content is available and user confirms (or auto-update is set)
+    immediate: true
 });
 
 // Root component with update prompt
