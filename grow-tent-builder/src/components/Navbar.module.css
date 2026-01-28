@@ -144,6 +144,25 @@
   margin: 0.25rem 0;
 }
 
+.menuGroup {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.menuGroup:last-child {
+  border-bottom: none;
+}
+
+.menuLabel {
+  display: block;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
 .brandIcon {
   width: 20px;
   height: 20px;
@@ -204,7 +223,6 @@
   color: var(--text-primary);
   cursor: pointer;
   padding: 0.5rem;
-  display: flex;
   align-items: center;
   justify-content: center;
 }

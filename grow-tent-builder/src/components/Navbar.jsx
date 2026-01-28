@@ -10,10 +10,8 @@ const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [isToolsOpen, setIsToolsOpen] = useState(false);
-    const [isFeedingOpen, setIsFeedingOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const toolsTimeoutRef = useRef(null);
-    const feedingTimeoutRef = useRef(null);
 
     // 300ms hover delay to prevent accidental dropdown opens
     const handleToolsMouseEnter = () => {
@@ -26,19 +24,6 @@ const Navbar = () => {
     const handleToolsMouseLeave = () => {
         toolsTimeoutRef.current = setTimeout(() => {
             setIsToolsOpen(false);
-        }, 300);
-    };
-
-    const handleFeedingMouseEnter = () => {
-        if (feedingTimeoutRef.current) {
-            clearTimeout(feedingTimeoutRef.current);
-        }
-        setIsFeedingOpen(true);
-    };
-
-    const handleFeedingMouseLeave = () => {
-        feedingTimeoutRef.current = setTimeout(() => {
-            setIsFeedingOpen(false);
         }, 300);
     };
 
@@ -84,32 +69,6 @@ const Navbar = () => {
                             {t('navProducts') || 'Store'}
                         </Link>
 
-                        {/* Feeding Programs Dropdown */}
-                        <div
-                            className={styles.dropdownContainer}
-                            onMouseEnter={handleFeedingMouseEnter}
-                            onMouseLeave={handleFeedingMouseLeave}
-                        >
-                            <span
-                                className={`${styles.navLink} ${location.pathname.includes('/feeding') ? styles.navLinkActive : ''}`}
-                            >
-                                {t('navFeedingPrograms')} <Icon icon="mdi:chevron-down" size={16} />
-                            </span>
-                            {isFeedingOpen && (
-                                <div className={styles.dropdownMenu}>
-                                    <Link to={getLocalizedPath('/feeding/advanced-nutrients')} className={styles.dropdownItem}>
-                                        <img src="/images/advanced-nutrients-logo.png" alt="Advanced Nutrients" className={styles.brandIcon} /> {t('anFeedingScheduleTitle')}
-                                    </Link>
-                                    <Link to={getLocalizedPath('/feeding/biobizz')} className={styles.dropdownItem}>
-                                        <img src="/images/cropped-Biobizz-Icon-Brown-Texture-180x180.jpg" alt="BioBizz" className={styles.brandIcon} /> {t('navBiobizz')}
-                                    </Link>
-                                    <Link to={getLocalizedPath('/feeding/canna')} className={styles.dropdownItem}>
-                                        <img src="/images/canna-logo.svg" alt="CANNA" className={styles.brandIcon} /> {t('navCanna')}
-                                    </Link>
-                                </div>
-                            )}
-                        </div>
-
                         {/* Toolkit Dropdown */}
                         <div
                             className={styles.dropdownContainer}
@@ -117,25 +76,41 @@ const Navbar = () => {
                             onMouseLeave={handleToolsMouseLeave}
                         >
                             <span
-                                className={`${styles.navLink} ${location.pathname.includes('/tools') ? styles.navLinkActive : ''}`}
+                                className={`${styles.navLink} ${location.pathname.includes('/tools') || location.pathname.includes('/feeding') ? styles.navLinkActive : ''}`}
                             >
                                 <Icon icon="mdi:toolbox" size={18} style={{ marginRight: 4 }} />
                                 {t('navToolkit') || t('navTools')} <Icon icon="mdi:chevron-down" size={16} />
                             </span>
                             {isToolsOpen && (
                                 <div className={styles.dropdownMenu}>
-                                    <Link to={getLocalizedPath('/tools/electricity-cost-calculator')} className={styles.dropdownItem}>
-                                        <Icon icon="mdi:lightning-bolt" size={18} /> {t('navCostCalc')}
-                                    </Link>
-                                    <Link to={getLocalizedPath('/tools/co2-calculator')} className={styles.dropdownItem}>
-                                        <Icon icon="mdi:smog" size={18} /> {t('navCo2Calc')}
-                                    </Link>
-                                    <Link to={getLocalizedPath('/tools/unit-converter')} className={styles.dropdownItem}>
-                                        <Icon icon="mdi:water" size={18} /> {t('navUnitConv')}
-                                    </Link>
-                                    <Link to={getLocalizedPath('/tools/ppfd-heatmap')} className={styles.dropdownItem}>
-                                        <Icon icon="mdi:white-balance-sunny" size={18} /> {t('navPpfdTool')}
-                                    </Link>
+                                    <div className={styles.menuGroup}>
+                                        <span className={styles.menuLabel}>Calculators</span>
+                                        <Link to={getLocalizedPath('/tools/electricity-cost-calculator')} className={styles.dropdownItem}>
+                                            <Icon icon="mdi:lightning-bolt" size={18} /> {t('navCostCalc')}
+                                        </Link>
+                                        <Link to={getLocalizedPath('/tools/co2-calculator')} className={styles.dropdownItem}>
+                                            <Icon icon="mdi:smog" size={18} /> {t('navCo2Calc')}
+                                        </Link>
+                                        <Link to={getLocalizedPath('/tools/unit-converter')} className={styles.dropdownItem}>
+                                            <Icon icon="mdi:water" size={18} /> {t('navUnitConv')}
+                                        </Link>
+                                        <Link to={getLocalizedPath('/tools/ppfd-heatmap')} className={styles.dropdownItem}>
+                                            <Icon icon="mdi:white-balance-sunny" size={18} /> {t('navPpfdTool')}
+                                        </Link>
+                                    </div>
+
+                                    <div className={styles.menuGroup}>
+                                        <span className={styles.menuLabel}>Feeding Schedules</span>
+                                        <Link to={getLocalizedPath('/feeding/advanced-nutrients')} className={styles.dropdownItem}>
+                                            <img src="/images/advanced-nutrients-logo.png" alt="Advanced Nutrients" className={styles.brandIcon} /> {t('anFeedingScheduleTitle')}
+                                        </Link>
+                                        <Link to={getLocalizedPath('/feeding/biobizz')} className={styles.dropdownItem}>
+                                            <img src="/images/cropped-Biobizz-Icon-Brown-Texture-180x180.jpg" alt="BioBizz" className={styles.brandIcon} /> {t('navBiobizz')}
+                                        </Link>
+                                        <Link to={getLocalizedPath('/feeding/canna')} className={styles.dropdownItem}>
+                                            <img src="/images/canna-logo.svg" alt="CANNA" className={styles.brandIcon} /> {t('navCanna')}
+                                        </Link>
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -187,38 +162,11 @@ const Navbar = () => {
                             {t('navProducts') || 'Store'}
                         </Link>
 
-                        {/* Mobile Feeding Programs */}
-                        <div>
-                            <div className={styles.mobileLink} style={{ opacity: 0.7 }}>{t('navFeedingPrograms')}</div>
-                            <div className={styles.mobileTools}>
-                                <Link
-                                    to={getLocalizedPath('/feeding/advanced-nutrients')}
-                                    className={styles.mobileLink}
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                >
-                                    <img src="/images/advanced-nutrients-logo.png" alt="Advanced Nutrients" className={styles.brandIconMobile} /> {t('anFeedingScheduleTitle')}
-                                </Link>
-                                <Link
-                                    to={getLocalizedPath('/feeding/biobizz')}
-                                    className={styles.mobileLink}
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                >
-                                    <img src="/images/cropped-Biobizz-Icon-Brown-Texture-180x180.jpg" alt="BioBizz" className={styles.brandIconMobile} /> {t('navBiobizz')}
-                                </Link>
-                                <Link
-                                    to={getLocalizedPath('/feeding/canna')}
-                                    className={styles.mobileLink}
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                >
-                                    <img src="/images/canna-logo.svg" alt="CANNA" className={styles.brandIconMobile} /> {t('navCanna')}
-                                </Link>
-                            </div>
-                        </div>
-
                         {/* Mobile Toolkit */}
                         <div>
                             <div className={styles.mobileLink} style={{ opacity: 0.7 }}>{t('navToolkit') || t('navTools')}</div>
                             <div className={styles.mobileTools}>
+                                <div style={{ margin: '1rem 0 0.5rem', opacity: 0.5, fontSize: '0.8em', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.05em' }}>Calculators</div>
                                 <Link
                                     to={getLocalizedPath('/tools/electricity-cost-calculator')}
                                     className={styles.mobileLink}
@@ -246,6 +194,29 @@ const Navbar = () => {
                                     onClick={() => setIsMobileMenuOpen(false)}
                                 >
                                     {t('navPpfdTool')}
+                                </Link>
+
+                                <div style={{ margin: '1rem 0 0.5rem', opacity: 0.5, fontSize: '0.8em', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.05em' }}>Feeding Schedules</div>
+                                <Link
+                                    to={getLocalizedPath('/feeding/advanced-nutrients')}
+                                    className={styles.mobileLink}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                >
+                                    <img src="/images/advanced-nutrients-logo.png" alt="Advanced Nutrients" className={styles.brandIconMobile} /> {t('anFeedingScheduleTitle')}
+                                </Link>
+                                <Link
+                                    to={getLocalizedPath('/feeding/biobizz')}
+                                    className={styles.mobileLink}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                >
+                                    <img src="/images/cropped-Biobizz-Icon-Brown-Texture-180x180.jpg" alt="BioBizz" className={styles.brandIconMobile} /> {t('navBiobizz')}
+                                </Link>
+                                <Link
+                                    to={getLocalizedPath('/feeding/canna')}
+                                    className={styles.mobileLink}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                >
+                                    <img src="/images/canna-logo.svg" alt="CANNA" className={styles.brandIconMobile} /> {t('navCanna')}
                                 </Link>
                             </div>
                         </div>

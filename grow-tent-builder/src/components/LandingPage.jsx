@@ -58,8 +58,8 @@ export default function LandingPage() {
             
             <Navbar />
             <HeroSection onStartBuilding={handleStartBuilding} />
-            <ToolsPreviewSection />
             <FeaturesSection />
+            <ToolsPreviewSection />
             <InfoBoxesSection />
             <PPFDSection />
             <FeedingSection />
