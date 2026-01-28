@@ -9,6 +9,7 @@ import {
     GROWTH_STAGES,
     calculateDLI
 } from '../../utils/lightingUtils';
+import Icon from '../Common/Icon';
 import Navbar from '../Navbar';
 import Footer from '../Footer';
 import { useSettings } from '../../context/SettingsContext';
@@ -574,7 +575,9 @@ export default function PPFDHeatMapTool() {
                             <div className={styles.lightList}>
                                 {AVAILABLE_LIGHTS.map(light => (
                                     <button key={light.id} className={styles.lightBtn} onClick={() => addLight(light)}>
-                                        <span>💡</span>
+                                        <span className={styles.lightIcon}>
+                                            <Icon icon="mdi:lightbulb-group" size={20} />
+                                        </span>
                                         <div className={styles.lightInfo}>
                                             <span className={styles.lightName}>{light.name}</span>
                                             <span className={styles.lightSpecs}>{light.maxPPFD} PPFD</span>

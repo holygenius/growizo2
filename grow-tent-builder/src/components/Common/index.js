@@ -1,2 +1,3 @@
-export { default as Header } from './Header';
-export { default as Footer } from './Footer';
+// Common components barrel export
+export { default as Icon } from './Icon';
+export { iconSets, getIconUrl } from './Icon';

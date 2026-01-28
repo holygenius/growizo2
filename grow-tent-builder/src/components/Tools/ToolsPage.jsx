@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useSettings } from '../../context/SettingsContext';
+import Icon from '../Common/Icon';
 import Navbar from '../Navbar';
 import Footer from '../Footer';
 import styles from './ToolsPage.module.css';
@@ -12,7 +13,7 @@ const ToolsPage = () => {
     const tools = [
         {
             id: 'cost',
-            icon: '⚡',
+            icon: 'mdi:lightning-bolt',
             titleKey: 'toolCostTitle',
             descKey: 'toolCostDesc',
             path: '/tools/electricity-cost-calculator',
@@ -20,7 +21,7 @@ const ToolsPage = () => {
         },
         {
             id: 'unit',
-            icon: '💧',
+            icon: 'mdi:water',
             titleKey: 'toolUnitTitle',
             descKey: 'toolUnitDesc',
             path: '/tools/unit-converter',
@@ -28,7 +29,7 @@ const ToolsPage = () => {
         },
         {
             id: 'co2',
-            icon: '🌫️',
+            icon: 'mdi:smog',
             titleKey: 'toolCo2Title',
             descKey: 'toolCo2Desc',
             path: '/tools/co2-calculator',
@@ -36,7 +37,7 @@ const ToolsPage = () => {
         },
         {
             id: 'ppfd',
-            icon: '🌡️',
+            icon: 'mdi:thermometer-lines',
             titleKey: 'toolPpfdTitle',
             descKey: 'toolPpfdDesc',
             path: '/tools/ppfd-heatmap',
@@ -59,7 +60,9 @@ const ToolsPage = () => {
                 <div className={styles.toolsGrid}>
                     {tools.map((tool) => (
                         <Link to={getLocalizedPath(tool.path)} key={tool.id} className={styles.toolCard}>
-                            <div className={styles.cardIcon}>{tool.icon}</div>
+                            <div className={styles.cardIcon}>
+                                <Icon icon={tool.icon} size={32} />
+                            </div>
                             <h3>{t(tool.titleKey)}</h3>
                             <p>{t(tool.descKey)}</p>
                             <div className={styles.cardArrow}>→</div>

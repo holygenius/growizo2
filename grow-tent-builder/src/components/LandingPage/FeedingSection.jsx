@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSettings } from '../../context/SettingsContext';
+import Icon from '../Common/Icon';
 
 export default function FeedingSection() {
     const { t, getLocalizedPath } = useSettings();
@@ -8,7 +9,7 @@ export default function FeedingSection() {
     return (
         <section className="feeding-section">
             <div className="section-header">
-                <h2>🌱 {t('landingFeedingTitle')}</h2>
+                <h2><Icon icon="mdi:leaf" size={24} /> {t('landingFeedingTitle')}</h2>
                 <p>{t('landingFeedingDesc')}</p>
             </div>
             <div className="feeding-grid">
@@ -25,7 +26,7 @@ export default function FeedingSection() {
                         <p>{t('biobizzDesc')}</p>
                         <span className="brand-tag">BioBizz</span>
                     </div>
-                    <div className="feeding-arrow">→</div>
+                    <div className="feeding-arrow"><Icon icon="mdi:arrow-right" size={20} /></div>
                 </Link>
 
                 <Link to={getLocalizedPath('/feeding/advanced-nutrients')} className="feeding-card advanced-nutrients">
@@ -37,7 +38,7 @@ export default function FeedingSection() {
                         <p>{t('anFeedingScheduleSubtitle')}</p>
                         <span className="brand-tag">Advanced Nutrients</span>
                     </div>
-                    <div className="feeding-arrow">→</div>
+                    <div className="feeding-arrow"><Icon icon="mdi:arrow-right" size={20} /></div>
                 </Link>
 
                 <Link to={getLocalizedPath('/feeding/canna')} className="feeding-card canna">
@@ -49,7 +50,7 @@ export default function FeedingSection() {
                         <p>{t('cannaScheduleSubtitle')}</p>
                         <span className="brand-tag">CANNA</span>
                     </div>
-                    <div className="feeding-arrow">→</div>
+                    <div className="feeding-arrow"><Icon icon="mdi:arrow-right" size={20} /></div>
                 </Link>
             </div>
         </section>

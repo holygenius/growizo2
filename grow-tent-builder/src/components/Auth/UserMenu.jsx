@@ -6,6 +6,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useSettings } from '../../context/SettingsContext';
+import Icon from '../Common/Icon';
 import styles from './UserMenu.module.css';
 
 export default function UserMenu() {
@@ -75,7 +76,7 @@ export default function UserMenu() {
                 <span className={styles.avatarName}>
                     {user?.user_metadata?.full_name || user?.email?.split('@')[0]}
                 </span>
-                {isAdmin && <span className={styles.adminBadge}>👑</span>}
+                {isAdmin && <span className={styles.adminBadge}><Icon icon="mdi:crown" size={14} /></span>}
             </button>
 
             {isOpen && (
@@ -96,18 +97,18 @@ export default function UserMenu() {
 
                     {isAdmin && (
                         <button className={styles.menuItem} onClick={() => { setIsOpen(false); window.location.href = '/admin'; }}>
-                            <span>⚡</span>
+                            <Icon icon="mdi:lightning-bolt" size={18} />
                             {language === 'tr' ? 'Yönetim Paneli' : 'Admin Dashboard'}
                         </button>
                     )}
 
                     <button className={styles.menuItem} onClick={() => { setIsOpen(false); window.location.href = `/${language}/profile`; }}>
-                        <span>👤</span>
+                        <Icon icon="mdi:account" size={18} />
                         {language === 'tr' ? 'Profil' : 'Profile'}
                     </button>
 
                     <button className={styles.menuItem} onClick={handleSignOut}>
-                        <span>🚪</span>
+                        <Icon icon="mdi:door" size={18} />
                         {language === 'tr' ? 'Çıkış Yap' : 'Sign Out'}
                     </button>
                 </div>

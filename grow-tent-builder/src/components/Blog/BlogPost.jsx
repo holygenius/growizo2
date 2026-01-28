@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useSettings } from '../../context/SettingsContext';
 import { getBlogPosts, getBlogPostBySlug } from '../../services/blogApi';
 import Footer from '../Footer';
+import Icon from '../Common/Icon';
 import styles from './BlogPost.module.css';
 
 const Quiz = ({ data }) => {
@@ -57,17 +58,17 @@ const Quiz = ({ data }) => {
     return (
       <div className={`${styles.quizContainer} fade-in-up`}>
         <div className={styles.quizResult}>
-          <h3>🎉 {language === 'tr' ? 'Test Tamamlandı!' : 'Quiz Completed!'}</h3>
+          <h3><Icon icon="mdi:party-popper" size={20} /> {language === 'tr' ? 'Test Tamamlandı!' : 'Quiz Completed!'}</h3>
           <div className={styles.scoreCircle}>
             <span className={styles.scoreNumber}>{score}</span>
             <span className={styles.scoreTotal}>/ {data.length}</span>
           </div>
           <p className={styles.scoreMessage}>
             {score === data.length
-              ? (language === 'tr' ? "Mükemmel skor! Sen bir usta yetiştiricisin! 🌿" : "Perfect score! You're a master grower! 🌿")
+              ? (language === 'tr' ? "Mükemmel skor! Sen bir usta yetiştiricisin!" : "Perfect score! You're a master grower!")
               : score >= data.length / 2
-                ? (language === 'tr' ? "İyi iş! Konuya hakimsin. 👍" : "Good job! You know your stuff. 👍")
-                : (language === 'tr' ? "Öğrenmeye devam! Bir dahaki sefere yaparsın. 📚" : "Keep learning! You'll get it next time. 📚")}
+                ? (language === 'tr' ? "İyi iş! Konuya hakimsin." : "Good job! You know your stuff.")
+                : (language === 'tr' ? "Öğrenmeye devam! Bir dahaki sefere yaparsın." : "Keep learning! You'll get it next time.")}
           </p>
           <button className={styles.quizSubmitBtn} onClick={handleRetake}>
             {language === 'tr' ? 'Testi Tekrarla' : 'Retake Quiz'}
@@ -96,7 +97,7 @@ const Quiz = ({ data }) => {
             />
           </div>
         </div>
-        <h3>🧠 {language === 'tr' ? 'Bilgini Test Et' : 'Test Your Knowledge'}</h3>
+        <h3><Icon icon="mdi:brain" size={20} /> {language === 'tr' ? 'Bilgini Test Et' : 'Test Your Knowledge'}</h3>
       </div>
 
       <div>
@@ -110,8 +111,8 @@ const Quiz = ({ data }) => {
               disabled={showResult}
             >
               {optionText}
-              {showResult && index === question.correctAnswer && <span>✅</span>}
-              {showResult && selectedOption === index && !isCorrect && <span>❌</span>}
+              {showResult && index === question.correctAnswer && <span><Icon icon="mdi:check-circle" size={16} /></span>}
+              {showResult && selectedOption === index && !isCorrect && <span><Icon icon="mdi:close-circle" size={16} /></span>}
             </button>
           ))}
         </div>
@@ -330,10 +331,10 @@ const BlogPost = () => {
             <div className={styles.shareWidget}>
               <h4>{language === 'tr' ? 'PAYLAŞ' : 'SHARE'}</h4>
               <div className={styles.shareButtonsRow}>
-                <button className={styles.shareIconBtn} title="WhatsApp">💬</button>
-                <button className={styles.shareIconBtn} title="Twitter">𝕏</button>
-                <button className={styles.shareIconBtn} title="LinkedIn">in</button>
-                <button className={styles.shareIconBtn} title="Facebook">f</button>
+                <button className={styles.shareIconBtn} title="WhatsApp"><Icon icon="mdi:whatsapp" size={18} /></button>
+                <button className={styles.shareIconBtn} title="Twitter"><Icon icon="mdi:twitter" size={18} /></button>
+                <button className={styles.shareIconBtn} title="LinkedIn"><Icon icon="mdi:linkedin" size={18} /></button>
+                <button className={styles.shareIconBtn} title="Facebook"><Icon icon="mdi:facebook" size={18} /></button>
               </div>
             </div>
           </div>

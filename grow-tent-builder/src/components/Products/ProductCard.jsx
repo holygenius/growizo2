@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSettings } from '../../context/SettingsContext';
-import { ArrowRight, ShoppingBag, Eye, Star, Store } from 'lucide-react';
+import Icon from '../Common/Icon';
 import styles from './Products.module.css';
 
 const ProductCard = ({ product, viewMode = 'grid' }) => {
@@ -69,7 +69,7 @@ const ProductCard = ({ product, viewMode = 'grid' }) => {
             <div className={styles.badgeContainer}>
                 {product.is_featured && (
                     <span className={`${styles.badge} ${styles.badgeFeatured}`}>
-                        <Star size={10} /> {t('featured') || 'Featured'}
+                        <Icon icon="mdi:star" size={12} className={styles.badgeIcon} /> {t('featured') || 'Featured'}
                     </span>
                 )}
                 {product.discount > 0 && (
@@ -79,7 +79,7 @@ const ProductCard = ({ product, viewMode = 'grid' }) => {
                 )}
                 {vendorCount > 0 && (
                     <span className={`${styles.badge}`} style={{ background: 'rgba(59, 130, 246, 0.2)', color: '#3b82f6' }}>
-                        <Store size={10} /> {vendorCount} {language === 'tr' ? 'satıcı' : 'vendor'}{vendorCount > 1 ? 's' : ''}
+                        <Icon icon="mdi:store" size={12} className={styles.badgeIcon} /> {vendorCount} {language === 'tr' ? 'satıcı' : 'vendor'}{vendorCount > 1 ? 's' : ''}
                     </span>
                 )}
             </div>
@@ -99,14 +99,14 @@ const ProductCard = ({ product, viewMode = 'grid' }) => {
                 {/* Quick Actions Overlay */}
                 <div className={styles.quickActions}>
                     <button className={styles.quickActionBtn} title={t('quickView') || 'Quick View'}>
-                        <Eye size={18} />
+                        <Icon icon="mdi:eye" size={20} />
                     </button>
                     <Link
                         to={getLocalizedPath(`/products/${product.sku}`)}
                         className={`${styles.quickActionBtn} ${styles.quickActionPrimary}`}
                         title={t('viewDetails') || 'View Details'}
                     >
-                        <ArrowRight size={18} />
+                        <Icon icon="mdi:arrow-right" size={20} />
                     </Link>
                 </div>
             </Link>
@@ -139,7 +139,7 @@ const ProductCard = ({ product, viewMode = 'grid' }) => {
                         to={getLocalizedPath(`/products/${product.sku}`)} 
                         className={styles.cardBtn}
                     >
-                        <ShoppingBag size={16} />
+                        <Icon icon="mdi:shopping" size={18} />
                         {t('viewProduct') || 'View'}
                     </Link>
                 </div>

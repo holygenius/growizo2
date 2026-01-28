@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { productService } from '../../services/productService';
 import { useSettings } from '../../context/SettingsContext';
-import { ArrowLeft, Check, Copy, ShoppingCart, Tag, Share2, Info, Package, Loader, Calendar, Droplets } from 'lucide-react';
+import Icon from '../Common/Icon';
 import Navbar from '../Navbar';
 import Footer from '../Footer';
 import styles from './Products.module.css';
@@ -260,7 +260,7 @@ const ProductDetail = () => {
             <div className={styles.pageWrapper}>
                 <Navbar />
                 <div className={styles.loadingState} style={{ minHeight: '60vh' }}>
-                    <Loader className={styles.spinner} size={48} />
+                    <Icon icon="mdi:loading" className={styles.spinner} size={48} />
                     <p>{t('loading') || 'Loading...'}</p>
                 </div>
                 <Footer />
@@ -273,7 +273,7 @@ const ProductDetail = () => {
             <div className={styles.pageWrapper}>
                 <Navbar />
                 <div className={styles.emptyState} style={{ minHeight: '60vh' }}>
-                    <Package size={64} strokeWidth={1} />
+                    <Icon icon="mdi:package-variant-closed" size={64} />
                     <h3>{t('productNotFound') || 'Product Not Found'}</h3>
                     <p>{t('productNotFoundDesc') || 'The product you are looking for does not exist or has been removed.'}</p>
                     <Link to={getLocalizedPath('/products')} className={styles.resetBtn}>
@@ -344,7 +344,7 @@ const ProductDetail = () => {
 
                     <div className={styles.detailMeta}>
                         <span className={styles.detailSku}>
-                            <Tag size={14} /> SKU: {product.sku}
+                            <Icon icon="mdi:tag" size={14} /> SKU: {product.sku}
                         </span>
                         {product.is_featured && (
                             <span className={styles.detailFeaturedBadge}>★ {t('featured') || 'Featured'}</span>
@@ -421,7 +421,7 @@ const ProductDetail = () => {
                                                     rel="noopener noreferrer"
                                                     className={styles.buyButton}
                                                 >
-                                                    <ShoppingCart size={14} />
+                                                    <Icon icon="mdi:cart" size={14} />
                                                     {language === 'tr' ? 'Satın Al' : 'Buy'}
                                                 </a>
                                             )}
@@ -442,7 +442,7 @@ const ProductDetail = () => {
                     {/* Actions - Removed Add to Cart since we show vendor links */}
                     <div className={styles.detailActions}>
                         <button className={styles.detailShareBtn}>
-                            <Share2 size={20} />
+                            <Icon icon="mdi:share-variant" size={20} />
                             {language === 'tr' ? 'Paylaş' : 'Share'}
                         </button>
                     </div>
@@ -482,7 +482,7 @@ const ProductDetail = () => {
                 {description && (
                     <div className={styles.detailSection}>
                         <div className={styles.detailSectionHeader}>
-                            <Info size={20} />
+                            <Icon icon="mdi:information" size={20} />
                             <h3>{t('productDescription') || 'Product Description'}</h3>
                         </div>
                         <div
@@ -496,7 +496,7 @@ const ProductDetail = () => {
                 {Object.keys(specs).length > 0 && (
                     <div className={styles.detailSection}>
                         <div className={styles.detailSectionHeader}>
-                            <Tag size={20} />
+                            <Icon icon="mdi:tag" size={20} />
                             <h3>{t('specifications') || 'Technical Specifications'}</h3>
                         </div>
                         <div className={styles.detailSpecsList}>
@@ -525,11 +525,11 @@ const ProductDetail = () => {
                 {specs.schedule_default && typeof specs.schedule_default === 'object' && Object.keys(specs.schedule_default).length > 0 && (
                     <div className={styles.detailSection}>
                         <div className={styles.detailSectionHeader}>
-                            <Calendar size={20} />
+                            <Icon icon="mdi:calendar" size={20} />
                             <h3>{language === 'tr' ? 'Beslenme Programı' : 'Feeding Schedule'}</h3>
                         </div>
                         <div className={styles.feedingScheduleInfo}>
-                            <Droplets size={16} />
+                            <Icon icon="mdi:water-drop" size={16} />
                             <span>{language === 'tr' ? `Doz birimi: ${specs.dose_unit || 'ml/L'}` : `Dose unit: ${specs.dose_unit || 'ml/L'}`}</span>
                         </div>
                         <div className={styles.feedingScheduleTable}>

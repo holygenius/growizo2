@@ -14,6 +14,7 @@ import { brandService } from '../../services/brandService';
 import { supabase } from '../../services/supabase';
 import Navbar from '../Navbar';
 import Footer from '../Footer';
+import Icon from '../Common/Icon';
 import styles from './CannaSchedule.module.css'; // Dedicated CANNA styles
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -431,7 +432,7 @@ export default function CannaSchedule() {
                             transition={{ delay: 0.4 }}
                         >
                             <div className={styles.heroStatItem}>
-                                <div className={styles.heroStatIcon}>🔬</div>
+                                <div className={styles.heroStatIcon}><Icon icon="mdi:microscope" size={20} /></div>
                                 <div className={styles.heroStatContent}>
                                     <span className={styles.heroStatValue}>5</span>
                                     <span className={styles.heroStatLabel}>{t('cannaSystems')}</span>
@@ -439,7 +440,7 @@ export default function CannaSchedule() {
                             </div>
                             <div className={styles.heroStatDivider} />
                             <div className={styles.heroStatItem}>
-                                <div className={styles.heroStatIcon}>🌱</div>
+                                <div className={styles.heroStatIcon}><Icon icon="mdi:sprout" size={20} /></div>
                                 <div className={styles.heroStatContent}>
                                     <span className={styles.heroStatValue}>7</span>
                                     <span className={styles.heroStatLabel}>{t('cannaPlantTypes')}</span>
@@ -447,7 +448,7 @@ export default function CannaSchedule() {
                             </div>
                             <div className={styles.heroStatDivider} />
                             <div className={styles.heroStatItem}>
-                                <div className={styles.heroStatIcon}>🧪</div>
+                                <div className={styles.heroStatIcon}><Icon icon="mdi:flask" size={20} /></div>
                                 <div className={styles.heroStatContent}>
                                     <span className={styles.heroStatValue}>20+</span>
                                     <span className={styles.heroStatLabel}>{t('cannaProducts')}</span>
@@ -520,7 +521,7 @@ export default function CannaSchedule() {
                                         whileHover={{ scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
                                     >
-                                        <span>{PLANT_INFO[plant]?.icon || '🌿'}</span>
+                                        <span><Icon icon={PLANT_INFO[plant]?.icon || 'mdi:grass'} size={16} /></span>
                                         <span>{t(PLANT_INFO[plant]?.name_key) || plant}</span>
                                     </motion.button>
                                 ))}
@@ -541,7 +542,7 @@ export default function CannaSchedule() {
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                 >
-                                    💎 {t('cannaHardWater')}
+                                    <Icon icon="mdi:diamond-stone" size={16} /> {t('cannaHardWater')}
                                 </motion.button>
                                 <motion.button
                                     className={`${styles.waterTypeBtn} ${waterType === 'soft' ? styles.selected : ''}`}
@@ -549,7 +550,7 @@ export default function CannaSchedule() {
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                 >
-                                    💧 {t('cannaSoftWater')}
+                                    <Icon icon="mdi:water" size={16} /> {t('cannaSoftWater')}
                                 </motion.button>
                             </div>
                         </div>
@@ -567,7 +568,7 @@ export default function CannaSchedule() {
                             whileTap={{ scale: 0.99 }}
                         >
                             <div className={styles.productSelectorSelected}>
-                                <div className={styles.productSelectorIcon}>🧪</div>
+                            <div className={styles.productSelectorIcon}><Icon icon="mdi:flask" size={20} /></div>
                                 <div className={styles.productSelectorInfo}>
                                     <span className={styles.productSelectorName}>
                                         {t('cannaProducts')}
@@ -759,7 +760,7 @@ export default function CannaSchedule() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
                 >
-                    <label className={styles.waterAmountLabel}>💧 {t('waterAmount')}</label>
+                    <label className={styles.waterAmountLabel}><Icon icon="mdi:water" size={18} /> {t('waterAmount')}</label>
                     <div className={styles.waterAmountInput}>
                         <input
                             type="number"
@@ -804,9 +805,9 @@ export default function CannaSchedule() {
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                             >
-                                <h3 className={styles.stagesTitle}>
-                                    📊 {t('cannaStageDetails')}
-                                </h3>
+                        <h3 className={styles.stagesTitle}>
+                            <Icon icon="mdi:chart-bar" size={20} /> {t('cannaStageDetails')}
+                        </h3>
                                 <div className={styles.stagesTableWrapper}>
                                     <table className={styles.stagesTable}>
                                         <thead>
@@ -984,7 +985,7 @@ export default function CannaSchedule() {
                     </motion.div>
                 ) : (
                     <div className={styles.emptyState}>
-                        <span className={styles.emptyIcon}>📋</span>
+                        <Icon icon="mdi:clipboard-text" size={48} />
                         <h3>{t('noProductsSelected')}</h3>
                         <p>{t('selectProductsPrompt')}</p>
                     </div>
@@ -998,7 +999,7 @@ export default function CannaSchedule() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.4 }}
                     >
-                        <h3>📝 {t('cannaImportantNotes')}</h3>
+                        <h3><Icon icon="mdi:note-edit" size={20} /> {t('cannaImportantNotes')}</h3>
                         <ul className={styles.notesList}>
                             {currentSchedule.notes.map((note, index) => (
                                 <li key={index} className={styles.noteItem}>
@@ -1017,7 +1018,7 @@ export default function CannaSchedule() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.5 }}
                     >
-                        <h3>{t('cannaSpecialRequirements')}</h3>
+                    <h3><Icon icon="mdi:alert-circle" size={20} /> {t('cannaSpecialRequirements')}</h3>
                         <div className={styles.requirementsList}>
                             {currentSchedule.special_requirements.map((req, index) => (
                                 <div key={index} className={styles.requirementItem}>
@@ -1040,26 +1041,26 @@ export default function CannaSchedule() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6 }}
                 >
-                    <h3>{t('cannaUsageTips')}</h3>
+                    <h3><Icon icon="mdi:lightbulb" size={20} /> {t('cannaUsageTips')}</h3>
                     <div className={styles.tipsList}>
                         <div className={styles.tipItem}>
-                            <span className={styles.tipIcon}>💧</span>
+                            <span className={styles.tipIcon}><Icon icon="mdi:water" size={20} /></span>
                             <span>{t('cannaTip1')}</span>
                         </div>
                         <div className={styles.tipItem}>
-                            <span className={styles.tipIcon}>🌡️</span>
+                            <span className={styles.tipIcon}><Icon icon="mdi:thermometer" size={20} /></span>
                             <span>{t('cannaTip2')}</span>
                         </div>
                         <div className={styles.tipItem}>
-                            <span className={styles.tipIcon}>📏</span>
+                            <span className={styles.tipIcon}><Icon icon="mdi:ruler" size={20} /></span>
                             <span>{t('cannaTip3')}</span>
                         </div>
                         <div className={styles.tipItem}>
-                            <span className={styles.tipIcon}>🔄</span>
+                            <span className={styles.tipIcon}><Icon icon="mdi:refresh" size={20} /></span>
                             <span>{t('cannaTip4')}</span>
                         </div>
                         <div className={styles.tipItem}>
-                            <span className={styles.tipIcon}>📊</span>
+                            <span className={styles.tipIcon}><Icon icon="mdi:chart-bar" size={20} /></span>
                             <span>{t('cannaTip5')}</span>
                         </div>
                     </div>
@@ -1084,7 +1085,7 @@ export default function CannaSchedule() {
                             className={styles.infoCard}
                             whileHover={{ y: -4 }}
                         >
-                            <div className={styles.infoCardIcon}>🔬</div>
+                        <div className={styles.infoCardIcon}><Icon icon="mdi:microscope" size={24} /></div>
                             <h3 className={styles.infoCardTitle}>
                                 {t('cannaEduResearchTitle')}
                             </h3>
@@ -1097,7 +1098,7 @@ export default function CannaSchedule() {
                             className={styles.infoCard}
                             whileHover={{ y: -4 }}
                         >
-                            <div className={styles.infoCardIcon}>🎯</div>
+                        <div className={styles.infoCardIcon}><Icon icon="mdi:target" size={24} /></div>
                             <h3 className={styles.infoCardTitle}>
                                 {t('cannaEduPrecisionTitle')}
                             </h3>
@@ -1110,7 +1111,7 @@ export default function CannaSchedule() {
                             className={styles.infoCard}
                             whileHover={{ y: -4 }}
                         >
-                            <div className={styles.infoCardIcon}>🌍</div>
+                        <div className={styles.infoCardIcon}><Icon icon="mdi:earth" size={24} /></div>
                             <h3 className={styles.infoCardTitle}>
                                 {t('cannaEduQualityTitle')}
                             </h3>
@@ -1131,7 +1132,7 @@ export default function CannaSchedule() {
                     <div className={styles.guideSection}>
                         <div className={styles.guideSectionHeader}>
                             <h2 className={styles.guideSectionTitle}>
-                                🧪 {t('cannaAdditivesTitle')}
+                                <Icon icon="mdi:flask" size={24} /> {t('cannaAdditivesTitle')}
                             </h2>
                             <p className={styles.guideSectionSubtitle}>
                                 {t('cannaAdditivesSubtitle')}
@@ -1140,7 +1141,7 @@ export default function CannaSchedule() {
 
                         <div className={styles.additivesList}>
                             <motion.div className={styles.additiveItem} whileHover={{ x: 4 }}>
-                                <div className={styles.additiveIcon} style={{ '--additive-color-rgb': '139, 92, 246' }}>🌱</div>
+                                <div className={styles.additiveIcon} style={{ '--additive-color-rgb': '139, 92, 246' }}><Icon icon="mdi:sprout" size={24} /></div>
                                 <div className={styles.additiveContent}>
                                     <h4 className={styles.additiveName}>RHIZOTONIC</h4>
                                     <p className={styles.additiveDesc}>
@@ -1153,7 +1154,7 @@ export default function CannaSchedule() {
                             </motion.div>
 
                             <motion.div className={styles.additiveItem} whileHover={{ x: 4 }}>
-                                <div className={styles.additiveIcon} style={{ '--additive-color-rgb': '34, 197, 94' }}>🔄</div>
+                                <div className={styles.additiveIcon} style={{ '--additive-color-rgb': '34, 197, 94' }}><Icon icon="mdi:refresh" size={24} /></div>
                                 <div className={styles.additiveContent}>
                                     <h4 className={styles.additiveName}>CANNAZYM</h4>
                                     <p className={styles.additiveDesc}>
@@ -1166,7 +1167,7 @@ export default function CannaSchedule() {
                             </motion.div>
 
                             <motion.div className={styles.additiveItem} whileHover={{ x: 4 }}>
-                                <div className={styles.additiveIcon} style={{ '--additive-color-rgb': '236, 72, 153' }}>💥</div>
+                                <div className={styles.additiveIcon} style={{ '--additive-color-rgb': '236, 72, 153' }}><Icon icon="mdi:lightning-bolt" size={24} /></div>
                                 <div className={styles.additiveContent}>
                                     <h4 className={styles.additiveName}>PK 13/14</h4>
                                     <p className={styles.additiveDesc}>
@@ -1179,7 +1180,7 @@ export default function CannaSchedule() {
                             </motion.div>
 
                             <motion.div className={styles.additiveItem} whileHover={{ x: 4 }}>
-                                <div className={styles.additiveIcon} style={{ '--additive-color-rgb': '251, 191, 36' }}>⚡</div>
+                                <div className={styles.additiveIcon} style={{ '--additive-color-rgb': '251, 191, 36' }}><Icon icon="mdi:lightning" size={24} /></div>
                                 <div className={styles.additiveContent}>
                                     <h4 className={styles.additiveName}>CANNABOOST</h4>
                                     <p className={styles.additiveDesc}>
@@ -1214,27 +1215,27 @@ export default function CannaSchedule() {
                     </div>
                     <div className={styles.quickRefGrid}>
                         <div className={styles.quickRefItem}>
-                            <div className={styles.quickRefItemIcon}>🌊</div>
+                            <div className={styles.quickRefItemIcon}><Icon icon="mdi:waves" size={20} /></div>
                             <div className={styles.quickRefItemLabel}>AQUA</div>
                             <div className={styles.quickRefItemValue}>5.2 – 6.2</div>
                         </div>
                         <div className={styles.quickRefItem}>
-                            <div className={styles.quickRefItemIcon}>🥥</div>
+                            <div className={styles.quickRefItemIcon}><Icon icon="mdi:coconut" size={20} /></div>
                             <div className={styles.quickRefItemLabel}>COCO</div>
                             <div className={styles.quickRefItemValue}>5.2 – 6.2</div>
                         </div>
                         <div className={styles.quickRefItem}>
-                            <div className={styles.quickRefItemIcon}>🌱</div>
+                            <div className={styles.quickRefItemIcon}><Icon icon="mdi:sprout" size={20} /></div>
                             <div className={styles.quickRefItemLabel}>TERRA</div>
                             <div className={styles.quickRefItemValue}>5.8 – 6.2</div>
                         </div>
                         <div className={styles.quickRefItem}>
-                            <div className={styles.quickRefItemIcon}>🧱</div>
+                            <div className={styles.quickRefItemIcon}><Icon icon="mdi:brick" size={20} /></div>
                             <div className={styles.quickRefItemLabel}>COGr</div>
                             <div className={styles.quickRefItemValue}>5.8 – 6.2</div>
                         </div>
                         <div className={styles.quickRefItem}>
-                            <div className={styles.quickRefItemIcon}>💧</div>
+                            <div className={styles.quickRefItemIcon}><Icon icon="mdi:water" size={20} /></div>
                             <div className={styles.quickRefItemLabel}>SUBSTRA</div>
                             <div className={styles.quickRefItemValue}>5.2 – 6.2</div>
                         </div>
@@ -1249,7 +1250,7 @@ export default function CannaSchedule() {
                     transition={{ delay: 0.85 }}
                 >
                     <div className={styles.insightsHeader}>
-                        <span className={styles.insightsIcon}>💡</span>
+                        <span className={styles.insightsIcon}><Icon icon="mdi:lightbulb" size={20} /></span>
                         <h3 className={styles.insightsTitle}>
                             {t('cannaInsightsTitle')}
                         </h3>

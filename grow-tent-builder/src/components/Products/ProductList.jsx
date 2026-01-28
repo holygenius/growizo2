@@ -8,7 +8,7 @@ import ProductFilter from './ProductFilter';
 import ProductCard from './ProductCard';
 import Navbar from '../Navbar';
 import Footer from '../Footer';
-import { Loader, Package, Grid3X3, LayoutGrid, SlidersHorizontal, X } from 'lucide-react';
+import Icon from '../Common/Icon';
 import styles from './Products.module.css';
 
 const ProductList = () => {
@@ -129,7 +129,7 @@ const ProductList = () => {
                 <div className={styles.heroOverlay}></div>
                 <div className={styles.heroContent}>
                     <h1 className={styles.heroTitle}>
-                        <Package className={styles.heroIcon} />
+                        <Icon icon="mdi:package-variant-closed" className={styles.heroIcon} />
                         {t('allProducts') || 'All Products'}
                     </h1>
                     <p className={styles.heroSubtitle}>
@@ -157,7 +157,7 @@ const ProductList = () => {
                                 <div className={styles.mobileFilterHeader}>
                                     <h3>{t('filters') || 'Filters'}</h3>
                                     <button onClick={() => setMobileFilterOpen(false)} className={styles.closeFilterBtn}>
-                                        <X size={20} />
+                                        <Icon icon="mdi:close" size={20} />
                                     </button>
                                 </div>
                                 <ProductFilter
@@ -181,7 +181,7 @@ const ProductList = () => {
                                     className={styles.mobileFilterBtn}
                                     onClick={() => setMobileFilterOpen(true)}
                                 >
-                                    <SlidersHorizontal size={18} />
+                                    <Icon icon="mdi:filter-variant" size={18} />
                                     {t('filters') || 'Filters'}
                                     {activeFilterCount > 0 && (
                                         <span className={styles.filterBadge}>{activeFilterCount}</span>
@@ -210,14 +210,14 @@ const ProductList = () => {
                                         onClick={() => setViewMode('grid')}
                                         title={t('gridView') || 'Grid view'}
                                     >
-                                        <LayoutGrid size={18} />
+                                        <Icon icon="mdi:view-grid" size={18} />
                                     </button>
                                     <button 
                                         className={`${styles.viewBtn} ${viewMode === 'compact' ? styles.viewBtnActive : ''}`}
                                         onClick={() => setViewMode('compact')}
                                         title={t('compactView') || 'Compact view'}
                                     >
-                                        <Grid3X3 size={18} />
+                                        <Icon icon="mdi:view-sequential" size={18} />
                                     </button>
                                 </div>
 
@@ -245,7 +245,7 @@ const ProductList = () => {
                                     <span className={styles.filterTag}>
                                         "{filters.searchTerm}"
                                         <button onClick={() => handleFilterChange({ searchTerm: '' })}>
-                                            <X size={14} />
+                                            <Icon icon="mdi:close" size={14} />
                                         </button>
                                     </span>
                                 )}
@@ -253,7 +253,7 @@ const ProductList = () => {
                                     <span className={styles.filterTag}>
                                         {filters.brandIds.length} {t('brandsSelected') || 'brands'}
                                         <button onClick={() => handleFilterChange({ brandIds: [] })}>
-                                            <X size={14} />
+                                            <Icon icon="mdi:close" size={14} />
                                         </button>
                                     </span>
                                 )}
@@ -261,7 +261,7 @@ const ProductList = () => {
                                     <span className={styles.filterTag}>
                                         {filters.categoryIds.length} {t('categoriesSelected') || 'categories'}
                                         <button onClick={() => handleFilterChange({ categoryIds: [] })}>
-                                            <X size={14} />
+                                            <Icon icon="mdi:close" size={14} />
                                         </button>
                                     </span>
                                 )}
@@ -283,12 +283,12 @@ const ProductList = () => {
                         {/* Product Grid */}
                         {loading ? (
                             <div className={styles.loadingState}>
-                                <Loader className={styles.spinner} size={48} />
+                                <Icon icon="mdi:loading" className={styles.spinner} size={48} />
                                 <p>{t('loadingProducts') || 'Loading products...'}</p>
                             </div>
                         ) : products.length === 0 ? (
                             <div className={styles.emptyState}>
-                                <Package size={64} strokeWidth={1} />
+                                <Icon icon="mdi:package-variant-closed" size={64} />
                                 <h3>{t('noProductsFound') || 'No products found'}</h3>
                                 <p>{t('tryDifferentFilters') || 'Try adjusting your filters or search terms'}</p>
                                 <button

@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { useOnboarding } from '../context/OnboardingContext';
 import { useSettings } from '../context/SettingsContext';
 import { useAuth } from '../context/AuthContext';
+import Icon from './Common/Icon';
 import styles from './Onboarding.module.css';
 
 export default function Onboarding() {
@@ -19,9 +20,9 @@ export default function Onboarding() {
             questionKey: "onboardingQ1",
             field: "plantType",
             options: [
-                { value: "herbs", labelKey: "onboardingQ1Opt1Label", detailKey: "onboardingQ1Opt1Detail", icon: "🌿" },
-                { value: "vegetables", labelKey: "onboardingQ1Opt2Label", detailKey: "onboardingQ1Opt2Detail", icon: "🥬" },
-                { value: "flowers", labelKey: "onboardingQ1Opt3Label", detailKey: "onboardingQ1Opt3Detail", icon: "🌺" }
+                { value: "herbs", labelKey: "onboardingQ1Opt1Label", detailKey: "onboardingQ1Opt1Detail", icon: "mdi:herb" },
+                { value: "vegetables", labelKey: "onboardingQ1Opt2Label", detailKey: "onboardingQ1Opt2Detail", icon: "mdi:leaf" },
+                { value: "flowers", labelKey: "onboardingQ1Opt3Label", detailKey: "onboardingQ1Opt3Detail", icon: "mdi:flower" }
             ],
             tooltips: {
                 herbs: "onboardingQ1Tip1",
@@ -33,9 +34,9 @@ export default function Onboarding() {
             questionKey: "onboardingQ2",
             field: "experienceLevel",
             options: [
-                { value: "beginner", labelKey: "onboardingQ2Opt1Label", icon: "🌱" },
-                { value: "intermediate", labelKey: "onboardingQ2Opt2Label", icon: "🌿" },
-                { value: "expert", labelKey: "onboardingQ2Opt3Label", icon: "🏆" }
+                { value: "beginner", labelKey: "onboardingQ2Opt1Label", icon: "mdi:sprout" },
+                { value: "intermediate", labelKey: "onboardingQ2Opt2Label", icon: "mdi:tree" },
+                { value: "expert", labelKey: "onboardingQ2Opt3Label", icon: "mdi:trophy" }
             ],
             tooltips: {
                 beginner: "onboardingQ2Tip1",
@@ -47,9 +48,9 @@ export default function Onboarding() {
             questionKey: "onboardingQ3",
             field: "tentSize",
             options: [
-                { value: "60x60", labelKey: "onboardingQ3Opt1Label", detailKey: "onboardingQ3Opt1Detail", icon: "📦" },
-                { value: "100x100", labelKey: "onboardingQ3Opt2Label", detailKey: "onboardingQ3Opt2Detail", icon: "📦" },
-                { value: "120x120", labelKey: "onboardingQ3Opt3Label", detailKey: "onboardingQ3Opt3Detail", icon: "📦" }
+                { value: "60x60", labelKey: "onboardingQ3Opt1Label", detailKey: "onboardingQ3Opt1Detail", icon: "mdi:box" },
+                { value: "100x100", labelKey: "onboardingQ3Opt2Label", detailKey: "onboardingQ3Opt2Detail", icon: "mdi:box" },
+                { value: "120x120", labelKey: "onboardingQ3Opt3Label", detailKey: "onboardingQ3Opt3Detail", icon: "mdi:box" }
             ],
             tooltips: {
                 "60x60": "onboardingQ3Tip1",
@@ -61,9 +62,9 @@ export default function Onboarding() {
             questionKey: "onboardingQ4",
             field: "lightPreference",
             options: [
-                { value: "led", labelKey: "onboardingQ4Opt1Label", detailKey: "onboardingQ4Opt1Detail", icon: "💡" },
-                { value: "hps", labelKey: "onboardingQ4Opt2Label", detailKey: "onboardingQ4Opt2Detail", icon: "🔥" },
-                { value: "unsure", labelKey: "onboardingQ4Opt3Label", detailKey: "onboardingQ4Opt3Detail", icon: "❓" }
+                { value: "led", labelKey: "onboardingQ4Opt1Label", detailKey: "onboardingQ4Opt1Detail", icon: "mdi:lightbulb" },
+                { value: "hps", labelKey: "onboardingQ4Opt2Label", detailKey: "onboardingQ4Opt2Detail", icon: "mdi:fire" },
+                { value: "unsure", labelKey: "onboardingQ4Opt3Label", detailKey: "onboardingQ4Opt3Detail", icon: "mdi:help-circle" }
             ],
             tooltips: {
                 led: "onboardingQ4Tip1",
@@ -75,9 +76,9 @@ export default function Onboarding() {
             questionKey: "onboardingQ5",
             field: "automationLevel",
             options: [
-                { value: "manual", labelKey: "onboardingQ5Opt1Label", detailKey: "onboardingQ5Opt1Detail", icon: "✋" },
-                { value: "semi", labelKey: "onboardingQ5Opt2Label", detailKey: "onboardingQ5Opt2Detail", icon: "⚙️" },
-                { value: "full", labelKey: "onboardingQ5Opt3Label", detailKey: "onboardingQ5Opt3Detail", icon: "🤖" }
+                { value: "manual", labelKey: "onboardingQ5Opt1Label", detailKey: "onboardingQ5Opt1Detail", icon: "mdi:hand" },
+                { value: "semi", labelKey: "onboardingQ5Opt2Label", detailKey: "onboardingQ5Opt2Detail", icon: "mdi:cog" },
+                { value: "full", labelKey: "onboardingQ5Opt3Label", detailKey: "onboardingQ5Opt3Detail", icon: "mdi:robot" }
             ],
             tooltips: {
                 manual: "onboardingQ5Tip1",
@@ -182,7 +183,7 @@ export default function Onboarding() {
                                 onClick={() => handleSelect(option.value)}
                                 className={`${styles.optionCard} ${onboardingData[currentStepData.field] === option.value ? styles.optionCardSelected : ''}`}
                             >
-                                <span className={styles.optionIcon}>{option.icon}</span>
+                                <span className={styles.optionIcon}><Icon icon={option.icon} size={28} /></span>
                                 <div className={styles.optionText}>
                                     <span className={styles.optionLabel}>{t(option.labelKey)}</span>
                                     {option.detailKey && <span className={styles.optionDetail}>{t(option.detailKey)}</span>}

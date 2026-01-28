@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSettings } from '../../context/SettingsContext';
+import Icon from '../Common/Icon';
 
 export default function CostToolSection() {
     const { language, t } = useSettings();
@@ -19,7 +20,7 @@ export default function CostToolSection() {
         <section className="cost-tool-section">
             <div className="cost-tool-container">
                 <div className="cost-tool-header">
-                    <h2>⚡ {t('landingCostToolTitle')}</h2>
+                    <h2><Icon icon="mdi:lightning-bolt" size={24} /> {t('landingCostToolTitle')}</h2>
                     <p>{t('landingCostToolSubtitle')}</p>
                 </div>
                 <div className="cost-tool-inputs">

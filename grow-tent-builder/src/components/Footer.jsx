@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSettings } from '../context/SettingsContext';
+import Icon from './Common/Icon';
 import styles from './Footer.module.css';
 
 const Footer = () => {
@@ -11,7 +12,7 @@ const Footer = () => {
       <div className={styles.footerContent}>
         <div className={styles.footerLeft}>
           <Link to={getLocalizedPath('/')} className={styles.footerLogo}>
-            🌱 GroWizard
+            <Icon icon="mdi:leaf" size={20} /> GroWizard
           </Link>
           <span className={styles.copyright}>
             © {new Date().getFullYear()} GroWizard

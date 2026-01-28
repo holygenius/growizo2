@@ -15,6 +15,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@iconify-json/carbon": "^1.2.18",
+    "@iconify-json/mdi": "^1.2.3",
+    "@iconify-json/noto": "^1.2.7",
+    "@iconify/react": "^6.0.2",
     "@react-three/drei": "^9.120.4",
     "@react-three/fiber": "^8.18.0",
     "@supabase/supabase-js": "^2.86.2",

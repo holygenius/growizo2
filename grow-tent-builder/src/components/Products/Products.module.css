@@ -69,7 +69,8 @@
 }
 
 .heroIcon {
-    color: #10b981;
+    color: var(--color-primary);
+    flex-shrink: 0;
 }
 
 .heroSubtitle {
@@ -137,8 +138,8 @@
     margin: 0;
 }
 
-.filterHeaderTitle svg {
-    color: #10b981;
+.filterHeaderTitle .icon {
+    color: var(--color-primary);
 }
 
 .resetFiltersBtn {
@@ -194,7 +195,7 @@
     left: 0.875rem;
     top: 50%;
     transform: translateY(-50%);
-    color: #64748b;
+    color: var(--text-muted);
     pointer-events: none;
 }
 
@@ -633,21 +634,28 @@
     text-align: center;
     color: #64748b;
     padding: 2rem;
+    background: var(--glass-bg);
+    border: 1px dashed var(--border-color);
+    border-radius: 1.25rem;
+    margin: 1rem 0;
 }
 
-.emptyState svg {
-    color: #334155;
+.emptyState .icon {
+    color: var(--text-muted);
     margin-bottom: 1.5rem;
+    opacity: 0.5;
 }
 
 .emptyState h3 {
-    color: #94a3b8;
+    color: var(--text-secondary);
     font-size: 1.25rem;
     margin: 0 0 0.5rem;
+    font-family: var(--font-serif);
 }
 
 .emptyState p {
     margin: 0 0 1.5rem;
+    color: var(--text-muted);
 }
 
 .resetBtn {
@@ -695,6 +703,10 @@
     display: flex;
     flex-direction: column;
     gap: 0.35rem;
+}
+
+.badgeIcon {
+    flex-shrink: 0;
 }
 
 .badge {
@@ -867,10 +879,11 @@
 }
 
 .price {
-    color: #10b981;
+    color: #4ade80;
     font-weight: 700;
-    font-size: 1.25rem;
+    font-size: 1.35rem;
     letter-spacing: -0.01em;
+    text-shadow: 0 0 20px rgba(74, 222, 128, 0.3);
 }
 
 .cardBtn {
@@ -1603,8 +1616,8 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.detailSectionHeader svg {
-    color: #10b981;
+.detailSectionHeader .icon {
+    color: var(--color-primary);
 }
 
 .detailSectionHeader h3 {

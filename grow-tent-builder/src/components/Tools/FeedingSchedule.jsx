@@ -11,6 +11,7 @@ import {
 } from '../../services/api/feedingScheduleApi';
 import Navbar from '../Navbar';
 import Footer from '../Footer';
+import Icon from '../Common/Icon';
 import styles from './FeedingSchedule.module.css';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -204,7 +205,7 @@ export default function FeedingSchedule() {
         <Navbar />
         <div className={styles.container} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
           <div style={{ textAlign: 'center' }}>
-            <span style={{ fontSize: '3rem' }}>🌱</span>
+            <Icon icon="mdi:sprout" size={48} />
             <p style={{ marginTop: '1rem', color: 'var(--text-secondary)' }}>{t('loading') || 'Yükleniyor...'}</p>
           </div>
         </div>
@@ -223,7 +224,7 @@ export default function FeedingSchedule() {
         <Navbar />
         <div className={styles.container} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
           <div style={{ textAlign: 'center' }}>
-            <span style={{ fontSize: '3rem' }}>⚠️</span>
+            <Icon icon="mdi:alert" size={48} />
             <p style={{ marginTop: '1rem', color: 'var(--color-danger)' }}>{error}</p>
           </div>
         </div>
@@ -263,9 +264,9 @@ export default function FeedingSchedule() {
             {t('feedingScheduleSubtitle')}
           </p>
           <div className={styles.headerFeatures}>
-            <span className={styles.featureTag}>🌱 {t('organic')}</span>
+            <span className={styles.featureTag}><Icon icon="mdi:leaf" size={16} /> {t('organic')}</span>
             <span className={styles.featureTag}>🇳🇱 {t('madeInHolland')}</span>
-            <span className={styles.featureTag}>♻️ {t('sustainable')}</span>
+            <span className={styles.featureTag}><Icon icon="mdi:recycle" size={16} /> {t('sustainable')}</span>
           </div>
         </div>
       </div>
@@ -331,13 +332,13 @@ export default function FeedingSchedule() {
               className={`${styles.toggleBtn} ${growType === 'indoor' ? styles.active : ''}`}
               onClick={() => setGrowType('indoor')}
             >
-              🏠 Indoor
+              <Icon icon="mdi:home" size={16} /> Indoor
             </button>
             <button
               className={`${styles.toggleBtn} ${growType === 'outdoor' ? styles.active : ''}`}
               onClick={() => setGrowType('outdoor')}
             >
-              ☀️ Outdoor
+              <Icon icon="mdi:weather-sunny" size={16} /> Outdoor
             </button>
           </div>
         </div>
@@ -467,11 +468,11 @@ export default function FeedingSchedule() {
                     onMouseLeave={() => setHighlightedWeek(null)}
                   >
                     <div className={styles.weekLabel}>{week}</div>
-                    {index < 2 && <div className={styles.weekPhase}>🌱</div>}
-                    {index >= 2 && index < 6 && <div className={styles.weekPhase}>🌿</div>}
-                    {index >= 6 && index < 10 && <div className={styles.weekPhase}>🌸</div>}
-                    {index === 10 && <div className={styles.weekPhase}>💧</div>}
-                    {index === 11 && <div className={styles.weekPhase}>✂️</div>}
+                    {index < 2 && <div className={styles.weekPhase}><Icon icon="mdi:sprout" size={14} /></div>}
+                    {index >= 2 && index < 6 && <div className={styles.weekPhase}><Icon icon="mdi:grass" size={14} /></div>}
+                    {index >= 6 && index < 10 && <div className={styles.weekPhase}><Icon icon="mdi:flower" size={14} /></div>}
+                    {index === 10 && <div className={styles.weekPhase}><Icon icon="mdi:water" size={14} /></div>}
+                    {index === 11 && <div className={styles.weekPhase}><Icon icon="mdi:content-cut" size={14} /></div>}
                   </th>
                 );
               })}
@@ -523,7 +524,7 @@ export default function FeedingSchedule() {
             {activeProducts.length > 0 && (
               <tr className={styles.totalsRow}>
                 <td className={styles.totalsLabel} colSpan={2}>
-                  <strong>📊 {t('totalForWater')} ({waterAmount}L {t('water')})</strong>
+                  <strong><Icon icon="mdi:chart-bar" size={16} /> {t('totalForWater')} ({waterAmount}L {t('water')})</strong>
                 </td>
                 {WEEK_LABELS.map((week, index) => {
                   const totals = calculateTotalForWeek(week);
@@ -552,7 +553,7 @@ export default function FeedingSchedule() {
       {activeProducts.some(p => p.note || p.foliar_dose) && (
         <div className={styles.notesSection}>
           <h3 className={styles.notesTitle}>
-            📝 {t('productNotes')}
+            <Icon icon="mdi:note-edit" size={20} /> {t('productNotes')}
           </h3>
           <div className={styles.notesList}>
             {activeProducts.filter(p => p.note || p.foliar_dose).map(product => (
@@ -569,7 +570,7 @@ export default function FeedingSchedule() {
                 )}
                 {product.foliar_dose && (
                   <p className={styles.foliarNote}>
-                    <span className={styles.foliarIcon}>🍃</span>
+                    <span className={styles.foliarIcon}><Icon icon="mdi:leaf" size={16} /></span>
                     <strong>{t('foliarApplication')}:</strong> {product.foliar_dose}
                   </p>
                 )}
@@ -582,23 +583,23 @@ export default function FeedingSchedule() {
       {/* Tips Section */}
       <div className={styles.tipsSection}>
         <h3 className={styles.tipsTitle}>
-          💡 {t('usageTips')}
+          <Icon icon="mdi:lightbulb" size={20} /> {t('usageTips')}
         </h3>
         <div className={styles.tipsList}>
           <div className={styles.tipItem}>
-            <span className={styles.tipIcon}>⚗️</span>
+            <span className={styles.tipIcon}><Icon icon="mdi:flask" size={20} /></span>
             <p>{t('tip1')}</p>
           </div>
           <div className={styles.tipItem}>
-            <span className={styles.tipIcon}>🌡️</span>
+            <span className={styles.tipIcon}><Icon icon="mdi:thermometer" size={20} /></span>
             <p>{t('tip2')}</p>
           </div>
           <div className={styles.tipItem}>
-            <span className={styles.tipIcon}>💧</span>
+            <span className={styles.tipIcon}><Icon icon="mdi:water" size={20} /></span>
             <p>{t('tip3')}</p>
           </div>
           <div className={styles.tipItem}>
-            <span className={styles.tipIcon}>📏</span>
+            <span className={styles.tipIcon}><Icon icon="mdi:ruler" size={20} /></span>
             <p>{t('tip4')}</p>
           </div>
         </div>
@@ -607,32 +608,32 @@ export default function FeedingSchedule() {
       {/* General Information Section */}
       <div className={styles.infoSection}>
         <h2 className={styles.infoSectionTitle}>
-          📚 {t('generalInfoTitle')}
+          <Icon icon="mdi:book-open-variant" size={24} /> {t('generalInfoTitle')}
         </h2>
 
         {/* Application Fundamentals */}
         <div className={styles.infoCategory}>
           <h3 className={styles.infoCategoryTitle}>
-            <span className={styles.infoCategoryIcon}>🌱</span>
+            <span className={styles.infoCategoryIcon}><Icon icon="mdi:sprout" size={20} /></span>
             {t('applicationFundamentals')}
           </h3>
           <div className={styles.infoGrid}>
             <div className={styles.infoCard}>
-              <div className={styles.infoCardIcon}>🛏️</div>
+              <div className={styles.infoCardIcon}><Icon icon="mdi:bed" size={20} /></div>
               <div className={styles.infoCardContent}>
                 <h4>{t('substratePreparation')}</h4>
                 <p>{t('substratePreparationDetail')}</p>
               </div>
             </div>
             <div className={styles.infoCard}>
-              <div className={styles.infoCardIcon}>📏</div>
+              <div className={styles.infoCardIcon}><Icon icon="mdi:ruler" size={20} /></div>
               <div className={styles.infoCardContent}>
                 <h4>{t('fertilizerStartTime')}</h4>
                 <p>{t('fertilizerStartTimeDetail')}</p>
               </div>
             </div>
             <div className={styles.infoCard}>
-              <div className={styles.infoCardIcon}>⏱️</div>
+              <div className={styles.infoCardIcon}><Icon icon="mdi:timer" size={20} /></div>
               <div className={styles.infoCardContent}>
                 <h4>{t('vegetativeDuration')}</h4>
                 <p>{t('vegetativeDurationDetail')}</p>
@@ -644,19 +645,19 @@ export default function FeedingSchedule() {
         {/* Dosing and Safety */}
         <div className={styles.infoCategory}>
           <h3 className={styles.infoCategoryTitle}>
-            <span className={styles.infoCategoryIcon}>⚖️</span>
+            <span className={styles.infoCategoryIcon}><Icon icon="mdi:scale" size={20} /></span>
             {t('dosingAndSafety')}
           </h3>
           <div className={styles.infoGrid}>
             <div className={styles.infoCard}>
-              <div className={styles.infoCardIcon}>⚠️</div>
+              <div className={styles.infoCardIcon}><Icon icon="mdi:alert" size={20} /></div>
               <div className={styles.infoCardContent}>
                 <h4>{t('dosingPrinciple')}</h4>
                 <p>{t('dosingPrincipleDetail')}</p>
               </div>
             </div>
             <div className={styles.infoCard}>
-              <div className={styles.infoCardIcon}>🔀</div>
+              <div className={styles.infoCardIcon}><Icon icon="mdi:swap-horizontal" size={20} /></div>
               <div className={styles.infoCardContent}>
                 <h4>{t('mixing')}</h4>
                 <p>{t('mixingDetail')}</p>
@@ -668,19 +669,19 @@ export default function FeedingSchedule() {
         {/* Watering and pH */}
         <div className={styles.infoCategory}>
           <h3 className={styles.infoCategoryTitle}>
-            <span className={styles.infoCategoryIcon}>💧</span>
+            <span className={styles.infoCategoryIcon}><Icon icon="mdi:water" size={20} /></span>
             {t('wateringAndPH')}
           </h3>
           <div className={styles.infoGrid}>
             <div className={styles.infoCard}>
-              <div className={styles.infoCardIcon}>🚿</div>
+              <div className={styles.infoCardIcon}><Icon icon="mdi:shower" size={20} /></div>
               <div className={styles.infoCardContent}>
                 <h4>{t('wateringFrequency')}</h4>
                 <p>{t('wateringFrequencyDetail')}</p>
               </div>
             </div>
             <div className={styles.infoCard}>
-              <div className={styles.infoCardIcon}>📊</div>
+              <div className={styles.infoCardIcon}><Icon icon="mdi:chart-bar" size={20} /></div>
               <div className={styles.infoCardContent}>
                 <h4>{t('idealPHRange')}</h4>
                 <p>{t('idealPHRangeDetail')}</p>
@@ -692,26 +693,26 @@ export default function FeedingSchedule() {
         {/* Calmag Usage */}
         <div className={styles.infoCategory}>
           <h3 className={styles.infoCategoryTitle}>
-            <span className={styles.infoCategoryIcon}>🧪</span>
+            <span className={styles.infoCategoryIcon}><Icon icon="mdi:flask" size={20} /></span>
             {t('calmagUsage')}
           </h3>
           <div className={styles.infoGrid}>
             <div className={styles.infoCard}>
-              <div className={styles.infoCardIcon}>🛡️</div>
+              <div className={styles.infoCardIcon}><Icon icon="mdi:shield" size={20} /></div>
               <div className={styles.infoCardContent}>
                 <h4>{t('calmagPrevention')}</h4>
                 <p>{t('calmagPreventionDetail')}</p>
               </div>
             </div>
             <div className={styles.infoCard}>
-              <div className={styles.infoCardIcon}>🩹</div>
+              <div className={styles.infoCardIcon}><Icon icon="mdi:bandage" size={20} /></div>
               <div className={styles.infoCardContent}>
                 <h4>{t('calmagDeficiency')}</h4>
                 <p>{t('calmagDeficiencyDetail')}</p>
               </div>
             </div>
             <div className={styles.infoCard}>
-              <div className={styles.infoCardIcon}>🎯</div>
+              <div className={styles.infoCardIcon}><Icon icon="mdi:target" size={20} /></div>
               <div className={styles.infoCardContent}>
                 <h4>{t('calmagPurpose')}</h4>
                 <p>{t('calmagPurposeDetail')}</p>
@@ -723,40 +724,40 @@ export default function FeedingSchedule() {
         {/* Product Flexibility and Foliar */}
         <div className={styles.infoCategory}>
           <h3 className={styles.infoCategoryTitle}>
-            <span className={styles.infoCategoryIcon}>🍃</span>
+            <span className={styles.infoCategoryIcon}><Icon icon="mdi:leaf" size={20} /></span>
             {t('productFlexibility')}
           </h3>
           <div className={styles.infoGrid}>
             <div className={styles.infoCard}>
-              <div className={styles.infoCardIcon}>🔄</div>
+              <div className={styles.infoCardIcon}><Icon icon="mdi:refresh" size={20} /></div>
               <div className={styles.infoCardContent}>
                 <h4>{t('growthFertilizerFlexibility')}</h4>
                 <p>{t('growthFertilizerFlexibilityDetail')}</p>
               </div>
             </div>
             <div className={styles.infoCard}>
-              <div className={styles.infoCardIcon}>🌿</div>
+              <div className={styles.infoCardIcon}><Icon icon="mdi:grass" size={20} /></div>
               <div className={styles.infoCardContent}>
                 <h4>{t('foliarApplication')}</h4>
                 <p>{t('foliarApplicationDetail')}</p>
               </div>
             </div>
             <div className={styles.infoCard}>
-              <div className={styles.infoCardIcon}>💉</div>
+              <div className={styles.infoCardIcon}><Icon icon="mdi:syringe" size={20} /></div>
               <div className={styles.infoCardContent}>
                 <h4>{t('foliarDosage')}</h4>
                 <p>{t('foliarDosageDetail')}</p>
               </div>
             </div>
             <div className={styles.infoCard}>
-              <div className={styles.infoCardIcon}>🌐</div>
+              <div className={styles.infoCardIcon}><Icon icon="mdi:web" size={20} /></div>
               <div className={styles.infoCardContent}>
                 <h4>{t('allSystems')}</h4>
                 <p>{t('allSystemsDetail')}</p>
               </div>
             </div>
             <div className={styles.infoCard}>
-              <div className={styles.infoCardIcon}>🥥</div>
+              <div className={styles.infoCardIcon}><Icon icon="mdi:coconut" size={20} /></div>
               <div className={styles.infoCardContent}>
                 <h4>{t('cocoMixRequirements')}</h4>
                 <p>{t('cocoMixRequirementsDetail')}</p>
@@ -768,19 +769,19 @@ export default function FeedingSchedule() {
         {/* Environmental Notes */}
         <div className={styles.infoCategory}>
           <h3 className={styles.infoCategoryTitle}>
-            <span className={styles.infoCategoryIcon}>🌍</span>
+            <span className={styles.infoCategoryIcon}><Icon icon="mdi:earth" size={20} /></span>
             {t('environmentalNotes')}
           </h3>
           <div className={styles.infoGrid}>
             <div className={styles.infoCard}>
-              <div className={styles.infoCardIcon}>♻️</div>
+              <div className={styles.infoCardIcon}><Icon icon="mdi:recycle" size={20} /></div>
               <div className={styles.infoCardContent}>
                 <h4>{t('environmentalAttention')}</h4>
                 <p>{t('environmentalAttentionDetail')}</p>
               </div>
             </div>
             <div className={styles.infoCard}>
-              <div className={styles.infoCardIcon}>🌿</div>
+              <div className={styles.infoCardIcon}><Icon icon="mdi:sprout" size={20} /></div>
               <div className={styles.infoCardContent}>
                 <h4>{t('productFeatures')}</h4>
                 <p>{t('productFeaturesDetail')}</p>
@@ -793,7 +794,7 @@ export default function FeedingSchedule() {
       {/* Empty State */}
       {activeProducts.length === 0 && (
         <div className={styles.emptyState}>
-          <span className={styles.emptyIcon}>🌱</span>
+          <Icon icon="mdi:sprout" size={48} />
           <h3>{t('noProductsSelected')}</h3>
           <p>{t('selectProductsPrompt')}</p>
           <button

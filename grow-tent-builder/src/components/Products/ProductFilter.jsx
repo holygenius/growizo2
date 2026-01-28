@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import { Search, X, Filter, ChevronDown, ChevronUp, RotateCcw } from 'lucide-react';
+import Icon from '../Common/Icon';
 import { useSettings } from '../../context/SettingsContext';
 import styles from './Products.module.css';
 
@@ -101,12 +101,12 @@ const ProductFilter = ({
             {/* Filter Header */}
             <div className={styles.filterHeader}>
                 <h3 className={styles.filterHeaderTitle}>
-                    <Filter size={18} />
+                    <Icon icon="mdi:filter-variant" size={18} />
                     {t('filters') || 'Filters'}
                 </h3>
                 {hasActiveFilters && (
                     <button onClick={clearFilters} className={styles.resetFiltersBtn}>
-                        <RotateCcw size={14} />
+                        <Icon icon="mdi:refresh" size={14} />
                         {t('reset') || 'Reset'}
                     </button>
                 )}
@@ -114,7 +114,7 @@ const ProductFilter = ({
 
             {/* Search */}
             <div className={styles.filterSearch}>
-                <Search className={styles.searchIcon} size={18} />
+                <Icon icon="mdi:magnify" className={styles.searchIcon} size={18} />
                 <input
                     type="text"
                     placeholder={t('searchProducts') || 'Search products...'}
@@ -127,7 +127,7 @@ const ProductFilter = ({
                         className={styles.clearSearchBtn}
                         onClick={() => { setSearchTerm(''); onFilterChange({ searchTerm: '' }); }}
                     >
-                        <X size={14} />
+                        <Icon icon="mdi:close" size={14} />
                     </button>
                 )}
             </div>
@@ -139,7 +139,7 @@ const ProductFilter = ({
                     onClick={() => toggleSection('price')}
                 >
                     <span className={styles.filterSectionTitle}>{t('priceRange') || 'Price Range'}</span>
-                    {expandedSections.price ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                    {expandedSections.price ? <Icon icon="mdi:chevron-up" size={16} /> : <Icon icon="mdi:chevron-down" size={16} />}
                 </button>
                 
                 {expandedSections.price && (
@@ -192,7 +192,7 @@ const ProductFilter = ({
                                 <span className={styles.selectedCount}>{selectedCategories.length}</span>
                             )}
                         </span>
-                        {expandedSections.categories ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                        {expandedSections.categories ? <Icon icon="mdi:chevron-up" size={16} /> : <Icon icon="mdi:chevron-down" size={16} />}
                     </button>
                     
                     {expandedSections.categories && (
@@ -231,7 +231,7 @@ const ProductFilter = ({
                                 <span className={styles.selectedCount}>{selectedBrands.length}</span>
                             )}
                         </span>
-                        {expandedSections.brands ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                        {expandedSections.brands ? <Icon icon="mdi:chevron-up" size={16} /> : <Icon icon="mdi:chevron-down" size={16} />}
                     </button>
                     
                     {expandedSections.brands && (

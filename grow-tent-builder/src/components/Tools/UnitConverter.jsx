@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useSettings } from '../../context/SettingsContext';
+import Icon from '../Common/Icon';
 import Navbar from '../Navbar';
 import Footer from '../Footer';
 import styles from './UnitConverter.module.css';
@@ -95,7 +96,9 @@ const UnitConverter = () => {
             <div className={styles.toolContent}>
                 <div className={styles.toolCard}>
                     <div className={styles.toolHeader}>
-                        <div className={styles.toolIcon}>💧</div>
+                        <div className={styles.toolIcon}>
+                            <Icon icon="mdi:water" size={48} color="var(--color-primary)" />
+                        </div>
                         <h1>{t('unitConvTitle')}</h1>
                         <p>{t('unitConvSubtitle')}</p>
                     </div>

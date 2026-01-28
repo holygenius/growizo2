@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSettings } from '../context/SettingsContext';
+import Icon from './Common/Icon';
 import styles from './UpdatePrompt.module.css';
 
 const UpdatePrompt = ({ updateSW }) => {
@@ -9,13 +10,13 @@ const UpdatePrompt = ({ updateSW }) => {
 
     const translations = {
         en: {
-            title: '🎉 New Update Available!',
+            title: 'New Update Available!',
             message: 'A new version of GroWizard is ready. Update now for the latest features and improvements.',
             update: 'Update Now',
             later: 'Later'
         },
         tr: {
-            title: '🎉 Yeni Güncelleme Mevcut!',
+            title: 'Yeni Güncelleme Mevcut!',
             message: 'GroWizard\'ın yeni bir versiyonu hazır. En son özellikler ve iyileştirmeler için şimdi güncelleyin.',
             update: 'Şimdi Güncelle',
             later: 'Sonra'
@@ -39,8 +40,8 @@ const UpdatePrompt = ({ updateSW }) => {
         <>
             <div className={styles.updatePromptOverlay} onClick={handleLater} />
             <div className={styles.updatePrompt}>
-                <div className={styles.updateIcon}>🚀</div>
-                <h3>{t.title}</h3>
+                <div className={styles.updateIcon}><Icon icon="mdi:rocket-launch" size={48} /></div>
+                <h3><Icon icon="mdi:party-popper" size={24} /> {t.title}</h3>
                 <p>{t.message}</p>
                 <div className={styles.updateActions}>
                     <button onClick={handleUpdate} className={styles.btnUpdate}>
