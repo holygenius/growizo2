@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { productService } from '../../services/productService';
 import { adminService } from '../../services/adminService';
 import { useSettings } from '../../context/SettingsContext';
@@ -8,11 +8,11 @@ import ProductFilter from './ProductFilter';
 import ProductCard from './ProductCard';
 import Navbar from '../Navbar';
 import Footer from '../Footer';
-import { Loader, Package, ChevronRight, Grid3X3, LayoutGrid, SlidersHorizontal, X } from 'lucide-react';
+import { Loader, Package, Grid3X3, LayoutGrid, SlidersHorizontal, X } from 'lucide-react';
 import styles from './Products.module.css';
 
 const ProductList = () => {
-    const { t, language, getLocalizedPath } = useSettings();
+    const { t } = useSettings();
     const [searchParams, setSearchParams] = useSearchParams();
 
     // Data State
@@ -128,11 +128,6 @@ const ProductList = () => {
             <div className={styles.heroBanner}>
                 <div className={styles.heroOverlay}></div>
                 <div className={styles.heroContent}>
-                    <nav className={styles.breadcrumb}>
-                        <Link to={getLocalizedPath('/')}>{t('navHome') || 'Home'}</Link>
-                        <ChevronRight size={14} />
-                        <span>{t('navProducts') || 'Products'}</span>
-                    </nav>
                     <h1 className={styles.heroTitle}>
                         <Package className={styles.heroIcon} />
                         {t('allProducts') || 'All Products'}

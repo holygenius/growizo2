@@ -38,7 +38,6 @@ export default function ElectricCostEstimator({ onClose } = {}) {
   const { state: builderState } = useBuilder();
 
   // Initialize lists: prefer builder-selected items when present, otherwise saved, otherwise sensible defaults
-  // Initialize lists: prefer builder-selected items when present, otherwise saved, otherwise sensible defaults
   const initialLights = (builderState?.selectedItems?.lighting?.length > 0)
     ? fromBuilderItems(builderState.selectedItems.lighting)
     : (saved?.lights || [{ name: t('defaultLightName'), watt: 300, quantity: 1 }]);
@@ -62,10 +61,6 @@ export default function ElectricCostEstimator({ onClose } = {}) {
     saveState({ lights, fans, pricePerKwh, daysPerMonth });
   }, [lights, fans, pricePerKwh, daysPerMonth]);
 
-  // Note: Builder sync is handled via initial state - the component initializes
-  // with builder items if they exist. Dynamic sync was removed to avoid
-  // cascading renders per React best practices.
-
   // Helpers for device lists
   const updateDevice = (list, setList, idx, patch) => {
     const copy = list.map((it, i) => i === idx ? { ...it, ...patch } : it);
@@ -78,40 +73,70 @@ export default function ElectricCostEstimator({ onClose } = {}) {
   return (
     <div className={styles.estimatorContainer}>
       <div className={styles.estimatorHeader}>
-        <strong>{t('estTitle')}</strong>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <button className={`${styles.btn} ${styles.btnSmall}`} onClick={() => { saveState({ lights, fans, pricePerKwh, daysPerMonth }); if (onClose) onClose(); }}>{t('estClose')}</button>
-        </div>
+        <h3>{t('estTitle')}</h3>
+        <button className={`${styles.btn} ${styles.btnSmall}`} onClick={() => { saveState({ lights, fans, pricePerKwh, daysPerMonth }); if (onClose) onClose(); }}>{t('estClose')}</button>
       </div>
 
       <div className={styles.estimatorInputsGrid}>
         <div>
-          <label style={{ fontSize: 12 }}>{t('estElectricityPrice')}</label>
-          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-            <input type="number" step="0.01" min="0" value={pricePerKwh} onChange={(e) => setPricePerKwh(e.target.value)} className={styles.input} />
-            <span style={{ fontSize: 14 }}>{currency}</span>
+          <label className={styles.inputLabel}>{t('estElectricityPrice')}</label>
+          <div className={styles.inputWrapper}>
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              value={pricePerKwh}
+              onChange={(e) => setPricePerKwh(e.target.value)}
+              className={styles.input}
+            />
+            <span className={styles.currencySymbol}>{currency}</span>
           </div>
         </div>
         <div>
-          <label style={{ fontSize: 12 }}>{t('estDaysPerMonth')}</label>
-          <input type="number" min="1" max="31" value={daysPerMonth} onChange={(e) => setDaysPerMonth(e.target.value)} className={styles.input} />
+          <label className={styles.inputLabel}>{t('estDaysPerMonth')}</label>
+          <input
+            type="number"
+            min="1"
+            max="31"
+            value={daysPerMonth}
+            onChange={(e) => setDaysPerMonth(e.target.value)}
+            className={styles.input}
+          />
         </div>
       </div>
 
-      <hr style={{ margin: '12px 0', borderColor: 'var(--border-color)' }} />
+      <hr className={styles.divider} />
 
       <div className={styles.estimatorDevicesFlex}>
         <div className={styles.deviceSection}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <strong>{t('estLights')}</strong>
+          <div className={styles.sectionHeader}>
+            <span className={styles.sectionTitle}>{t('estLights')}</span>
             <button className={`${styles.btn} ${styles.btnSmall}`} onClick={() => addDevice(lights, setLights, { name: t('estNewLight'), watt: 100, quantity: 1 })}>{t('estAdd')}</button>
           </div>
-          <div style={{ marginTop: 8 }}>
+          <div className={styles.deviceList}>
             {lights.map((d, i) => (
               <div key={i} className={styles.deviceRow}>
-                <input value={d.name} onChange={(e) => updateDevice(lights, setLights, i, { name: e.target.value })} className={`${styles.input} ${styles.inputDeviceName}`} />
-                <input type="number" value={d.watt} onChange={(e) => updateDevice(lights, setLights, i, { watt: Number(e.target.value) })} className={`${styles.input} ${styles.inputTiny}`} />
-                <input type="number" value={d.quantity} min={1} onChange={(e) => updateDevice(lights, setLights, i, { quantity: Number(e.target.value) })} className={`${styles.input} ${styles.inputTiny}`} />
+                <input
+                  value={d.name}
+                  onChange={(e) => updateDevice(lights, setLights, i, { name: e.target.value })}
+                  className={`${styles.input} ${styles.inputDeviceName}`}
+                  placeholder={t('estDeviceName')}
+                />
+                <input
+                  type="number"
+                  value={d.watt}
+                  onChange={(e) => updateDevice(lights, setLights, i, { watt: Number(e.target.value) })}
+                  className={`${styles.input} ${styles.inputTiny}`}
+                  placeholder="W"
+                />
+                <input
+                  type="number"
+                  value={d.quantity}
+                  min={1}
+                  onChange={(e) => updateDevice(lights, setLights, i, { quantity: Number(e.target.value) })}
+                  className={`${styles.input} ${styles.inputTiny}`}
+                  placeholder="#"
+                />
                 <button className={`${styles.btn} ${styles.btnDanger}`} onClick={() => removeDevice(lights, setLights, i)}>{t('estDelete')}</button>
               </div>
             ))}
@@ -119,16 +144,34 @@ export default function ElectricCostEstimator({ onClose } = {}) {
         </div>
 
         <div className={styles.deviceSection}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <strong>{t('estFans')}</strong>
+          <div className={styles.sectionHeader}>
+            <span className={styles.sectionTitle}>{t('estFans')}</span>
             <button className={`${styles.btn} ${styles.btnSmall}`} onClick={() => addDevice(fans, setFans, { name: t('estNewFan'), watt: 50, quantity: 1 })}>{t('estAdd')}</button>
           </div>
-          <div style={{ marginTop: 8 }}>
+          <div className={styles.deviceList}>
             {fans.map((d, i) => (
               <div key={i} className={styles.deviceRow}>
-                <input value={d.name} onChange={(e) => updateDevice(fans, setFans, i, { name: e.target.value })} className={`${styles.input} ${styles.inputDeviceName}`} />
-                <input type="number" value={d.watt} onChange={(e) => updateDevice(fans, setFans, i, { watt: Number(e.target.value) })} className={`${styles.input} ${styles.inputTiny}`} />
-                <input type="number" value={d.quantity} min={1} onChange={(e) => updateDevice(fans, setFans, i, { quantity: Number(e.target.value) })} className={`${styles.input} ${styles.inputTiny}`} />
+                <input
+                  value={d.name}
+                  onChange={(e) => updateDevice(fans, setFans, i, { name: e.target.value })}
+                  className={`${styles.input} ${styles.inputDeviceName}`}
+                  placeholder={t('estDeviceName')}
+                />
+                <input
+                  type="number"
+                  value={d.watt}
+                  onChange={(e) => updateDevice(fans, setFans, i, { watt: Number(e.target.value) })}
+                  className={`${styles.input} ${styles.inputTiny}`}
+                  placeholder="W"
+                />
+                <input
+                  type="number"
+                  value={d.quantity}
+                  min={1}
+                  onChange={(e) => updateDevice(fans, setFans, i, { quantity: Number(e.target.value) })}
+                  className={`${styles.input} ${styles.inputTiny}`}
+                  placeholder="#"
+                />
                 <button className={`${styles.btn} ${styles.btnDanger}`} onClick={() => removeDevice(fans, setFans, i)}>{t('estDelete')}</button>
               </div>
             ))}
@@ -136,26 +179,44 @@ export default function ElectricCostEstimator({ onClose } = {}) {
         </div>
       </div>
 
-      <hr style={{ margin: '12px 0', borderColor: 'var(--border-color)' }} />
+      <hr className={styles.divider} />
 
       {report && (
-        <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <strong>{t('estGrowPhase')}</strong>
-            <span>{report.veg.totalKwh} kWh — {(report.veg.totalCost).toFixed(2)} {currency}</span>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
-            <strong>{t('estFlowerPhase')}</strong>
-            <span>{report.flower.totalKwh} kWh — {(report.flower.totalCost).toFixed(2)} {currency}</span>
+        <div className={styles.resultsSection}>
+          <div className={styles.phaseSection}>
+            <div className={styles.phaseHeader}>
+              <span className={styles.phaseIcon}></span>
+              {t('estGrowPhase')}
+            </div>
+            <div className={styles.resultRow}>
+              <span className={styles.resultLabel}>{t('estMonthlyCost')}</span>
+              <span className={styles.resultValue}>{report.veg.totalKwh.toFixed(1)} kWh — {(report.veg.totalCost).toFixed(2)} {currency}</span>
+            </div>
           </div>
 
-          <details style={{ marginTop: 10 }}>
-            <summary style={{ cursor: 'pointer' }}>{t('estDetailedBreakdown')}</summary>
-            <div style={{ marginTop: 8 }}>
-              <strong>{t('estLightsAndFans')}</strong>
+          <div className={styles.phaseSection}>
+            <div className={styles.phaseHeader}>
+              <span className={styles.phaseIcon}></span>
+              {t('estFlowerPhase')}
+            </div>
+            <div className={styles.resultRow}>
+              <span className={styles.resultLabel}>{t('estMonthlyCost')}</span>
+              <span className={styles.resultValue}>{report.flower.totalKwh.toFixed(1)} kWh — {(report.flower.totalCost).toFixed(2)} {currency}</span>
+            </div>
+          </div>
+
+          <div className={styles.totalSection}>
+            <div className={styles.totalLabel}>{t('estDailyAverage')}</div>
+            <div className={styles.totalValue}>{((report.veg.totalCost + report.flower.totalCost) / 2 / daysPerMonth).toFixed(2)} {currency}/day</div>
+          </div>
+
+          <details className={styles.detailsSection}>
+            <summary className={styles.detailsSummary}>{t('estDetailedBreakdown')}</summary>
+            <div className={styles.detailsContent}>
+              <div className={styles.breakdownTitle}>{t('estLightsAndFans')}</div>
               <ul className={styles.estList}>
                 {report.veg.items.map((it, idx) => (
-                  <li key={idx}>{it.name}: {it.monthlyKwh} kWh</li>
+                  <li key={idx}><strong>{it.name}</strong>: {it.monthlyKwh.toFixed(2)} kWh</li>
                 ))}
               </ul>
             </div>

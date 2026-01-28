@@ -5,7 +5,7 @@ import { UserMenu } from './Auth';
 import styles from './Navbar.module.css';
 
 const Navbar = () => {
-    const { language, setLanguage, getBuilderUrl, t, getLocalizedPath, theme, toggleTheme } = useSettings();
+    const { language, setLanguage, getBuilderUrl, t, getLocalizedPath } = useSettings();
     const location = useLocation();
     const navigate = useNavigate();
     const [isToolsOpen, setIsToolsOpen] = useState(false);
@@ -109,13 +109,6 @@ const Navbar = () => {
 
                     <div className={styles.navRight}>
                         <UserMenu />
-                        <button
-                            onClick={toggleTheme}
-                            className={styles.themeBtn}
-                            title={theme === 'dark' ? t('lightMode') : t('darkMode')}
-                        >
-                            {theme === 'dark' ? '☀️' : '🌙'}
-                        </button>
                         <button
                             onClick={handleLanguageSwitch}
                             className={styles.langBtn}
@@ -225,15 +218,6 @@ const Navbar = () => {
 
                         <div className={styles.mobileActions}>
                             <UserMenu />
-                            <button
-                                onClick={() => {
-                                    toggleTheme();
-                                    setIsMobileMenuOpen(false);
-                                }}
-                                className={styles.themeBtn}
-                            >
-                                {theme === 'dark' ? `☀️ ${t('lightMode')}` : `🌙 ${t('darkMode')}`}
-                            </button>
                             <button
                                 onClick={() => {
                                     handleLanguageSwitch();

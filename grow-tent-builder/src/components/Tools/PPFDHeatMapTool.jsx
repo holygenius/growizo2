@@ -1,6 +1,14 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { generatePPFDMap, calculateMetrics } from '../../utils/lightingUtils';
+import { 
+    generatePPFDMap, 
+    calculateMetrics, 
+    analyzePPFDMap,
+    getPPFDColor,
+    COLOR_SCALES,
+    GROWTH_STAGES,
+    calculateDLI
+} from '../../utils/lightingUtils';
 import Navbar from '../Navbar';
 import Footer from '../Footer';
 import { useSettings } from '../../context/SettingsContext';
@@ -60,6 +68,31 @@ export default function PPFDHeatMapTool() {
 
     // 3D State
     const [is3D, setIs3D] = useState(true);
+    
+    // Input Mode: 'lights' or 'sensor'
+    const [inputMode, setInputMode] = useState('lights');
+    
+    // Sensor Grid for manual input mode (4x4 default)
+    const [sensorGrid, setSensorGrid] = useState(() => {
+        const grid = [];
+        for (let r = 0; r < 4; r++) {
+            const row = [];
+            for (let c = 0; c < 4; c++) {
+                row.push(null);
+            }
+            grid.push(row);
+        }
+        return grid;
+    });
+    
+    // Growth Stage
+    const [growthStage, setGrowthStage] = useState('flower');
+    
+    // Color Scale
+    const [colorScale, setColorScale] = useState('growers');
+    
+    // Photoperiod for DLI calculation
+    const [photoperiod, setPhotoperiod] = useState(18);
 
     // Filter State
     const [activeFilters, setActiveFilters] = useState({
@@ -78,6 +111,8 @@ export default function PPFDHeatMapTool() {
     // 3D Display Options
     const [showGuideLines, setShowGuideLines] = useState(true);
     const [voxelOpacity, setVoxelOpacity] = useState(0.3);
+    const [showDisplacement, setShowDisplacement] = useState(false);
+    const [showVolumetric, setShowVolumetric] = useState(false);
 
     // Handle Unit Switching
     const handleUnitChange = (newUnit) => {
@@ -350,6 +385,48 @@ export default function PPFDHeatMapTool() {
                     <div className={`${styles.controlsPanel} ${styles.glassPanel}`}>
 
                         <div className={styles.controlGroup}>
+                            <h3>Input Mode</h3>
+                            <div className={styles.unitToggle}>
+                                <button
+                                    className={inputMode === 'lights' ? styles.activeButton : ''}
+                                    onClick={() => setInputMode('lights')}
+                                >Lights</button>
+                                <button
+                                    className={inputMode === 'sensor' ? styles.activeButton : ''}
+                                    onClick={() => setInputMode('sensor')}
+                                >Sensor Grid</button>
+                            </div>
+                        </div>
+
+                        <div className={styles.controlGroup}>
+                            <h3>Growth Stage</h3>
+                            <select 
+                                value={growthStage}
+                                onChange={(e) => setGrowthStage(e.target.value)}
+                                className={styles.selectInput}
+                            >
+                                {Object.entries(GROWTH_STAGES).map(([key, stage]) => (
+                                    <option key={key} value={key}>
+                                        {stage.name} ({stage.minPPFD}-{stage.maxPPFD})
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className={styles.controlGroup}>
+                            <h3>Color Scale</h3>
+                            <select 
+                                value={colorScale}
+                                onChange={(e) => setColorScale(e.target.value)}
+                                className={styles.selectInput}
+                            >
+                                {Object.entries(COLOR_SCALES).map(([key, scale]) => (
+                                    <option key={key} value={key}>{scale.name}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className={styles.controlGroup}>
                             <h3>{t.viewMode}</h3>
                             <div className={styles.unitToggle}>
                                 <button
@@ -365,6 +442,30 @@ export default function PPFDHeatMapTool() {
 
                         {is3D && (
                             <div className={styles.controlGroup}>
+                                <h3>3D Visualization</h3>
+                                <label className={styles.filterItem}>
+                                    <input
+                                        type="checkbox"
+                                        checked={showDisplacement}
+                                        onChange={(e) => setShowDisplacement(e.target.checked)}
+                                    />
+                                    <span className={styles.checkbox}></span>
+                                    <span>Displacement Map</span>
+                                </label>
+                                <label className={styles.filterItem}>
+                                    <input
+                                        type="checkbox"
+                                        checked={showVolumetric}
+                                        onChange={(e) => setShowVolumetric(e.target.checked)}
+                                    />
+                                    <span className={styles.checkbox}></span>
+                                    <span>Volumetric Beams</span>
+                                </label>
+                            </div>
+                        )}
+
+                        {is3D && (
+                            <div className={styles.controlGroup}>
                                 <h3>{t.filters}</h3>
                                 <div className={styles.filterList}>
                                     {Object.entries(t.legend).map(([key, label]) => (
@@ -374,6 +475,7 @@ export default function PPFDHeatMapTool() {
                                                 checked={activeFilters[key]}
                                                 onChange={() => toggleFilter(key)}
                                             />
+                                            <span className={styles.checkbox}></span>
                                             <span>{label}</span>
                                         </label>
                                     ))}
@@ -390,6 +492,7 @@ export default function PPFDHeatMapTool() {
                                         checked={showGuideLines}
                                         onChange={(e) => setShowGuideLines(e.target.checked)}
                                     />
+                                    <span className={styles.checkbox}></span>
                                     <span>{t.showGuides}</span>
                                 </label>
                             </div>
@@ -514,6 +617,8 @@ export default function PPFDHeatMapTool() {
                                         activeFilters={activeFilters}
                                         showGuideLines={showGuideLines}
                                         voxelOpacity={voxelOpacity}
+                                        showDisplacement={showDisplacement}
+                                        showVolumetric={showVolumetric}
                                     />
                                 </div>
                             ) : (

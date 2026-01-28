@@ -15,32 +15,24 @@ import {
     CostToolSection,
     FAQSection,
     BlogPreviewSection,
-    ScrollToTopButton,
-    BackgroundEffects
+    ScrollToTopButton
 } from './LandingPage/index';
 import './LandingPage.css';
 import { BASE_URL, LANGUAGES, LOCALES } from '../config/constants';
 
 export default function LandingPage() {
-    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
     const [showScrollTop, setShowScrollTop] = useState(false);
     const { getBuilderUrl, t, language } = useSettings();
     const navigate = useNavigate();
 
     useEffect(() => {
-        const handleMouseMove = (e) => {
-            setMousePos({ x: (e.clientX / window.innerWidth) - 0.5, y: (e.clientY / window.innerHeight) - 0.5 });
-        };
-
         const handleScroll = () => {
             setShowScrollTop(window.scrollY > 300);
         };
 
-        window.addEventListener('mousemove', handleMouseMove);
         window.addEventListener('scroll', handleScroll);
 
         return () => {
-            window.removeEventListener('mousemove', handleMouseMove);
             window.removeEventListener('scroll', handleScroll);
         };
     }, []);
@@ -64,9 +56,8 @@ export default function LandingPage() {
                 {language === LANGUAGES.TR && <meta property="og:locale:alternate" content={LOCALES[LANGUAGES.EN]} />}
             </Helmet>
             
-            <BackgroundEffects mousePos={mousePos} />
             <Navbar />
-            <HeroSection mousePos={mousePos} onStartBuilding={handleStartBuilding} />
+            <HeroSection onStartBuilding={handleStartBuilding} />
             <ToolsPreviewSection />
             <FeaturesSection />
             <InfoBoxesSection />

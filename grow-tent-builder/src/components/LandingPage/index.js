@@ -9,4 +9,3 @@ export { default as CostToolSection } from './CostToolSection';
 export { default as FAQSection } from './FAQSection';
 export { default as BlogPreviewSection } from './BlogPreviewSection';
 export { default as ScrollToTopButton } from './ScrollToTopButton';
-export { default as BackgroundEffects } from './BackgroundEffects';

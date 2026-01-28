@@ -102,10 +102,10 @@ const CostCalculator = () => {
                                 <span className={styles.dots}>•••</span>
                             </div>
                             <div className={`${styles.inputWrapper} ${styles.inputWrapperReadOnly}`}>
-                                <span className={styles.highlightBlue}>
+                                <span className={styles.highlightGreen}>
                                     {energyConsumed.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                                 </span>
-                                <span className={`${styles.unit} ${styles.highlightBlue}`}>{t('costCalcKwh')}</span>
+                                <span className={`${styles.unit} ${styles.highlightGreen}`}>{t('costCalcKwh')}</span>
                             </div>
                         </div>
 
@@ -135,8 +135,8 @@ const CostCalculator = () => {
                                 <span className={styles.dots}>•••</span>
                             </div>
                             <div className={`${styles.inputWrapper} ${styles.inputWrapperReadOnly} ${styles.costWrapper}`}>
-                                <span className={`${styles.currencyPrefix} ${styles.highlightBlue}`}>{t('costCalcCurrency')}</span>
-                                <span className={styles.highlightBlue}>
+                                <span className={`${styles.currencyPrefix} ${styles.highlightGreen}`}>{t('costCalcCurrency')}</span>
+                                <span className={styles.highlightGreen}>
                                     {totalCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 3 })}
                                 </span>
                             </div>

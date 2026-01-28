@@ -1,20 +1,19 @@
-/* Admin Dashboard Variables */
+/* Admin Dashboard - Organic Gardening Theme */
 .adminContainer {
     display: flex;
     min-height: 100vh;
-    background: radial-gradient(circle at top left, #1e293b 0%, #0f172a 100%);
-    /* Deep Dark Bg */
-    color: #f8fafc;
+    background: linear-gradient(135deg, #1C1816 0%, #2A2420 50%, #1C1816 100%);
+    color: #E8E4D9;
     font-family: 'Inter', system-ui, sans-serif;
 }
 
 /* Sidebar */
 .sidebar {
     width: 280px;
-    background: rgba(15, 23, 42, 0.6);
+    background: rgba(42, 36, 32, 0.8);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    border-right: 1px solid rgba(107, 142, 35, 0.15);
     padding: 2rem 1rem;
     display: flex;
     flex-direction: column;
@@ -32,7 +31,7 @@
     gap: 0.75rem;
     padding: 0 1rem 2rem;
     margin-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(107, 142, 35, 0.1);
 }
 
 .logoIcon {
@@ -42,7 +41,7 @@
 .brandName {
     font-size: 1.25rem;
     font-weight: 700;
-    background: linear-gradient(135deg, #4ade80 0%, #3b82f6 100%);
+    background: linear-gradient(135deg, #6B8E23 0%, #9ACD32 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: -0.025em;
@@ -55,7 +54,7 @@
 .navLabel {
     font-size: 0.75rem;
     text-transform: uppercase;
-    color: #64748b;
+    color: #8B7B6B;
     font-weight: 600;
     letter-spacing: 0.05em;
     padding: 0 1rem;
@@ -67,28 +66,28 @@
     align-items: center;
     gap: 0.75rem;
     padding: 0.75rem 1rem;
-    color: #94a3b8;
+    color: #C4B89B;
     text-decoration: none;
-    border-radius: 0.75rem;
-    transition: all 0.2s ease;
+    border-radius: 1rem;
+    transition: all 0.25s ease;
     font-weight: 500;
     margin-bottom: 0.25rem;
 }
 
 .navLink:hover {
-    background: rgba(255, 255, 255, 0.03);
-    color: #fff;
+    background: rgba(107, 142, 35, 0.1);
+    color: #E8E4D9;
     transform: translateX(4px);
 }
 
 .navLinkActive {
-    background: rgba(16, 185, 129, 0.1);
-    color: #34d399;
-    box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.2);
+    background: rgba(107, 142, 35, 0.15);
+    color: #9ACD32;
+    border: 1px solid rgba(107, 142, 35, 0.25);
 }
 
 .navLinkActive:hover {
-    background: rgba(16, 185, 129, 0.15);
+    background: rgba(107, 142, 35, 0.2);
     transform: none;
 }
 
@@ -96,19 +95,19 @@
 .userProfile {
     margin-top: auto;
     padding: 1rem;
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(107, 142, 35, 0.08);
     border-radius: 1rem;
     display: flex;
     align-items: center;
     gap: 1rem;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(107, 142, 35, 0.1);
 }
 
 .userAvatar {
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 50%;
-    background: linear-gradient(135deg, #6366f1, #a855f7);
+    background: linear-gradient(135deg, #6B8E23, #556B2F);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -134,11 +133,11 @@
     font-size: 2rem;
     font-weight: 700;
     margin: 0;
-    color: #fff;
+    color: #E8E4D9;
 }
 
 .pageTitle p {
-    color: #94a3b8;
+    color: #8B7B6B;
     margin: 0.5rem 0 0;
 }
 
@@ -151,19 +150,19 @@
     width: 3rem;
     height: 3rem;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #94a3b8;
+    background: rgba(107, 142, 35, 0.1);
+    border: 1px solid rgba(107, 142, 35, 0.2);
+    color: #C4B89B;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.25s;
 }
 
 .iconBtn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    background: rgba(107, 142, 35, 0.2);
+    color: #E8E4D9;
     transform: translateY(-2px);
 }
 
@@ -176,20 +175,20 @@
 }
 
 .statCard {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(42, 36, 32, 0.6);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 1.5rem;
+    border: 1px solid rgba(107, 142, 35, 0.15);
+    border-radius: 1.25rem;
     padding: 1.5rem;
     position: relative;
     overflow: hidden;
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .statCard:hover {
     transform: translateY(-5px);
-    border-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    border-color: rgba(107, 142, 35, 0.25);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
 }
 
 .statHeader {
@@ -203,8 +202,8 @@
     width: 3rem;
     height: 3rem;
     border-radius: 1rem;
-    background: rgba(59, 130, 246, 0.1);
-    color: #60a5fa;
+    background: rgba(107, 142, 35, 0.15);
+    color: #6B8E23;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -213,13 +212,13 @@
 .statValue {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #fff;
+    color: #E8E4D9;
     margin: 0;
     line-height: 1;
 }
 
 .statLabel {
-    color: #94a3b8;
+    color: #8B7B6B;
     font-size: 0.875rem;
     font-weight: 500;
 }
@@ -233,11 +232,11 @@
 }
 
 .trendUp {
-    color: #34d399;
+    color: #6B8E23;
 }
 
 .trendDown {
-    color: #f87171;
+    color: #CD5C5C;
 }
 
 /* Recent Activity Section */
@@ -248,11 +247,10 @@
 }
 
 .panel {
-    background: rgba(20, 27, 45, 0.6);
-    /* Slightly more opaque for content */
+    background: rgba(42, 36, 32, 0.5);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 1.5rem;
+    border: 1px solid rgba(107, 142, 35, 0.1);
+    border-radius: 1.25rem;
     padding: 2rem;
 }
 
@@ -266,10 +264,10 @@
 .panelTitle {
     font-size: 1.25rem;
     font-weight: 700;
-    color: #fff;
+    color: #E8E4D9;
 }
 
-/* Table Styles - Glassmorphic */
+/* Table Styles - Earthy */
 .tableContainer {
     width: 100%;
     overflow-x: auto;
@@ -283,18 +281,18 @@
 .table th {
     text-align: left;
     padding: 1rem;
-    color: #64748b;
+    color: #8B7B6B;
     font-size: 0.75rem;
     text-transform: uppercase;
     font-weight: 600;
     letter-spacing: 0.05em;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(107, 142, 35, 0.15);
 }
 
 .table td {
     padding: 1rem;
-    color: #e2e8f0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    color: #C4B89B;
+    border-bottom: 1px solid rgba(107, 142, 35, 0.08);
 }
 
 .table tr:last-child td {
@@ -302,10 +300,10 @@
 }
 
 .table tr:hover td {
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(107, 142, 35, 0.05);
 }
 
-/* Badges */
+/* Badges - Organic Earth Tones */
 .badge {
     padding: 0.25rem 0.75rem;
     border-radius: 2rem;
@@ -317,21 +315,21 @@
 }
 
 .badgeSuccess {
-    background: rgba(16, 185, 129, 0.1);
-    color: #34d399;
-    border: 1px solid rgba(16, 185, 129, 0.2);
+    background: rgba(107, 142, 35, 0.15);
+    color: #6B8E23;
+    border: 1px solid rgba(107, 142, 35, 0.25);
 }
 
 .badgeWarning {
-    background: rgba(245, 158, 11, 0.1);
-    color: #fbbf24;
-    border: 1px solid rgba(245, 158, 11, 0.2);
+    background: rgba(218, 165, 32, 0.15);
+    color: #DAA520;
+    border: 1px solid rgba(218, 165, 32, 0.25);
 }
 
 .badgeInfo {
-    background: rgba(59, 130, 246, 0.1);
-    color: #60a5fa;
-    border: 1px solid rgba(59, 130, 246, 0.2);
+    background: rgba(143, 188, 143, 0.15);
+    color: #8FBC8F;
+    border: 1px solid rgba(143, 188, 143, 0.25);
 }
 
 /* Quick Actions */
@@ -342,23 +340,23 @@
 }
 
 .actionBtn {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(107, 142, 35, 0.08);
+    border: 1px solid rgba(107, 142, 35, 0.15);
     border-radius: 1rem;
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.75rem;
-    color: #94a3b8;
+    color: #C4B89B;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.25s;
 }
 
 .actionBtn:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
-    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(107, 142, 35, 0.15);
+    color: #E8E4D9;
+    border-color: rgba(107, 142, 35, 0.25);
     transform: translateY(-2px);
 }
 
@@ -368,7 +366,6 @@
         opacity: 0;
         transform: translateY(10px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -379,15 +376,15 @@
     animation: fadeIn 0.5s ease-out forwards;
 }
 
-/* Modal Styles */
+/* Modal Styles - Earthy */
 .modalOverlay {
     position: fixed;
     inset: 0;
     width: 100vw;
     height: 100vh;
-    background: radial-gradient(circle at 20% 20%, rgba(74, 222, 128, 0.08), transparent 30%),
-        radial-gradient(circle at 80% 0%, rgba(59, 130, 246, 0.08), transparent 26%),
-        rgba(0, 0, 0, 0.72);
+    background: radial-gradient(circle at 20% 20%, rgba(107, 142, 35, 0.06), transparent 30%),
+        radial-gradient(circle at 80% 0%, rgba(210, 105, 30, 0.04), transparent 26%),
+        rgba(28, 24, 22, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     display: flex;
@@ -400,13 +397,13 @@
 }
 
 .modalContainer {
-    background: linear-gradient(135deg, rgba(26, 35, 58, 0.9), rgba(14, 23, 42, 0.92));
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(135deg, rgba(42, 36, 32, 0.95), rgba(28, 24, 22, 0.98));
+    border: 1px solid rgba(107, 142, 35, 0.15);
     border-radius: 1.25rem;
     width: min(1280px, 96vw);
     max-height: calc(100vh - 3rem);
     overflow: hidden;
-    box-shadow: 0 24px 80px -20px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.02);
+    box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.6);
     animation: fadeIn 0.25s ease-out, slideDown 0.25s ease-out;
     position: relative;
 }
@@ -416,43 +413,41 @@
     justify-content: space-between;
     align-items: center;
     padding: 1.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(107, 142, 35, 0.15);
     position: sticky;
     top: 0;
-    background: linear-gradient(135deg, rgba(26, 35, 58, 0.95), rgba(14, 23, 42, 0.95));
+    background: linear-gradient(135deg, rgba(42, 36, 32, 0.98), rgba(28, 24, 22, 0.98));
     z-index: 10;
 }
 
 .modalTitle {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #f8fafc;
+    color: #E8E4D9;
     margin: 0;
 }
 
 .modalCloseBtn {
     background: transparent;
     border: none;
-    color: #94a3b8;
+    color: #8B7B6B;
     cursor: pointer;
     padding: 0.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
     transition: all 0.2s;
 }
 
 .modalCloseBtn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    background: rgba(107, 142, 35, 0.1);
+    color: #E8E4D9;
 }
 
 .modalContent {
     padding: 1.5rem 1.75rem 1.75rem;
-    background: radial-gradient(circle at 30% 20%, rgba(59, 130, 246, 0.05), transparent 40%),
-        radial-gradient(circle at 80% 10%, rgba(16, 185, 129, 0.06), transparent 45%),
-        rgba(10, 17, 32, 0.6);
+    background: rgba(28, 24, 22, 0.5);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     max-height: calc(100vh - 8rem);
@@ -462,9 +457,8 @@
 @keyframes slideDown {
     from {
         transform: translateY(-6px);
-        opacity: 0.85;
+        opacity: 0.9;
     }
-
     to {
         transform: translateY(0);
         opacity: 1;
@@ -476,7 +470,6 @@
         transform: translateY(-20px);
         opacity: 0;
     }
-
     to {
         transform: translateY(0);
         opacity: 1;

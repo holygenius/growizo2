@@ -1,108 +1,146 @@
-/* CSS Variables - Design Tokens */
+/* CSS Variables - Organic Green Theme (Based on sample.html) */
 :root {
-  /* Shared Tokens */
-  --color-primary: #10b981;
-  /* Emerald 500 */
-  --color-primary-glow: rgba(16, 185, 129, 0.4);
-  --color-secondary: #34d399;
-  /* Emerald 400 */
+  /* Typography */
+  --font-display: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-serif: 'Georgia', serif;
 
-  /* Default Theme (Dark) */
-  --bg-app: #0f172a;
-  /* Slate 900 */
-  --bg-card: #1e293b;
-  /* Slate 800 */
-  --bg-surface: #334155;
-  /* Slate 700 */
-  --bg-surface-hover: #475569;
-  /* Slate 600 */
-  --bg-input: #1e293b;
+  /* ===== ORGANIC GREEN PALETTE (sample.html inspired) ===== */
+  --color-primary: #22c55e;       /* Emerald green - main growing green */
+  --color-primary-hover: #16a34a; /* Darker emerald - hover state */
+  --color-primary-light: #4ade80; /* Bright green - highlights */
+  --color-primary-glow: rgba(34, 197, 94, 0.3);
+  
+  --color-secondary: #34d399;     /* Emerald - secondary */
+  --color-accent: #fbbf24;        /* Amber - accent for CTAs/warmth */
+  --color-accent-hover: #f59e0b;  /* Darker amber */
+  
+  --color-success: #22c55e;
+  --color-warning: #fbbf24;
+  --color-error: #ef4444;
+  
+  /* ===== GREEN PALETTE ===== */
+  --color-moss: #1a3a2a;
+  --color-forest: #0f3d24;
 
-  --text-primary: #f8fafc;
-  /* Slate 50 */
-  --text-secondary: #cbd5e1;
-  /* Slate 300 */
-  --text-muted: #94a3b8;
-  /* Slate 400 */
-
-  --border-color: #334155;
-  /* Slate 700 */
-
-  --navbar-bg: rgba(10, 10, 10, 0.8);
-  --navbar-border: rgba(255, 255, 255, 0.1);
-  --dropdown-bg: #1e293b;
-  --dropdown-hover: rgba(255, 255, 255, 0.05);
-
-  --scrollbar-track: #0f172a;
-  --scrollbar-thumb: #334155;
-  --scrollbar-thumb-hover: #475569;
-
-  /* Border Radius */
-  --radius-sm: 0.375rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-full: 9999px;
-
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-glow: 0 0 15px var(--color-primary-glow);
-
-  /* Spacing */
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-  --spacing-2xl: 3rem;
-
-  /* Font Sizes */
-  --font-xs: 0.75rem;
-  --font-sm: 0.875rem;
-  --font-base: 1rem;
-  --font-lg: 1.125rem;
-  --font-xl: 1.25rem;
-  --font-2xl: 1.5rem;
-  --font-3xl: 2rem;
-  --font-4xl: 2.5rem;
-
-  /* Transitions */
-  --transition-fast: 0.15s ease;
-  --transition-normal: 0.2s ease;
-  --transition-slow: 0.3s ease;
+  /* Transitions - smooth, natural */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.35s ease;
+  --transition-slow: 0.5s ease;
 }
 
-/* Light Theme Overrides */
+/* ===== DARK ORGANIC THEME ===== */
+:root,
+:root[data-theme="dark"],
+html[data-theme="dark"] {
+  /* Backgrounds - deep organic green */
+  --bg-app: #0a1f14;
+  --bg-card: #132e22;
+  --bg-surface: #1a3a2a;
+  --bg-surface-hover: #234d36;
+  --bg-input: #132e22;
+
+  /* Text - warm cream/white */
+  --text-primary: #ffffff;
+  --text-secondary: #a7f3d0;
+  --text-muted: #6b8f7a;
+
+  /* Borders - soft green tones */
+  --border-color: rgba(34, 197, 94, 0.2);
+  --border-light: rgba(34, 197, 94, 0.3);
+
+  /* Components */
+  --navbar-bg: rgba(10, 31, 20, 0.95);
+  --navbar-border: rgba(34, 197, 94, 0.15);
+  --dropdown-bg: #132e22;
+  --dropdown-hover: rgba(34, 197, 94, 0.1);
+
+  --glass-bg: rgba(19, 46, 34, 0.85);
+  --glass-border: rgba(34, 197, 94, 0.1);
+
+  /* Scrollbar - green tones */
+  --scrollbar-track: #0a1f14;
+  --scrollbar-thumb: #1a3a2a;
+  --scrollbar-thumb-hover: #234d36;
+  --scrollbar-thumb-active: #2d5a27;
+
+  /* Inputs */
+  --input-bg: #132e22;
+  --input-border: rgba(34, 197, 94, 0.2);
+  --input-focus: #22c55e;
+
+  /* Gradients - organic green */
+  --gradient-primary: linear-gradient(135deg, #22c55e 0%, #34d399 100%);
+  --gradient-accent: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  --gradient-hover: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+
+  /* Shadows - soft, no harsh glow */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.25);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== LIGHT THEME ===== */
 :root[data-theme="light"],
 html[data-theme="light"],
 body[data-theme="light"] {
-  --bg-app: #f6f8fb;
-  /* Soft cool white */
+  /* Backgrounds - warm cream/light green */
+  --bg-app: #f0fdf4;
   --bg-card: #ffffff;
-  /* White */
-  --bg-surface: #eef2f6;
-  /* Subtle surface */
-  --bg-surface-hover: #e2e8f0;
-  /* Hover surface */
+  --bg-surface: #dcfce7;
+  --bg-surface-hover: #bbf7d0;
   --bg-input: #ffffff;
 
-  --text-primary: #0b1220;
-  /* Near-black for contrast */
-  --text-secondary: #3a4a5e;
-  /* Slate 700-ish */
-  --text-muted: #5f6f85;
-  /* Muted slate */
+  /* Text - dark green/brown */
+  --text-primary: #14532d;
+  --text-secondary: #166534;
+  --text-muted: #6b7280;
 
-  --border-color: #d9e1ea;
-  /* Soft border */
+  /* Borders - soft green */
+  --border-color: rgba(34, 197, 94, 0.2);
+  --border-light: rgba(34, 197, 94, 0.3);
 
-  --navbar-bg: rgba(255, 255, 255, 0.92);
-  --navbar-border: rgba(15, 23, 42, 0.08);
+  /* Components */
+  --navbar-bg: rgba(255, 255, 255, 0.95);
+  --navbar-border: rgba(34, 197, 94, 0.15);
   --dropdown-bg: #ffffff;
-  --dropdown-hover: rgba(15, 23, 42, 0.05);
+  --dropdown-hover: rgba(34, 197, 94, 0.08);
 
-  --scrollbar-track: #f1f5f9;
-  --scrollbar-thumb: #cfd8e3;
-  --scrollbar-thumb-hover: #9fb0c3;
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(34, 197, 94, 0.1);
+
+  /* Scrollbar - light green */
+  --scrollbar-track: #f0fdf4;
+  --scrollbar-thumb: #bbf7d0;
+  --scrollbar-thumb-hover: #86efac;
+  --scrollbar-thumb-active: #22c55e;
+
+  /* Inputs */
+  --input-bg: #ffffff;
+  --input-border: rgba(34, 197, 94, 0.3);
+  --input-focus: #22c55e;
+
+  /* Gradients - fresh green */
+  --gradient-primary: linear-gradient(135deg, #22c55e 0%, #4ade80 100%);
+  --gradient-accent: linear-gradient(135deg, #fbbf24 0%, #fcd34d 100%);
+  --gradient-hover: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+
+  /* Shadows - soft */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.15);
 }

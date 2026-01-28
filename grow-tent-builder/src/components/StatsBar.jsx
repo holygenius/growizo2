@@ -9,7 +9,7 @@ export default function StatsBar() {
     return (
         <div className="glass-header no-print" style={{
             position: 'sticky',
-            top: '53px', // Below settings bar
+            top: '56px', // Below navbar (56px height)
             zIndex: 900,
             padding: '1rem 0',
             borderBottom: '1px solid rgba(255,255,255,0.05)'

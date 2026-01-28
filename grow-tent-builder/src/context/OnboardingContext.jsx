@@ -70,3 +70,5 @@ export const OnboardingProvider = ({ children }) => {
         </OnboardingContext.Provider>
     );
 };
+
+export default OnboardingContext;

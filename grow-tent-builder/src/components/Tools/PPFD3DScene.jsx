@@ -1,8 +1,8 @@
 import React, { useMemo, useRef, useEffect, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Text, Grid, PerspectiveCamera } from '@react-three/drei';
+import { OrbitControls, Text, Grid, PerspectiveCamera, Html } from '@react-three/drei';
 import * as THREE from 'three';
-import { useSettings } from '../../context/SettingsContext';
+import { generatePPFDMap, calculateMetrics } from '../../utils/lightingUtils';
 
 // Color scale helper
 const getVoxelColor = (ppfd) => {
@@ -43,8 +43,9 @@ const getVoxelColor = (ppfd) => {
     return { color, opacity, category };
 };
 
-const VoxelGrid = ({ dimensions, activeLights, width, depth, height, unit, activeFilters, voxelOpacity = 0.3 }) => {
+const VoxelGrid = ({ dimensions, activeLights, width, depth, height, unit, activeFilters, voxelOpacity = 0.3, onHover }) => {
     const meshRef = useRef();
+    const [hoveredVoxel, setHoveredVoxel] = useState(null);
 
     // Grid Resolution (Number of cubes per axis)
     const resX = 12;
@@ -116,6 +117,7 @@ const VoxelGrid = ({ dimensions, activeLights, width, depth, height, unit, activ
                     }
 
                     voxels.push({
+                        id: `${x}-${y}-${z}`,
                         position: [posX, posY, posZ],
                         color: color,
                         opacity: opacity,
@@ -131,14 +133,22 @@ const VoxelGrid = ({ dimensions, activeLights, width, depth, height, unit, activ
         return { data: voxels, count: voxels.length };
     }, [dimensions, activeLights, unit, width, depth, height, activeFilters]);
 
-    // Animation State
+    // Animation State with easing
     const [revealedCount, setRevealedCount] = useState(0);
+    const [animationProgress, setAnimationProgress] = useState(0);
+
+    // Easing function for smooth reveal
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
 
     useFrame((state, delta) => {
         if (revealedCount < count) {
-            // Animate reveal: Reveal ~20% of remaining or min 10 per frame
-            // Adjust speed factor (2.5) to control duration
-            const speed = Math.max(10, (count - revealedCount) * 2.5 * delta);
+            // Calculate progress with easing
+            const targetProgress = revealedCount / count;
+            const newProgress = easeOutCubic(targetProgress);
+            setAnimationProgress(newProgress);
+            
+            // Staggered reveal - faster start, slower end
+            const speed = Math.max(15, (count - revealedCount) * 3 * delta);
             const nextCount = Math.min(count, revealedCount + Math.ceil(speed));
             setRevealedCount(nextCount);
 
@@ -152,17 +162,13 @@ const VoxelGrid = ({ dimensions, activeLights, width, depth, height, unit, activ
     useEffect(() => {
         // Reset animation when data changes
         setRevealedCount(0);
-    }, [count, activeLights]); // Trigger restart on light change too
+        setAnimationProgress(0);
+    }, [count, activeLights]);
 
     useEffect(() => {
         if (!meshRef.current) return;
 
         const tempObject = new THREE.Object3D();
-
-        // Only update matrices for the revealed count
-        // But we need to set ALL matrices initially or at least the ones we want to show
-        // Actually, instancedMesh draws 'count' instances. We can control 'count' prop on the mesh itself.
-        // So we just need to ensure the matrices are set in the correct sorted order (which they are in 'data')
 
         for (let i = 0; i < count; i++) {
             const { position, color } = data[i];
@@ -176,33 +182,89 @@ const VoxelGrid = ({ dimensions, activeLights, width, depth, height, unit, activ
 
     }, [data, count]);
 
+    // Handle hover events
+    const handlePointerMove = (e) => {
+        e.stopPropagation();
+        const instanceId = e.instanceId;
+        if (instanceId !== undefined && data[instanceId]) {
+            setHoveredVoxel(data[instanceId]);
+            onHover?.(data[instanceId]);
+        }
+    };
+
+    const handlePointerLeave = () => {
+        setHoveredVoxel(null);
+        onHover?.(null);
+    };
+
     // Voxel Geometry size
     const boxSizeX = (width / resX) * 0.9;
     const boxSizeY = (height / resY) * 0.9;
     const boxSizeZ = (depth / resZ) * 0.9;
 
     return (
-        <instancedMesh
-            ref={meshRef}
-            args={[null, null, count]} // Initialize with MAX count
-        >
-            <boxGeometry args={[boxSizeX, boxSizeY, boxSizeZ]} />
-            <meshStandardMaterial
-                transparent
-                opacity={voxelOpacity}
-                roughness={0.1}
-                metalness={0.1}
-            />
-        </instancedMesh>
+        <group>
+            <instancedMesh
+                ref={meshRef}
+                args={[null, null, count]}
+                onPointerMove={handlePointerMove}
+                onPointerLeave={handlePointerLeave}
+            >
+                <boxGeometry args={[boxSizeX, boxSizeY, boxSizeZ]} />
+                <meshStandardMaterial
+                    transparent
+                    opacity={voxelOpacity}
+                    roughness={0.1}
+                    metalness={0.1}
+                />
+            </instancedMesh>
+            {/* Tooltip for hovered voxel */}
+            {hoveredVoxel && (
+                <HtmlTooltip voxel={hoveredVoxel} />
+            )}
+        </group>
     );
 };
 
-const GuideLines = ({ width, depth, height, unit, dimensions, theme }) => {
+// HTML Tooltip component for voxel data display
+const HtmlTooltip = ({ voxel }) => {
+    return (
+        <group position={voxel.position}>
+            <Html center distanceFactor={15}>
+                <div style={{
+                    background: 'rgba(0, 0, 0, 0.85)',
+                    color: 'white',
+                    padding: '8px 12px',
+                    borderRadius: '6px',
+                    fontSize: '12px',
+                    whiteSpace: 'nowrap',
+                    pointerEvents: 'none',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                    border: '1px solid rgba(255,255,255,0.2)'
+                }}>
+                    <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>
+                        {voxel.ppfd} μmol/m²/s
+                    </div>
+                    <div style={{ 
+                        display: 'inline-block',
+                        width: '10px',
+                        height: '10px',
+                        borderRadius: '50%',
+                        background: `rgb(${voxel.color.r * 255}, ${voxel.color.g * 255}, ${voxel.color.b * 255})`,
+                        marginRight: '6px'
+                    }} />
+                    <span style={{ textTransform: 'capitalize' }}>
+                        {getVoxelColor(voxel.ppfd).category}
+                    </span>
+                </div>
+            </Html>
+        </group>
+    );
+};
+
+const GuideLines = ({ width, depth, height, unit, dimensions }) => {
     const scaleFactor = unit === 'cm' ? 0.1 : 3.0;
     const interval = unit === 'cm' ? 10 : 1; // 10cm or 1ft
-
-    // Text color based on theme
-    const textColor = theme === 'light' ? '#1f2937' : '#ffffff';
 
     const RulerAxis = ({ size, actualSize, color, axis, position, labelOffset }) => {
         const ticks = [];
@@ -297,7 +359,7 @@ const GuideLines = ({ width, depth, height, unit, dimensions, theme }) => {
             <RulerAxis
                 size={width}
                 actualSize={dimensions.width}
-                color={theme === 'light' ? '#d97706' : '#ff6600'}
+                color="#ff6600"
                 axis="x"
                 position={[-width / 2, -0.1, depth / 2 + 0.5]}
                 labelOffset={[0, 0, 0.5]}
@@ -307,7 +369,7 @@ const GuideLines = ({ width, depth, height, unit, dimensions, theme }) => {
             <RulerAxis
                 size={depth}
                 actualSize={dimensions.depth}
-                color={theme === 'light' ? '#059669' : '#00ff66'}
+                color="#00ff66"
                 axis="z"
                 position={[-width / 2 - 0.5, -0.1, -depth / 2]}
                 labelOffset={[-0.5, 0, 0]}
@@ -317,7 +379,7 @@ const GuideLines = ({ width, depth, height, unit, dimensions, theme }) => {
             <RulerAxis
                 size={height}
                 actualSize={dimensions.height}
-                color={theme === 'light' ? '#7c3aed' : '#6600ff'}
+                color="#6600ff"
                 axis="y"
                 position={[-width / 2 - 0.5, 0, -depth / 2 - 0.5]}
                 labelOffset={[-0.5, 0, 0]}
@@ -326,11 +388,7 @@ const GuideLines = ({ width, depth, height, unit, dimensions, theme }) => {
     );
 };
 
-const TentBox = ({ width, depth, height, theme }) => {
-    // Theme colors
-    const cellColor = theme === 'light' ? '#e2e8e6' : '#333';
-    const sectionColor = theme === 'light' ? '#10b981' : '#10b981';
-
+const TentBox = ({ width, depth, height }) => {
     return (
         <group>
             <Grid
@@ -339,13 +397,13 @@ const TentBox = ({ width, depth, height, theme }) => {
                 cellSize={width / 10}
                 sectionSize={width / 2}
                 fadeDistance={width * 2}
-                sectionColor={sectionColor}
-                cellColor={cellColor}
+                sectionColor="#10b981"
+                cellColor="#333"
                 infiniteGrid
             />
             <lineSegments position={[0, height / 2, 0]}>
                 <edgesGeometry args={[new THREE.BoxGeometry(width, height, depth)]} />
-                <lineBasicMaterial color={theme === 'light' ? '#059669' : '#10b981'} opacity={0.3} transparent />
+                <lineBasicMaterial color="#10b981" opacity={0.3} transparent />
             </lineSegments>
         </group>
     );
@@ -415,37 +473,288 @@ const CameraRig = ({ targetPosition }) => {
     return null;
 };
 
-export default function PPFD3DScene({ dimensions, activeLights, unit, activeFilters, showGuideLines = true, voxelOpacity = 0.3 }) {
-    const { theme } = useSettings();
+/**
+ * Displacement Map Visualization (Technique B from PDF)
+ * Creates a 3D surface where elevation = PPFD intensity
+ * Uses vertex shader for smooth displacement
+ */
+const DisplacementMap = ({ dimensions, activeLights, width, depth, height, unit, colorScale = 'growers' }) => {
+    const meshRef = useRef();
+    
+    // Generate PPFD map
+    const { ppfdMap, maxPPFD } = useMemo(() => {
+        const widthFt = unit === 'cm' ? dimensions.width / 30.48 : dimensions.width;
+        const depthFt = unit === 'cm' ? dimensions.depth / 30.48 : dimensions.depth;
+        const heightFt = unit === 'cm' ? dimensions.height / 30.48 : dimensions.height;
+        
+        const resolution = 8;
+        const map = generatePPFDMap(widthFt, depthFt, activeLights, resolution, heightFt);
+        const metrics = calculateMetrics(map);
+        
+        return { ppfdMap: map, maxPPFD: Math.max(metrics.max, 1) };
+    }, [dimensions, activeLights, unit]);
+    
+    // Create geometry with enough segments for smooth displacement
+    const geometry = useMemo(() => {
+        const segments = 32;
+        return new THREE.PlaneGeometry(width, depth, segments, segments);
+    }, [width, depth]);
+    
+    // Custom shader material for displacement
+    const shaderMaterial = useMemo(() => {
+        return new THREE.ShaderMaterial({
+            uniforms: {
+                ppfdMap: { value: null },
+                maxPPFD: { value: maxPPFD },
+                displacementScale: { value: height * 0.5 }
+            },
+            vertexShader: `
+                uniform sampler2D ppfdMap;
+                uniform float maxPPFD;
+                uniform float displacementScale;
+                varying float vElevation;
+                varying vec2 vUv;
+                
+                void main() {
+                    vUv = uv;
+                    
+                    // Sample PPFD from texture (we'll create this from the map)
+                    vec4 ppfdData = texture2D(ppfdMap, uv);
+                    float ppfd = ppfdData.r * maxPPFD;
+                    
+                    // Normalize and apply displacement
+                    float normalizedPPFD = ppfd / maxPPFD;
+                    vElevation = normalizedPPFD * displacementScale;
+                    
+                    vec3 newPosition = position;
+                    newPosition.z += vElevation;
+                    
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform float maxPPFD;
+                varying float vElevation;
+                varying vec2 vUv;
+                
+                // Color function for heatmap
+                vec3 getHeatmapColor(float value) {
+                    // Grower's palette colors
+                    vec3 c;
+                    if (value < 0.15) {
+                        c = mix(vec3(0.12, 0.12, 0.4), vec3(0.2, 0.4, 0.8), value / 0.15);
+                    } else if (value < 0.3) {
+                        c = mix(vec3(0.2, 0.4, 0.8), vec3(0.0, 0.7, 0.0), (value - 0.15) / 0.15);
+                    } else if (value < 0.5) {
+                        c = mix(vec3(0.0, 0.7, 0.0), vec3(0.7, 0.8, 0.0), (value - 0.3) / 0.2);
+                    } else if (value < 0.7) {
+                        c = mix(vec3(0.78, 0, 0..0), vec3(1.0, 0.55, 0.0), (value - 0.5) / 0.2);
+                    } else if (value < 0.85) {
+                        c = mix(vec3(1.0, 0.55, 0.0), vec3(1.0, 0.2, 0.0), (value - 0.7) / 0.15);
+                    } else {
+                        c = mix(vec3(1.0, 0.2, 0.0), vec3(1.0, 1.0, 1.0), (value - 0.85) / 0.15);
+                    }
+                    return c;
+                }
+                
+                void main() {
+                    float normalizedValue = vElevation / (displacementScale * 0.5);
+                    vec3 color = getHeatmapColor(clamp(normalizedValue, 0.0, 1.0));
+                    
+                    // Add some lighting
+                    float lighting = 0.5 + 0.5 * normalizedValue;
+                    
+                    gl_FragColor = vec4(color * lighting, 0.9);
+                }
+            `,
+            side: THREE.DoubleSide,
+            transparent: true
+        });
+    }, [maxPPFD, height]);
+    
+    // Create data texture from PPFD map
+    useEffect(() => {
+        if (!ppfdMap.length || !meshRef.current) return;
+        
+        const rows = ppfdMap.length;
+        const cols = ppfdMap[0].length;
+        const data = new Float32Array(rows * cols * 4);
+        
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                const idx = (r * cols + c) * 4;
+                const ppfd = ppfdMap[r][c];
+                data[idx] = ppfd / maxPPFD;     // R: normalized PPFD
+                data[idx + 1] = 0;              // G
+                data[idx + 2] = 0;              // B
+                data[idx + 3] = 1;              // A
+            }
+        }
+        
+        const texture = new THREE.DataTexture(data, cols, rows, THREE.RGBAFormat, THREE.FloatType);
+        texture.needsUpdate = true;
+        
+        meshRef.current.material.uniforms.ppfdMap.value = texture;
+    }, [ppfdMap, maxPPFD]);
+    
+    return (
+        <mesh ref={meshRef} geometry={geometry} material={shaderMaterial} rotation={[-Math.PI / 2, 0, 0]} />
+    );
+};
+
+/**
+ * Volumetric Light Beams (God Rays) - Technique C from PDF
+ * Creates fake volumetric cone effects for each light source
+ * Optimized for performance - no continuous frame updates
+ */
+const VolumetricLightBeams = React.memo(({ activeLights, width, depth, height, unit }) => {
+    const beamsRef = useRef();
+    
+    // Reuse single geometry for all beams
+    const beamGeometry = useMemo(() => {
+        return new THREE.ConeGeometry(1, 1, 24, 1, true);
+    }, []);
+    
+    // Create optimized shader material
+    const beamMaterial = useMemo(() => {
+        return new THREE.ShaderMaterial({
+            uniforms: {
+                color: { value: new THREE.Color(1.0, 0.95, 0.85) }
+            },
+            vertexShader: `
+                varying vec3 vPosition;
+                varying float vOpacity;
+                
+                void main() {
+                    vPosition = position;
+                    // Fade opacity based on Y position (top = opaque, bottom = transparent)
+                    vOpacity = 1.0 - (position.y + 0.5);
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform vec3 color;
+                varying float vOpacity;
+                
+                void main() {
+                    // Circular falloff from center with smoother edge
+                    float dist = length(vec2(vPosition.x, vPosition.z));
+                    float beamFalloff = 1.0 - smoothstep(0.0, 0.5, dist);
+                    float alpha = vOpacity * beamFalloff * 0.08;
+                    
+                    gl_FragColor = vec4(color, alpha);
+                }
+            `,
+            transparent: true,
+            blending: THREE.AdditiveBlending,
+            side: THREE.DoubleSide,
+            depthWrite: false
+        });
+    }, []);
+    
+    // Calculate beam data once (no per-frame updates)
+    const beamData = useMemo(() => {
+        return activeLights.map((light) => {
+            const pos = light.positions[0];
+            const x = (pos.x - 0.5) * width;
+            const z = (pos.y - 0.5) * depth;
+            const beamHeight = height;
+            const beamRadius = Math.tan((light.beamAngle || 120) * Math.PI / 360) * beamHeight;
+            
+            return {
+                key: light.instanceId,
+                position: [x, 0, z],
+                scale: [beamRadius, beamHeight, beamRadius]
+            };
+        });
+    }, [activeLights, width, depth, height]);
+    
+    return (
+        <group ref={beamsRef} position={[0, height, 0]}>
+            {beamData.map((beam) => (
+                <group key={beam.key} position={beam.position}>
+                    <mesh 
+                        geometry={beamGeometry} 
+                        material={beamMaterial}
+                        rotation={[Math.PI, 0, 0]}
+                        scale={beam.scale}
+                    />
+                </group>
+            ))}
+        </group>
+    );
+});
+
+export default function PPFD3DScene({ 
+    dimensions, 
+    activeLights, 
+    unit, 
+    activeFilters, 
+    showGuideLines = true, 
+    voxelOpacity = 0.3,
+    showDisplacement = false,
+    showVolumetric = false
+}) {
     const scaleFactor = unit === 'cm' ? 0.1 : 3.0;
     const width = (dimensions.width || 1) * scaleFactor;
     const depth = (dimensions.depth || 1) * scaleFactor;
     const height = (dimensions.height || 1) * scaleFactor;
 
-    // Background color based on theme
-    // Dark: #050505, Light: #ECF0EE (Soft Sage Surface from walkthrough)
-    const bgColor = theme === 'light' ? '#ECF0EE' : '#050505';
-
     return (
-        <div style={{ width: '100%', height: '100%', minHeight: '500px', background: bgColor, transition: 'background-color 0.3s' }}>
+        <div style={{ width: '100%', height: '100%', minHeight: '500px', background: '#050505' }}>
             <Canvas shadows dpr={[1, 2]}>
                 <PerspectiveCamera makeDefault position={[width * 1.5, height * 1.2, width * 1.5]} fov={50} />
                 <CameraRig targetPosition={[width * 1.5, height * 1.2, width * 1.5]} />
-                <OrbitControls makeDefault minPolarAngle={0} maxPolarAngle={Math.PI} />
+                <OrbitControls 
+                    makeDefault 
+                    minPolarAngle={0} 
+                    maxPolarAngle={Math.PI}
+                    enableDamping={true}
+                    dampingFactor={0.05}
+                    rotateSpeed={0.5}
+                    minDistance={width * 0.5}
+                    maxDistance={width * 4}
+                />
 
                 <ambientLight intensity={0.5} />
                 <pointLight position={[10, 10, 10]} intensity={1} />
 
-                <VoxelGrid
-                    dimensions={dimensions}
-                    activeLights={activeLights}
-                    width={width}
-                    depth={depth}
-                    height={height}
-                    unit={unit}
-                    activeFilters={activeFilters}
-                    voxelOpacity={voxelOpacity}
-                />
+                {/* Displacement Map Visualization */}
+                {showDisplacement && (
+                    <DisplacementMap
+                        dimensions={dimensions}
+                        activeLights={activeLights}
+                        width={width}
+                        depth={depth}
+                        height={height}
+                        unit={unit}
+                    />
+                )}
+
+                {/* Volumetric Light Beams */}
+                {showVolumetric && (
+                    <VolumetricLightBeams
+                        activeLights={activeLights}
+                        width={width}
+                        depth={depth}
+                        height={height}
+                        unit={unit}
+                    />
+                )}
+
+                {/* Standard Voxel Grid (only show if not using displacement) */}
+                {!showDisplacement && (
+                    <VoxelGrid
+                        dimensions={dimensions}
+                        activeLights={activeLights}
+                        width={width}
+                        depth={depth}
+                        height={height}
+                        unit={unit}
+                        activeFilters={activeFilters}
+                        voxelOpacity={voxelOpacity}
+                    />
+                )}
 
                 {showGuideLines && (
                     <GuideLines
@@ -454,11 +763,10 @@ export default function PPFD3DScene({ dimensions, activeLights, unit, activeFilt
                         height={height}
                         unit={unit}
                         dimensions={dimensions}
-                        theme={theme}
                     />
                 )}
 
-                <TentBox width={width} depth={depth} height={height} theme={theme} />
+                <TentBox width={width} depth={depth} height={height} />
                 <Lights activeLights={activeLights} width={width} depth={depth} height={height} />
                 <axesHelper args={[5]} />
             </Canvas>

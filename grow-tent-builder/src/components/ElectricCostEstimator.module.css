@@ -1,10 +1,10 @@
 .estimatorContainer {
   width: 100%;
-  padding: 12px;
+  padding: 16px;
   background: var(--bg-card);
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--border-color);
-  border-radius: 10px;
+  border-radius: 12px;
   color: var(--text-primary);
 }
 
@@ -12,24 +12,91 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
+}
+
+.estimatorHeader h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 .estimatorInputsGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.inputLabel {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.inputWrapper {
+  display: flex;
   gap: 8px;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+.input:hover {
+  border-color: rgba(16, 185, 129, 0.5);
+}
+
+.currencySymbol {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  font-weight: 500;
 }
 
 .estimatorDevicesFlex {
   display: flex;
-  gap: 12px;
+  gap: 16px;
   flex-wrap: wrap;
 }
 
 .deviceSection {
   flex: 1 1 300px;
   min-width: 0;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.sectionTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.deviceList {
+  margin-top: 8px;
 }
 
 .deviceRow {
@@ -39,19 +106,17 @@
   align-items: center;
 }
 
-.input {
-  width: 100%;
-  padding: 8px 10px;
-  border-radius: 8px;
-  background: var(--bg-input);
-  border: 1px solid var(--border-color);
-  color: var(--text-primary);
-  font-weight: 500;
-}
-
 .inputTiny {
   width: 60px;
   flex-shrink: 0;
+  text-align: center;
+  padding: 8px 6px;
+  font-size: 0.85rem;
+}
+
+.inputTiny:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
 }
 
 .inputDeviceName {
@@ -63,21 +128,146 @@
   background: rgba(255, 255, 255, 0.05);
   color: var(--text-primary);
   border: 1px solid var(--border-color);
-  padding: 6px 8px;
+  padding: 8px 12px;
   border-radius: 8px;
   cursor: pointer;
+  font-weight: 500;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.btn:active {
+  transform: scale(0.98);
 }
 
 .btnSmall {
-  padding: 4px 8px;
-  font-size: 0.85rem;
+  padding: 6px 10px;
+  font-size: 0.8rem;
 }
 
 .btnDanger {
-  background: rgba(239, 68, 68, 0.06);
-  border-color: rgba(239, 68, 68, 0.18);
-  color: var(--text-primary);
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.2);
+  color: #f87171;
   flex-shrink: 0;
+}
+
+.btnDanger:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.divider {
+  margin: 16px 0;
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+}
+
+.resultsSection {
+  margin-top: 16px;
+}
+
+.resultRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.resultRow:last-of-type {
+  border-bottom: none;
+}
+
+.resultLabel {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.resultValue {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--color-primary);
+  font-family: monospace;
+}
+
+.phaseSection {
+  margin-bottom: 16px;
+}
+
+.phaseHeader {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.phaseIcon {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-primary);
+}
+
+.totalSection {
+  background: var(--bg-surface);
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.totalLabel {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.totalValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  font-family: monospace;
+}
+
+.detailsSummary {
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  padding: 8px 0;
+  transition: color 0.2s;
+  user-select: none;
+}
+
+.detailsSummary:hover {
+  color: var(--text-primary);
+}
+
+.detailsContent {
+  margin-top: 12px;
+  padding: 12px;
+  background: var(--bg-surface);
+  border-radius: 8px;
+}
+
+.breakdownTitle {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
 }
 
 .estList {
@@ -89,6 +279,13 @@
 .estList li {
   word-break: break-word;
   margin-left: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  padding: 4px 0;
+}
+
+.estList li strong {
+  color: var(--text-primary);
 }
 
 @media (max-width: 600px) {

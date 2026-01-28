@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { productService } from '../../services/productService';
 import { useSettings } from '../../context/SettingsContext';
-import { ArrowLeft, Check, Copy, ShoppingCart, Tag, Share2, Info, ChevronRight, Package, Loader, Calendar, Droplets } from 'lucide-react';
+import { ArrowLeft, Check, Copy, ShoppingCart, Tag, Share2, Info, Package, Loader, Calendar, Droplets } from 'lucide-react';
 import Navbar from '../Navbar';
 import Footer from '../Footer';
 import styles from './Products.module.css';
@@ -298,13 +298,7 @@ const ProductDetail = () => {
             {/* Hero Banner */}
             <div className={styles.detailHeroBanner}>
                 <div className={styles.heroContent}>
-                    <nav className={styles.breadcrumb}>
-                        <Link to={getLocalizedPath('/')}>{t('navHome') || 'Home'}</Link>
-                        <ChevronRight size={14} />
-                        <Link to={getLocalizedPath('/products')}>{t('navProducts') || 'Products'}</Link>
-                        <ChevronRight size={14} />
-                        <span>{productName}</span>
-                    </nav>
+                    <h1 className={styles.detailTitle}>{productName}</h1>
                 </div>
             </div>
 

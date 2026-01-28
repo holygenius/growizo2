@@ -9,7 +9,7 @@ export default function Layout({ children }) {
         <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-app)' }}>
             <StatsBar />
 
-            <main className="container" style={{ flex: 1, padding: '2rem 1rem', maxWidth: '1000px', margin: '0 auto', width: '100%' }}>
+            <main className="container" style={{ flex: 1, padding: 'calc(56px + 1rem) 1rem 2rem', maxWidth: '1000px', margin: '0 auto', width: '100%' }}>
                 <ProgressTracker />
 
                 <div className="glass-panel slide-up" style={{

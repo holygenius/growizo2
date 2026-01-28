@@ -39,7 +39,7 @@
 .toolIcon {
   font-size: 3.5rem;
   margin-bottom: 1rem;
-  color: #f59e0b;
+  color: var(--color-primary);
 }
 
 .toolHeader h1 {
@@ -93,8 +93,8 @@
 }
 
 .inputWrapper:focus-within {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
 }
 
 .inputWrapperReadOnly {
@@ -115,13 +115,13 @@
 .unit,
 .unitSuffix,
 .currencyPrefix {
-  color: #3b82f6;
+  color: var(--color-primary);
   font-weight: 600;
   font-size: 0.9rem;
 }
 
 .arrow {
-  color: #3b82f6;
+  color: var(--color-primary);
   font-weight: bold;
   font-size: 0.8rem;
 }
@@ -145,8 +145,8 @@
   color: var(--text-muted);
 }
 
-.highlightBlue {
-  color: #3b82f6;
+.highlightGreen {
+  color: var(--color-primary);
   font-weight: 700;
   font-size: 1.25rem;
 }
@@ -156,7 +156,7 @@
 }
 
 .pin {
-  color: #ef4444;
+  color: var(--color-warning);
   font-size: 0.9rem;
   transform: rotate(45deg);
 }
