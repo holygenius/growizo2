@@ -1,6 +1,7 @@
 import { useSettings } from '../context/SettingsContext';
 import StatsBar from './StatsBar';
 import ProgressTracker from './ProgressTracker';
+import Footer from './Common/Footer/Footer';
 
 export default function Layout({ children }) {
     const { t, language, setLanguage, currency, setCurrency, unitSystem, setUnitSystem } = useSettings();

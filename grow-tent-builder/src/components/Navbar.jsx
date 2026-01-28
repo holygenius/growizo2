@@ -9,7 +9,6 @@ const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [isToolsOpen, setIsToolsOpen] = useState(false);
-    const [isFeedingOpen, setIsFeedingOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     useEffect(() => {
@@ -59,42 +58,29 @@ const Navbar = () => {
                             onMouseLeave={() => setIsToolsOpen(false)}
                         >
                             <span
-                                className={`${styles.navLink} ${location.pathname.includes('/tools') ? styles.navLinkActive : ''}`}
+                                className={`${styles.navLink} ${location.pathname.includes('/tools') || location.pathname.includes('/feeding') ? styles.navLinkActive : ''}`}
                             >
                                 {t('navTools')} ▾
                             </span>
                             {isToolsOpen && (
                                 <div className={styles.dropdownMenu}>
+                                    <div className={styles.dropdownSection}>
+                                        <span className={styles.dropdownSectionTitle}>{t('navFeedingPrograms')}</span>
+                                        <Link to={getLocalizedPath('/feeding/advanced-nutrients')} className={styles.dropdownItem}>
+                                            <img src="/images/advanced-nutrients-logo.png" alt="Advanced Nutrients" className={styles.brandIcon} /> {t('anFeedingScheduleTitle')}
+                                        </Link>
+                                        <Link to={getLocalizedPath('/feeding/biobizz')} className={styles.dropdownItem}>
+                                            <img src="/images/cropped-Biobizz-Icon-Brown-Texture-180x180.jpg" alt="BioBizz" className={styles.brandIcon} /> {t('navBiobizz')}
+                                        </Link>
+                                        <Link to={getLocalizedPath('/feeding/canna')} className={styles.dropdownItem}>
+                                            <img src="/images/canna-logo.svg" alt="CANNA" className={styles.brandIcon} /> {t('navCanna')}
+                                        </Link>
+                                    </div>
+                                    <div className={styles.dropdownDivider} />
                                     <Link to={getLocalizedPath('/tools/electricity-cost-calculator')} className={styles.dropdownItem}>⚡ {t('navCostCalc')}</Link>
                                     <Link to={getLocalizedPath('/tools/co2-calculator')} className={styles.dropdownItem}>🌫️ {t('navCo2Calc')}</Link>
                                     <Link to={getLocalizedPath('/tools/unit-converter')} className={styles.dropdownItem}>💧 {t('navUnitConv')}</Link>
                                     <Link to={getLocalizedPath('/tools/ppfd-heatmap')} className={styles.dropdownItem}>☀️ {t('navPpfdTool')}</Link>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Feeding Schedules Dropdown */}
-                        <div
-                            className={styles.dropdownContainer}
-                            onMouseEnter={() => setIsFeedingOpen(true)}
-                            onMouseLeave={() => setIsFeedingOpen(false)}
-                        >
-                            <span
-                                className={`${styles.navLink} ${location.pathname.includes('/feeding') ? styles.navLinkActive : ''}`}
-                            >
-                                {t('navFeedingPrograms')} ▾
-                            </span>
-                            {isFeedingOpen && (
-                                <div className={styles.dropdownMenu}>
-                                    <Link to={getLocalizedPath('/feeding/advanced-nutrients')} className={styles.dropdownItem}>
-                                        <img src="/images/advanced-nutrients-logo.png" alt="Advanced Nutrients" className={styles.brandIcon} /> {t('anFeedingScheduleTitle')}
-                                    </Link>
-                                    <Link to={getLocalizedPath('/feeding/biobizz')} className={styles.dropdownItem}>
-                                        <img src="/images/cropped-Biobizz-Icon-Brown-Texture-180x180.jpg" alt="BioBizz" className={styles.brandIcon} /> {t('navBiobizz')}
-                                    </Link>
-                                    <Link to={getLocalizedPath('/feeding/canna')} className={styles.dropdownItem}>
-                                        <img src="/images/canna-logo.svg" alt="CANNA" className={styles.brandIcon} /> {t('navCanna')}
-                                    </Link>
                                 </div>
                             )}
                         </div>
