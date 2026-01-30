@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GroWizard - Cyber Horticulture</title>
+<meta content="Design your perfect harvest with GroWizard's advanced simulation tools." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Roboto+Mono:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#10b981", // Neon Green
+                        "primary-dim": "#059669", 
+                        "cyber-dark": "#020617", // Slate 950 base
+                        "cyber-panel": "#0f172a", // Slate 900 panel
+                        "cyber-border": "#1e293b", // Slate 800 border
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "sans-serif"],
+                        mono: ["Roboto Mono", "monospace"],
+                    },
+                    boxShadow: {
+                        'neon': '0 0 5px theme("colors.primary"), 0 0 20px theme("colors.primary")',
+                        'neon-sm': '0 0 2px theme("colors.primary"), 0 0 8px rgba(16, 185, 129, 0.4)',
+                    },
+                    backgroundImage: {
+                        'grid-cyber': "linear-gradient(to right, #1e293b 1px, transparent 1px), linear-gradient(to bottom, #1e293b 1px, transparent 1px)",
+                    }
+                },
+            },
+        };
+    </script>
+<style type="text/tailwindcss">
+        @layer utilities {
+            .glass-panel {
+                @apply bg-cyber-panel/70 backdrop-blur-md border border-white/10;
+            }
+            .cyber-card {
+                @apply bg-cyber-panel border border-cyber-border hover:border-primary/50 transition-all duration-300;
+            }
+            .text-glow {
+                text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+            }
+            .bg-grid-pattern {
+                background-size: 40px 40px;
+                mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+            }
+            .clip-corner {
+                clip-path: polygon(
+                    0 0,
+                    100% 0,
+                    100% calc(100% - 15px),
+                    calc(100% - 15px) 100%,
+                    0 100%
+                );
+            }
+        }
+    </style>
+</head>
+<body class="bg-cyber-dark text-slate-300 font-sans antialiased selection:bg-primary selection:text-black overflow-x-hidden">
+<nav class="fixed w-full z-50 top-0 border-b border-white/5 glass-panel">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-20 items-center">
+<div class="flex items-center gap-3">
+<div class="relative flex items-center justify-center w-10 h-10 border border-primary/30 rounded bg-primary/10">
+<span class="material-symbols-outlined text-primary">yard</span>
+<div class="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full animate-pulse shadow-neon-sm"></div>
+</div>
+<span class="font-bold text-xl tracking-wider text-white">GRO<span class="text-primary font-mono">WIZARD</span>_</span>
+</div>
+<div class="hidden md:flex items-center space-x-10 text-sm font-mono text-slate-400">
+<a class="hover:text-primary transition-colors flex items-center gap-2" href="#tools">
+<span class="text-primary/40">01.</span> TOOLS
+                    </a>
+<a class="hover:text-primary transition-colors flex items-center gap-2" href="#science">
+<span class="text-primary/40">02.</span> ANALYSIS
+                    </a>
+<a class="hover:text-primary transition-colors flex items-center gap-2" href="#utility">
+<span class="text-primary/40">03.</span> UTILITY
+                    </a>
+</div>
+<div class="flex items-center gap-4">
+<a class="relative group px-6 py-2 bg-transparent border border-primary/50 text-primary font-mono text-sm font-bold tracking-wide overflow-hidden hover:bg-primary/10 transition-all clip-corner" href="#">
+<span class="relative z-10">LAUNCH APP_</span>
+<div class="absolute bottom-0 right-0 w-2 h-2 bg-primary"></div>
+</a>
+</div>
+</div>
+</div>
+</nav>
+<section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden min-h-screen flex items-center">
+<div class="absolute inset-0 z-0 bg-grid-cyber bg-grid-pattern opacity-20 pointer-events-none"></div>
+<div class="absolute top-0 right-0 w-1/2 h-1/2 bg-primary/5 blur-[120px] rounded-full pointer-events-none"></div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+<div class="grid lg:grid-cols-2 gap-16 items-center">
+<div class="space-y-8">
+<div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-cyber-panel border border-primary/20 text-primary text-xs font-mono mb-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                        SYSTEM V.2.0 ONLINE
+                    </div>
+<h1 class="text-5xl lg:text-7xl font-bold tracking-tight text-white leading-[1.1]">
+                        PRECISION <br/>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-200 text-glow">CYBER-HORTICULTURE</span>
+</h1>
+<p class="text-lg text-slate-400 max-w-lg font-light leading-relaxed border-l-2 border-primary/30 pl-6">
+                        Advanced environmental simulation for high-yield indoor gardening. Optimize PPFD, calculate nutrients, and simulate growth cycles before you plant.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-5 pt-4">
+<a class="group relative px-8 py-4 bg-primary text-cyber-dark font-mono font-bold text-lg hover:shadow-neon transition-all duration-300 clip-corner flex items-center justify-center gap-3" href="#tools">
+                            INITIALIZE SETUP
+                            <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
+</a>
+<a class="px-8 py-4 text-slate-300 border border-slate-700 hover:border-white hover:text-white transition-all font-mono text-sm flex items-center justify-center" href="#science">
+                            VIEW DOCUMENTATION
+                        </a>
+</div>
+<div class="flex gap-8 pt-8 text-xs font-mono text-slate-500">
+<div>
+<span class="block text-white text-lg">99.8%</span>
+                            ACCURACY RATE
+                        </div>
+<div>
+<span class="block text-white text-lg">15K+</span>
+                            SIMULATIONS
+                        </div>
+<div>
+<span class="block text-white text-lg">0.2s</span>
+                            LATENCY
+                        </div>
+</div>
+</div>
+<div class="relative perspective-1000">
+<div class="absolute -top-10 -right-10 w-24 h-24 border-t-2 border-r-2 border-primary/20 rounded-tr-3xl"></div>
+<div class="absolute -bottom-10 -left-10 w-24 h-24 border-b-2 border-l-2 border-primary/20 rounded-bl-3xl"></div>
+<div class="relative bg-cyber-panel/40 backdrop-blur-sm border border-white/10 rounded-2xl p-2 shadow-2xl overflow-hidden group">
+<div class="absolute inset-0 z-20 pointer-events-none border border-primary/10 rounded-2xl">
+<div class="absolute top-4 left-4 w-4 h-4 border-t border-l border-primary"></div>
+<div class="absolute top-4 right-4 w-4 h-4 border-t border-r border-primary"></div>
+<div class="absolute bottom-4 left-4 w-4 h-4 border-b border-l border-primary"></div>
+<div class="absolute bottom-4 right-4 w-4 h-4 border-b border-r border-primary"></div>
+<div class="absolute top-8 right-8 flex flex-col items-end gap-2">
+<div class="bg-black/60 backdrop-blur border border-primary/30 px-3 py-1 rounded text-[10px] font-mono text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">sunny</span> 850 PPFD
+                                </div>
+<div class="bg-black/60 backdrop-blur border border-cyan-500/30 px-3 py-1 rounded text-[10px] font-mono text-cyan-400 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">thermostat</span> 26.5°C
+                                </div>
+<div class="bg-black/60 backdrop-blur border border-purple-500/30 px-3 py-1 rounded text-[10px] font-mono text-purple-400 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">water_drop</span> 62% RH
+                                </div>
+</div>
+<div class="absolute top-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent animate-[scan_3s_ease-in-out_infinite] opacity-30"></div>
+</div>
+<div class="relative rounded-xl overflow-hidden bg-gradient-to-b from-slate-900 to-black aspect-[4/3]">
+<img alt="Futuristic plant simulation" class="w-full h-full object-cover opacity-90 mix-blend-screen hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNegWGE03FBY9zcXrR--52itOnOI4JoIJSddOL7M9XCNAnwMJuj7KYRKIFWYWg8j-brVtiN0NvCHIZScFRYRempGzccs_ss0ib4bFOqxrOFCBMyh83kO2nFrYo3H17XHE_C05QIGN0Y3mgAS9zt9Fxs4QHHLTxqKaHMPnFwj5BgPIbGINH_IaBvI1zxXjYw_oO9aQulFeDXPf8us6TUnWIbCSFnXoF-p8tTjInLO-87pCcz-f-CNZcQbB7HXBHljnjBnk8GGG4K-89"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+</div>
+<div class="absolute bottom-6 left-6 right-6 flex justify-between items-end z-20">
+<div>
+<div class="text-[10px] font-mono text-slate-500 mb-1">PROJECT ID</div>
+<div class="text-xs font-mono text-white tracking-widest">GW-ALPHA-09</div>
+</div>
+<div class="flex gap-1">
+<div class="w-1 h-4 bg-primary/20"></div>
+<div class="w-1 h-6 bg-primary/40"></div>
+<div class="w-1 h-8 bg-primary/60"></div>
+<div class="w-1 h-5 bg-primary/40"></div>
+<div class="w-1 h-3 bg-primary/20"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-24 bg-cyber-dark relative border-t border-white/5" id="tools">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+<div>
+<h2 class="text-3xl md:text-4xl font-bold text-white mb-2 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-4xl">construction</span>
+                        System Modules
+                    </h2>
+<p class="text-slate-400 font-mono text-sm">Select a module to begin configuration.</p>
+</div>
+<div class="flex gap-2">
+<span class="w-3 h-3 bg-primary rounded-full animate-pulse"></span>
+<span class="text-xs font-mono text-primary">ALL SYSTEMS OPERATIONAL</span>
+</div>
+</div>
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+<a class="group cyber-card p-6 rounded-lg relative overflow-hidden" href="#">
+<div class="absolute top-0 right-0 p-3">
+<span class="text-[10px] font-mono bg-primary/10 text-primary px-2 py-1 rounded border border-primary/20">READY</span>
+</div>
+<div class="w-12 h-12 rounded bg-slate-800 border border-slate-700 flex items-center justify-center mb-6 group-hover:border-primary/50 group-hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all">
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">bolt</span>
+</div>
+<h3 class="text-xl font-bold text-white mb-2 font-mono">Cost Estimator</h3>
+<p class="text-sm text-slate-400 mb-6 leading-relaxed">Calculate power consumption metrics based on local kWh rates and equipment load.</p>
+<div class="flex items-center text-primary text-xs font-bold font-mono tracking-wide group-hover:translate-x-2 transition-transform">
+                        ACCESS TOOL <span class="material-symbols-outlined text-sm ml-1">chevron_right</span>
+</div>
+</a>
+<a class="group cyber-card p-6 rounded-lg relative overflow-hidden" href="#">
+<div class="absolute top-0 right-0 p-3">
+<span class="text-[10px] font-mono bg-primary/10 text-primary px-2 py-1 rounded border border-primary/20">LIVE</span>
+</div>
+<div class="w-12 h-12 rounded bg-slate-800 border border-slate-700 flex items-center justify-center mb-6 group-hover:border-primary/50 group-hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all">
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">air</span>
+</div>
+<h3 class="text-xl font-bold text-white mb-2 font-mono">CO2 Optimizer</h3>
+<p class="text-sm text-slate-400 mb-6 leading-relaxed">Determine optimal PPM saturation levels for your specific tent dimensions.</p>
+<div class="flex items-center text-primary text-xs font-bold font-mono tracking-wide group-hover:translate-x-2 transition-transform">
+                        ACCESS TOOL <span class="material-symbols-outlined text-sm ml-1">chevron_right</span>
+</div>
+</a>
+<a class="group cyber-card p-6 rounded-lg relative overflow-hidden" href="#">
+<div class="absolute top-0 right-0 p-3">
+<span class="text-[10px] font-mono bg-primary/10 text-primary px-2 py-1 rounded border border-primary/20">READY</span>
+</div>
+<div class="w-12 h-12 rounded bg-slate-800 border border-slate-700 flex items-center justify-center mb-6 group-hover:border-primary/50 group-hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all">
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">sunny</span>
+</div>
+<h3 class="text-xl font-bold text-white mb-2 font-mono">PPFD Mapper</h3>
+<p class="text-sm text-slate-400 mb-6 leading-relaxed">Visualize photon flux density across your canopy with 3D heatmap projection.</p>
+<div class="flex items-center text-primary text-xs font-bold font-mono tracking-wide group-hover:translate-x-2 transition-transform">
+                        ACCESS TOOL <span class="material-symbols-outlined text-sm ml-1">chevron_right</span>
+</div>
+</a>
+<a class="group cyber-card p-6 rounded-lg relative overflow-hidden" href="#">
+<div class="absolute top-0 right-0 p-3">
+<span class="text-[10px] font-mono bg-slate-800 text-slate-400 px-2 py-1 rounded border border-slate-700">BETA</span>
+</div>
+<div class="w-12 h-12 rounded bg-slate-800 border border-slate-700 flex items-center justify-center mb-6 group-hover:border-primary/50 group-hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all">
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">straighten</span>
+</div>
+<h3 class="text-xl font-bold text-white mb-2 font-mono">Unit Converter</h3>
+<p class="text-sm text-slate-400 mb-6 leading-relaxed">Instant conversion for volume, temperature, and light metrics.</p>
+<div class="flex items-center text-primary text-xs font-bold font-mono tracking-wide group-hover:translate-x-2 transition-transform">
+                        ACCESS TOOL <span class="material-symbols-outlined text-sm ml-1">chevron_right</span>
+</div>
+</a>
+<a class="group cyber-card p-6 rounded-lg relative overflow-hidden" href="#">
+<div class="absolute top-0 right-0 p-3">
+<span class="text-[10px] font-mono bg-primary/10 text-primary px-2 py-1 rounded border border-primary/20">LIVE</span>
+</div>
+<div class="w-12 h-12 rounded bg-slate-800 border border-slate-700 flex items-center justify-center mb-6 group-hover:border-primary/50 group-hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all">
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">thermostat</span>
+</div>
+<h3 class="text-xl font-bold text-white mb-2 font-mono">VPD Calculator</h3>
+<p class="text-sm text-slate-400 mb-6 leading-relaxed">Calculate Vapor Pressure Deficit to optimize plant transpiration rates.</p>
+<div class="flex items-center text-primary text-xs font-bold font-mono tracking-wide group-hover:translate-x-2 transition-transform">
+                        ACCESS TOOL <span class="material-symbols-outlined text-sm ml-1">chevron_right</span>
+</div>
+</a>
+<a class="group cyber-card p-6 rounded-lg relative overflow-hidden border-dashed border-slate-700" href="#">
+<div class="w-full h-full flex flex-col items-center justify-center text-center">
+<span class="material-symbols-outlined text-slate-600 text-4xl mb-2">add_circle</span>
+<h3 class="text-sm font-bold text-slate-500 font-mono">SUGGEST A TOOL</h3>
+</div>
+</a>
+</div>
+</div>
+</section>
+<section class="py-24 bg-[#0a0f1c]" id="science">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="mb-12 border-b border-white/5 pb-8">
+<h2 class="text-3xl font-bold text-white flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">science</span>
+                    Scientific Analysis
+                </h2>
+<p class="text-slate-400 mt-2 font-mono text-sm">Critical success factors and environmental mapping.</p>
+</div>
+<div class="grid md:grid-cols-3 gap-6 mb-16">
+<div class="bg-cyber-panel/50 p-6 rounded border-l-2 border-yellow-500 backdrop-blur-sm">
+<div class="flex items-start justify-between mb-4">
+<h3 class="font-bold text-white text-lg">Light Intensity</h3>
+<span class="material-symbols-outlined text-yellow-500">lightbulb</span>
+</div>
+<p class="text-sm text-slate-400 leading-relaxed mb-4">
+                        Photosynthetic Photon Flux Density (PPFD) is the critical metric. Lumens are for humans; PAR is for plants.
+                    </p>
+<div class="font-mono text-xs text-yellow-500">TARGET: 600-900 µmol/m²/s</div>
+</div>
+<div class="bg-cyber-panel/50 p-6 rounded border-l-2 border-cyan-500 backdrop-blur-sm">
+<div class="flex items-start justify-between mb-4">
+<h3 class="font-bold text-white text-lg">Atmosphere</h3>
+<span class="material-symbols-outlined text-cyan-500">wind_power</span>
+</div>
+<p class="text-sm text-slate-400 leading-relaxed mb-4">
+                        Air exchange prevents micro-climates. Stagnant air leads to mold and weak stem structure.
+                    </p>
+<div class="font-mono text-xs text-cyan-500">TARGET: 1 Exchange / Min</div>
+</div>
+<div class="bg-cyber-panel/50 p-6 rounded border-l-2 border-red-500 backdrop-blur-sm">
+<div class="flex items-start justify-between mb-4">
+<h3 class="font-bold text-white text-lg">VPD Balance</h3>
+<span class="material-symbols-outlined text-red-500">device_thermostat</span>
+</div>
+<p class="text-sm text-slate-400 leading-relaxed mb-4">
+                        Vapor Pressure Deficit controls transpiration. Too low implies rot; too high implies stress.
+                    </p>
+<div class="font-mono text-xs text-red-500">TARGET: 0.8 - 1.2 kPa</div>
+</div>
+</div>
+<div class="grid lg:grid-cols-2 gap-8 items-center bg-cyber-panel rounded-xl p-8 border border-white/5 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+<div class="space-y-6">
+<h3 class="text-2xl font-bold text-white font-mono">PPFD Heat Map Projection</h3>
+<p class="text-slate-400">
+                        Visualize light intensity distribution across your canopy. Identify hotspots and shadow zones to optimize grow light positioning.
+                    </p>
+<div class="space-y-4">
+<div class="flex items-center gap-4 p-3 rounded bg-black/40 border border-white/5">
+<span class="material-symbols-outlined text-primary">3d_rotation</span>
+<div>
+<div class="text-white font-bold text-sm">3D Wireframe View</div>
+<div class="text-xs text-slate-500">Analyze intensity peaks vertically.</div>
+</div>
+</div>
+<div class="flex items-center gap-4 p-3 rounded bg-black/40 border border-white/5">
+<span class="material-symbols-outlined text-primary">grid_on</span>
+<div>
+<div class="text-white font-bold text-sm">2D Surface Map</div>
+<div class="text-xs text-slate-500">Check corner-to-corner coverage uniformity.</div>
+</div>
+</div>
+</div>
+<button class="mt-4 border border-primary text-primary px-6 py-2 rounded font-mono text-sm hover:bg-primary hover:text-black transition-colors">
+                        RUN SIMULATION
+                    </button>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="relative group rounded-lg overflow-hidden border border-white/10">
+<div class="absolute top-2 left-2 bg-black/70 backdrop-blur text-[10px] text-primary px-2 py-0.5 rounded border border-primary/30 font-mono">VIEW A</div>
+<img alt="Wireframe Heatmap" class="w-full h-40 object-cover filter hue-rotate-90 contrast-125 opacity-80 hover:opacity-100 transition-opacity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAflRmAfKIJTSNo608gWbvzNxh9_IbORt0jv9wynri6s8TOKHAo8FXog_bElExEoI6PRcjuWwHpQv821gXJ7YeAnxFcmDxMI7m4CWp1iP3Su37-FjSJkFZaQO9-vXhImYdBjCigPrOg_6jHyWxPf9FCEDxkBCDNecsARCes2BRFsDDqj_88m7uDx5Jxuvq2co-6aHD69VrQglzBp12dpmDrfEqD04E7qYxssplPKZhNy2aHwc-D-ZGDDRo2cYPEAxzaEMeRroL2mmP2"/>
+</div>
+<div class="relative group rounded-lg overflow-hidden border border-white/10">
+<div class="absolute top-2 left-2 bg-black/70 backdrop-blur text-[10px] text-primary px-2 py-0.5 rounded border border-primary/30 font-mono">VIEW B</div>
+<img alt="Top Down Heatmap" class="w-full h-40 object-cover opacity-80 hover:opacity-100 transition-opacity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnHNSeG8U7yrxN-gvKhFMJo5oRIjlQUW8WbT2OdVWp10_d6tiXK1MX9aJV8KLCgOI9b1ImHdj2V9gN1gMneczOeo80I7qx_ybN-BA7dncc40nXTYThGXGE4055z86q26mFdNjSDC5CsiZXeA19XU1wC5qTyxX1CdJ9M7xWdnM02miUiHCUNVQvV9lG-RaFoTnbsY0NxkkaJGXbEfP9IjM4iwH-lCmmGoDzbwMfsL6QEmCd8gyYMDLp4UNbd7EDFAcYcLq6b3es2wzV"/>
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<div class="w-20 h-20 rounded-full bg-red-500/10 border border-red-500/30 animate-pulse"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-24 bg-cyber-dark border-t border-white/5" id="utility">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="text-center mb-12">
+<span class="material-symbols-outlined text-4xl text-primary mb-2">calculate</span>
+<h2 class="text-3xl font-bold text-white">Grow Utilities</h2>
+<p class="text-slate-400 mt-2 font-mono text-sm">Operational calculators and schedule management.</p>
+</div>
+<div class="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+<div class="bg-cyber-panel rounded-xl border border-cyber-border overflow-hidden relative">
+<div class="bg-slate-900/50 p-4 border-b border-white/5 flex justify-between items-center">
+<h3 class="text-white font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-yellow-500 text-sm">bolt</span> Power Estimator
+                        </h3>
+<div class="flex gap-1">
+<div class="w-2 h-2 rounded-full bg-red-500"></div>
+<div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+<div class="w-2 h-2 rounded-full bg-green-500"></div>
+</div>
+</div>
+<div class="p-8">
+<div class="space-y-6">
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-[10px] font-mono font-bold text-slate-500 uppercase mb-2">Load (Watts)</label>
+<input class="w-full bg-black/40 border border-slate-700 rounded text-white font-mono text-sm focus:border-primary focus:ring-1 focus:ring-primary" type="number" value="600"/>
+</div>
+<div>
+<label class="block text-[10px] font-mono font-bold text-slate-500 uppercase mb-2">Duration (Hrs)</label>
+<input class="w-full bg-black/40 border border-slate-700 rounded text-white font-mono text-sm focus:border-primary focus:ring-1 focus:ring-primary" type="number" value="18"/>
+</div>
+</div>
+<div>
+<label class="block text-[10px] font-mono font-bold text-slate-500 uppercase mb-2">Energy Rate ($/kWh)</label>
+<div class="relative">
+<span class="absolute left-3 top-2.5 text-slate-500 text-sm">$</span>
+<input class="w-full bg-black/40 border border-slate-700 rounded pl-7 text-white font-mono text-sm focus:border-primary focus:ring-1 focus:ring-primary" step="0.01" type="number" value="0.14"/>
+</div>
+</div>
+<div class="pt-4 border-t border-white/5 mt-4">
+<div class="flex justify-between items-end">
+<span class="text-xs text-slate-400 font-mono">EST. MONTHLY COST</span>
+<span class="text-3xl font-mono font-bold text-primary text-glow">$45.36</span>
+</div>
+</div>
+<button class="w-full py-3 bg-primary/10 border border-primary/50 text-primary font-bold rounded hover:bg-primary hover:text-black transition-all">
+                                RECALCULATE
+                            </button>
+</div>
+</div>
+</div>
+<div class="bg-cyber-panel rounded-xl border border-cyber-border overflow-hidden flex flex-col">
+<div class="bg-slate-900/50 p-4 border-b border-white/5 flex justify-between items-center">
+<h3 class="text-white font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-green-500 text-sm">spa</span> Nutrient Schedules
+                        </h3>
+<span class="text-[10px] font-mono text-slate-500">DB.VER.4.1</span>
+</div>
+<div class="p-6 flex-1 flex flex-col gap-4">
+<div class="group flex items-center gap-4 p-4 rounded bg-black/20 border border-white/5 hover:border-orange-500/50 transition-colors cursor-pointer">
+<div class="w-10 h-10 rounded bg-orange-500/10 flex items-center justify-center text-orange-500">
+<span class="material-symbols-outlined">science</span>
+</div>
+<div class="flex-1">
+<h4 class="text-white font-bold text-sm">BioBizz Calculator</h4>
+<p class="text-xs text-slate-500 font-mono">Organic Schedule • Soil</p>
+</div>
+<span class="material-symbols-outlined text-slate-600 group-hover:text-white">chevron_right</span>
+</div>
+<div class="group flex items-center gap-4 p-4 rounded bg-black/20 border border-white/5 hover:border-red-500/50 transition-colors cursor-pointer">
+<div class="w-10 h-10 rounded bg-red-500/10 flex items-center justify-center text-red-500">
+<span class="material-symbols-outlined">water_ph</span>
+</div>
+<div class="flex-1">
+<h4 class="text-white font-bold text-sm">Advanced Nutrients</h4>
+<p class="text-xs text-slate-500 font-mono">pH Perfect • Hydro</p>
+</div>
+<span class="material-symbols-outlined text-slate-600 group-hover:text-white">chevron_right</span>
+</div>
+<div class="group flex items-center gap-4 p-4 rounded bg-black/20 border border-white/5 hover:border-green-500/50 transition-colors cursor-pointer">
+<div class="w-10 h-10 rounded bg-green-500/10 flex items-center justify-center text-green-500">
+<span class="material-symbols-outlined">eco</span>
+</div>
+<div class="flex-1">
+<h4 class="text-white font-bold text-sm">CANNA Aqua</h4>
+<p class="text-xs text-slate-500 font-mono">Recirculating • Clay Pebbles</p>
+</div>
+<span class="material-symbols-outlined text-slate-600 group-hover:text-white">chevron_right</span>
+</div>
+<a class="mt-auto text-center text-xs text-slate-500 hover:text-primary pt-2" href="#">View All Nutrient Brands -&gt;</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-20 bg-[#0a0f1c]">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<h2 class="text-3xl font-bold text-white mb-8">Featured Knowledge</h2>
+<div class="grid md:grid-cols-2 gap-8">
+<div class="group relative rounded-lg overflow-hidden h-64 border border-white/10">
+<img alt="Greenhouse plants" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity group-hover:scale-105 duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFPoI48QkNRFOQTYKMAzuEsiR6SqZ89c05taugaTPEFaslNPpUPgL8XGLFZls-NVwinC-_MqLLo_BcFo1znoiJWEoKxhsmhpQaGPWgDbTcFExrjmBvU7uoCkfKcVg_ED_xxVdGEQdVf8snHNsDOwb_xrT0sSdOupcsSQxChgJHMWavlQHXco9FGXxheo0S80WFhOnR8I1VJ9ouAHqYV-gCH9Zl3x99aWzv6ue--NODrj9bBpB8lXGhuB0Y5nyE0HRZ92kpU2HtHxXY"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent p-6 flex flex-col justify-end">
+<span class="text-primary font-mono text-xs mb-2">TECHNICAL GUIDE</span>
+<h3 class="text-xl font-bold text-white">Mastering PPFD vs Lumens</h3>
+<a class="text-slate-300 text-sm mt-2 hover:text-white" href="#">Read Article -&gt;</a>
+</div>
+</div>
+<div class="group relative rounded-lg overflow-hidden h-64 border border-white/10">
+<img alt="Hydroponic setup" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity group-hover:scale-105 duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZd_0k2frqydEJu3sUmYQuqKK5S6IbIxXLWKAGaVBuaCFgvS_1sGGIGX66dx3eVaqvLAuAS89pNdyIt-Dwc0fINrTvH0HvUMiAkqmqbaS-Si0UgmS5mrKdm2x7WjwSZDrliRYd56CzZvpMaFd5zMRIsDvzrQm-7gYkiHaz5kdKB76eY9AcpIw4gAiDcOU1oJQUanq104VZaAtA7O3gjujpHC3LdIaxIOsLOmMCHgjdGHJDB9UCUrPq94c0Lsp8PWIEU3xdqpmP0taE"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent p-6 flex flex-col justify-end">
+<span class="text-blue-400 font-mono text-xs mb-2">OPTIMIZATION</span>
+<h3 class="text-xl font-bold text-white">Daily Light Integral (DLI) Explained</h3>
+<a class="text-slate-300 text-sm mt-2 hover:text-white" href="#">Read Article -&gt;</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<footer class="bg-cyber-dark border-t border-white/5 py-16">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+<div class="md:col-span-1">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary">yard</span>
+<span class="font-bold text-lg text-white">GRO<span class="text-primary font-mono">WIZARD</span>_</span>
+</div>
+<p class="text-slate-500 text-sm leading-relaxed">
+                        Precision-engineered digital tools for the modern indoor cultivator. Data-driven harvests start here.
+                    </p>
+</div>
+<div>
+<h4 class="text-white font-bold mb-4 font-mono text-sm">PRODUCT</h4>
+<ul class="space-y-2 text-sm text-slate-500">
+<li><a class="hover:text-primary transition-colors" href="#">Builder</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Tools</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Pricing</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">API</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold mb-4 font-mono text-sm">RESOURCES</h4>
+<ul class="space-y-2 text-sm text-slate-500">
+<li><a class="hover:text-primary transition-colors" href="#">Documentation</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Community</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Guides</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Help Center</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold mb-4 font-mono text-sm">STAY UPDATED</h4>
+<p class="text-xs text-slate-500 mb-4">Get the latest simulation algorithms sent to your inbox.</p>
+<form class="flex gap-2">
+<input class="w-full bg-slate-900 border border-slate-700 rounded text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary px-3 py-2" placeholder="Email address" type="email"/>
+<button class="bg-primary/20 text-primary border border-primary/50 rounded px-3 hover:bg-primary hover:text-black transition-colors" type="button">
+<span class="material-symbols-outlined text-sm">send</span>
+</button>
+</form>
+</div>
+</div>
+<div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-600 font-mono">
+<div>
+                    © 2023 GroWizard Inc. All systems nominal.
+                </div>
+<div class="flex gap-6">
+<a class="hover:text-white" href="#">Privacy Policy</a>
+<a class="hover:text-white" href="#">Terms of Service</a>
+<a class="hover:text-white" href="#">Legal</a>
+</div>
+</div>
+</div>
+</footer>
+
+</body></html>
